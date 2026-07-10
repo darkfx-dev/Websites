@@ -739,8 +739,10 @@
     if (HAS_GSAP && window.ScrollTrigger) { ScrollTrigger.refresh(); window.addEventListener('load', () => ScrollTrigger.refresh()); }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function start() {
     initPreloader(() => { window.__heroIntro && window.__heroIntro(); });
     boot();
-  });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();
