@@ -1,0 +1,4 @@
+# Python cache (from skill scripts)
+__pycache__/
+*.pyc
+.DS_Store
