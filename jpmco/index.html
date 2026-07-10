@@ -72,8 +72,12 @@
     <!-- HERO · “The Standard” -->
     <section class="hero" id="hero" aria-label="JPM & Co. — Chartered Accountants">
       <canvas class="ambient" id="heroCanvas" data-ambient="ledger" aria-hidden="true"></canvas>
+      <div class="hero__seal" id="heroSeal" aria-hidden="true">
+        <canvas class="ambient" id="sealCanvas"></canvas>
+      </div>
+      <div class="hero__rail mono" aria-hidden="true">FOLIO 01 — THE STANDARD</div>
       <div class="hero__inner">
-        <p class="eyebrow mono" data-reveal>CHARTERED ACCOUNTANTS · SURAT · EST. SUITE 305</p>
+        <p class="eyebrow mono" id="heroEyebrow" aria-label="Chartered Accountants, Surat, Suite 305">CHARTERED ACCOUNTANTS · SURAT · EST. SUITE 305</p>
         <h1 class="hero__title" id="heroTitle">
           <span class="line"><span class="w">Numbers</span> <span class="w">raise</span> <span class="w">questions.</span></span>
           <span class="line"><span class="w">We</span> <span class="w">enter</span> <span class="w gold-grad"><em>clarity.</em></span></span>
@@ -81,7 +85,9 @@
         <p class="hero__sub" data-fade>Twelve disciplines of accountancy under one roof — from bookkeeping and payroll
           to tax planning, trusts, and IRS resolution — kept to one exacting standard.</p>
         <div class="hero__cta" data-fade>
-          <a href="#contact" class="btn btn--sage btn--lg" data-magnetic>Book a Consultation</a>
+          <a href="#contact" class="btn btn--sage btn--lg" data-magnetic>Book a Consultation
+            <svg class="btn__arrow" viewBox="0 0 20 12" aria-hidden="true"><path id="ctaArrow" d="M1 6 H17 M12 1.5 L17.5 6 L12 10.5" fill="none" /></svg>
+          </a>
           <a href="#services" class="btn btn--ghost btn--lg" data-magnetic>The Twelve Disciplines</a>
         </div>
         <div class="hero__stats" data-fade>
@@ -498,9 +504,9 @@
     </button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

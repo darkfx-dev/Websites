@@ -98,6 +98,36 @@
       glow.style.opacity = (0.4 + charge * 0.5 + (idleT > 2 ? Math.sin(t / 900) * 0.07 : 0)).toFixed(3);
       document.documentElement.style.setProperty('--charge', charge.toFixed(3));
     });
+    // hero cursor halo — a tighter ring of sage light riding the same
+    // Current, shifting within the sage family: brighter with speed,
+    // denser and tighter over interactive elements. pointer-only.
+    if (!TOUCH) {
+      const halo = document.createElement('div');
+      halo.className = 'halo'; halo.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(halo);
+      const hero = $('#hero');
+      let heroH = hero ? hero.offsetHeight : 0;
+      addEventListener('resize', () => { heroH = hero ? hero.offsetHeight : 0; });
+      let hx = curX, hy = curY, hot = 0, hotT = 0, on = 0;
+      document.addEventListener('pointerover', (e) => {
+        hot = e.target.closest && e.target.closest('#hero a, #hero button, .nav a, .nav button') ? 1 : 0;
+      });
+      onFrame(() => {
+        hx = lerp(hx, curX, 0.34); hy = lerp(hy, curY, 0.34);
+        const overHero = window.scrollY + curY < heroH;
+        on = lerp(on, overHero ? 1 : 0, 0.08);
+        hotT = lerp(hotT, hot, 0.14);
+        if (on < 0.01) { halo.style.opacity = '0'; return; }
+        const vmix = clamp(charge * 0.7 + hotT * 0.45, 0, 1); // sage → sage-light
+        const r = Math.round(lerp(95, 169, vmix));
+        const g = Math.round(lerp(169, 216, vmix));
+        const b = Math.round(lerp(126, 188, vmix));
+        const a = 0.22 + hotT * 0.2 + charge * 0.12;
+        halo.style.setProperty('--halo-c', `rgba(${r}, ${g}, ${b}, ${a.toFixed(3)})`);
+        halo.style.transform = `translate(${(hx - 55).toFixed(1)}px, ${(hy - 55).toFixed(1)}px) scale(${(1 - hotT * 0.32).toFixed(3)})`;
+        halo.style.opacity = (on * 0.85).toFixed(3);
+      });
+    }
     // charged hairline rules — inject overlays on ledger boundaries
     const hosts = $$('.lrow').slice(0);
     $$('.lgroup').forEach((g) => hosts.push(g));
@@ -154,22 +184,57 @@
   const SAGE = (a) => `rgba(129, 190, 152, ${a})`;
   const LIGHTC = (a) => `rgba(239, 243, 242, ${a})`;
 
-  /* the ledger — faint grid, an evolving balance line, drifting figures */
-  function makeLedgerDraw(bright) {
-    const figs = Array.from({ length: 12 }, () => ({
+  /* the ledger — faint grid, an evolving balance line, drifting figures.
+     hero mode adds the living-interface layer: grid parallax, cursor
+     line-ignition tied to The Current, and a slow drifting light band */
+  function makeLedgerDraw(bright, hero) {
+    const figs = Array.from({ length: hero ? 9 : 12 }, () => ({
       x: Math.random(), y: Math.random(), s: 0.00016 + Math.random() * 0.00028,
       v: (1000 + Math.random() * 9000).toLocaleString('en-IN', { minimumFractionDigits: 2 }),
     }));
     const k = bright ? 1.9 : 1;
     return function draw(ctx, w, h, t) {
       ctx.clearRect(0, 0, w, h);
-      // ledger grid
-      ctx.strokeStyle = LIGHTC(0.035 * k); ctx.lineWidth = 1;
+      // ledger grid — in the hero the horizontal rules lag the scroll (parallax)
       const gap = 72;
+      const off = hero ? (window.scrollY * 0.08) % gap : 0;
+      ctx.strokeStyle = LIGHTC(0.035 * k); ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = gap; x < w; x += gap) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
-      for (let y = gap; y < h; y += gap) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
+      for (let y = gap - off; y < h; y += gap) { if (y > 0) { ctx.moveTo(0, y); ctx.lineTo(w, y); } }
       ctx.stroke();
+      if (hero && !REDUCED) {
+        // drifting specular light — slow band crossing like light over still water
+        const sw = ((t * 0.00003) % 1) * (w + 600) - 300;
+        ctx.save();
+        ctx.translate(sw, 0); ctx.rotate(Math.PI / 7);
+        const band = ctx.createLinearGradient(-150, 0, 150, 0);
+        band.addColorStop(0, LIGHTC(0)); band.addColorStop(0.5, LIGHTC(0.03)); band.addColorStop(1, LIGHTC(0));
+        ctx.fillStyle = band; ctx.fillRect(-150, -h, 300, h * 3);
+        ctx.restore();
+        // cursor line-ignition — the nearest rules catch a length of sage light
+        const mx = curX, my = curY + window.scrollY;
+        const ch = clamp(Math.abs(velocity) / 30, 0, 1);
+        const reach = 150 + ch * 90;
+        const nvx = Math.round(mx / gap) * gap;
+        const nhy = Math.round((my + off) / gap) * gap - off;
+        const dvx = Math.abs(mx - nvx), dhy = Math.abs(my - nhy);
+        ctx.lineWidth = 1;
+        if (dvx < gap && nvx > 0 && nvx < w) {
+          const a = (1 - dvx / gap) * (0.3 + ch * 0.3);
+          const g1 = ctx.createLinearGradient(0, my - reach, 0, my + reach);
+          g1.addColorStop(0, SAGE(0)); g1.addColorStop(0.5, SAGE(a)); g1.addColorStop(1, SAGE(0));
+          ctx.strokeStyle = g1;
+          ctx.beginPath(); ctx.moveTo(nvx, my - reach); ctx.lineTo(nvx, my + reach); ctx.stroke();
+        }
+        if (dhy < gap && nhy > 0 && nhy < h) {
+          const a = (1 - dhy / gap) * (0.3 + ch * 0.3);
+          const g2 = ctx.createLinearGradient(mx - reach, 0, mx + reach, 0);
+          g2.addColorStop(0, SAGE(0)); g2.addColorStop(0.5, SAGE(a)); g2.addColorStop(1, SAGE(0));
+          ctx.strokeStyle = g2;
+          ctx.beginPath(); ctx.moveTo(mx - reach, nhy); ctx.lineTo(mx + reach, nhy); ctx.stroke();
+        }
+      }
       // drifting tabular figures
       ctx.font = '11px "IBM Plex Mono", monospace';
       ctx.fillStyle = LIGHTC(0.05 * k);
@@ -215,6 +280,66 @@
       ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
       ctx.restore();
     });
+  }
+
+  /* the hero seal — an engraved instrument turning in sage light.
+     sage + paper only: the hero's single gold allowance is already
+     spent on the headline word */
+  let sealPhase = 0;
+  function drawSeal(ctx, w, h, t) {
+    ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.46;
+    sealPhase += 1 + Math.min(Math.abs(velocity) * 0.12, 2); // scroll gives it a nudge
+    const rot = sealPhase * 0.00075;
+    // engraved concentric hairlines
+    [0.995, 0.86, 0.6].forEach((f, i) => {
+      ctx.strokeStyle = LIGHTC(i === 0 ? 0.16 : 0.08); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(cx, cy, R * f, 0, Math.PI * 2); ctx.stroke();
+    });
+    // coin-edge ticks
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+    ctx.strokeStyle = LIGHTC(0.2); ctx.lineWidth = 1;
+    for (let i = 0; i < 72; i++) {
+      const a = (i / 72) * Math.PI * 2;
+      const r2 = R * (i % 6 === 0 ? 0.885 : 0.915);
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94);
+      ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    // circular lettering, counter-rotating slowly
+    const word = 'JPM & CO · CHARTERED ACCOUNTANTS · SURAT · ';
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-rot * 0.6);
+    ctx.font = `500 ${Math.max(9, R * 0.07)}px "IBM Plex Mono", monospace`;
+    ctx.fillStyle = LIGHTC(0.32);
+    const step = (Math.PI * 2) / word.length;
+    for (let i = 0; i < word.length; i++) {
+      ctx.save(); ctx.rotate(i * step); ctx.translate(0, -R * 0.76);
+      ctx.fillText(word[i], -3, 0);
+      ctx.restore();
+    }
+    ctx.restore();
+    // dashed inner ring
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-rot * 1.6);
+    ctx.setLineDash([2, 8]); ctx.strokeStyle = SAGE(0.28); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.68, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    // the check monogram — steady, quietly breathing
+    const breathe = 0.68 + Math.sin(t * 0.0006) * 0.12;
+    ctx.strokeStyle = SAGE(breathe);
+    ctx.lineWidth = Math.max(2, R * 0.035); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - R * 0.24, cy + R * 0.02);
+    ctx.lineTo(cx - R * 0.05, cy + R * 0.2);
+    ctx.lineTo(cx + R * 0.28, cy - R * 0.18);
+    ctx.stroke();
+    // orbital light — the catch of light drifting round the rim
+    const la = t * 0.00019;
+    const lx = cx + Math.cos(la) * R * 0.86, ly = cy + Math.sin(la) * R * 0.86;
+    const gl = ctx.createRadialGradient(lx, ly, 0, lx, ly, R * 0.5);
+    gl.addColorStop(0, SAGE(0.15)); gl.addColorStop(0.55, SAGE(0.05)); gl.addColorStop(1, SAGE(0));
+    ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(lx, ly, R * 0.5, 0, Math.PI * 2); ctx.fill();
   }
 
   /* group micro-motifs — each drawn from its group's actual work */
@@ -308,10 +433,26 @@
   };
 
   function initAmbient() {
-    Ambient.register($('#heroCanvas'), makeLedgerDraw(false));
+    Ambient.register($('#heroCanvas'), makeLedgerDraw(false, true));
+    Ambient.register($('#sealCanvas'), drawSeal);
     Ambient.register($('#ctaCanvas'), makeLedgerDraw(true));
     Ambient.register($('#whyCanvas'), drawRings);
     $$('.motif').forEach((cv) => Ambient.register(cv, motifs[cv.dataset.motif] || motifs.chart));
+  }
+
+  /* seal depth — pointer parallax + a velocity breath, on the canvas only
+     (the wrapper's transform belongs to the scroll-exit scrub) */
+  function initSealDepth() {
+    const seal = $('#sealCanvas'), hero = $('#hero');
+    if (!seal || !hero || REDUCED) return;
+    let px = 0, py = 0, vy = 0;
+    onFrame(() => {
+      if (window.scrollY > hero.offsetHeight) return;
+      const nx = curX / innerWidth - 0.5, ny = curY / innerHeight - 0.5;
+      px = lerp(px, nx * -14, 0.05); py = lerp(py, ny * -10, 0.05);
+      vy = lerp(vy, clamp(velocity * 0.5, -16, 16), 0.09);
+      seal.style.transform = `translate3d(${px.toFixed(2)}px, ${(py + vy).toFixed(2)}px, 0)`;
+    });
   }
 
   /* ============================================================
@@ -412,22 +553,71 @@
       return;
     }
     $$('[data-fade]').forEach((el) => gsap.set(el, { opacity: 0 }));
+    gsap.set('#heroEyebrow', { opacity: 0 });
     $$('[data-reveal]').forEach((el) => {
       gsap.from(el, { y: 26, opacity: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 86%', once: true } });
     });
+    /* the hero master timeline — one directed sequence, < 2.2s:
+       eyebrow decodes → headline unmasks → the gold word lands with its
+       own beat → sub → CTAs (arrow draws once) → stats count → cue ignites.
+       hands off to the ambient idle state via .is-idle */
     window.__heroIntro = function () {
-      $('#hero').classList.add('is-in');
-      const tl = gsap.timeline();
-      tl.to('.hero__title .w', { y: 0, duration: 1.0, stagger: 0.07, ease: 'power4.out' })
-        .fromTo('.hero__sub', { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, '-=0.55')
-        .fromTo('.hero__cta', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '-=0.4')
-        .fromTo('.hero__stats', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '-=0.35')
-        .fromTo('.hero .fineprint', { opacity: 0 }, { opacity: 0.65, duration: 0.5 }, '-=0.2');
+      const hero = $('#hero');
+      hero.classList.add('is-in');
+      const eyebrow = $('#heroEyebrow');
+      const final = eyebrow.textContent;
+      const GLYPHS = '0123456789·—/';
+      const arrow = $('#ctaArrow');
+      if (arrow) {
+        const len = arrow.getTotalLength();
+        arrow.style.strokeDasharray = len;
+        arrow.style.strokeDashoffset = len;
+      }
+      const decode = { p: 0 };
+      const tl = gsap.timeline({
+        defaults: { ease: 'power4.out' },
+        onComplete: () => hero.classList.add('is-idle'),
+      });
+      tl.to(eyebrow, { opacity: 1, duration: 0.2, ease: 'none' }, 0)
+        .to(decode, {
+          p: 1, duration: 0.7, ease: 'power2.inOut',
+          onUpdate() {
+            const n = Math.round(decode.p * final.length);
+            let s = final.slice(0, n);
+            for (let i = n; i < final.length; i++) s += final[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+            eyebrow.textContent = s;
+          },
+        }, 0)
+        .to('.hero__title .line:first-child .w', { y: 0, duration: 0.95, stagger: 0.085 }, 0.28)
+        .to('.hero__title .line:last-child .w:not(.gold-grad)', { y: 0, duration: 0.95, stagger: 0.085 }, 0.62)
+        .to('.hero__title .gold-grad', { y: 0, duration: 1.05, ease: 'power3.out' }, 0.95)
+        .fromTo('.hero__title .gold-grad', { backgroundPosition: '130% 0' }, { backgroundPosition: '0% 0', duration: 1.1, ease: 'power2.inOut' }, 1.0)
+        .fromTo('.hero__sub', { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 1.12)
+        .fromTo('.hero__cta', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 1.3)
+        .to(arrow, { strokeDashoffset: 0, duration: 0.55, ease: 'power2.out' }, 1.5)
+        .fromTo('.hero__stats', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 1.42)
+        .add(() => $$('#hero [data-count]').forEach(animateCount), 1.52)
+        .fromTo('.hero .fineprint', { opacity: 0 }, { opacity: 0.65, duration: 0.5, ease: 'none' }, 1.66)
+        .fromTo('#cueTray', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 1.78);
     };
-    // scroll-out: the scene settles — content sinks, canvas dims, no hard fade
+    // scroll-out: layered elevation — foreground type rises fastest, the
+    // seal (mid-ground) drifts at its own rate, the canvas recedes last
     gsap.to('.hero__inner', {
       yPercent: -9, opacity: 0.25, ease: 'none',
       scrollTrigger: { trigger: '#hero', start: '18% top', end: 'bottom top', scrub: 1 },
+    });
+    gsap.to('#heroSeal', {
+      yPercent: -30, scale: 0.9, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
+    });
+    gsap.to('#sealCanvas', {
+      opacity: 0.12, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
+    });
+    // rail is rotated 180° via CSS `rotate`, so negative x slides it out right
+    gsap.to('.hero__rail', {
+      xPercent: -60, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: '15% top', end: '70% top', scrub: 1 },
     });
     gsap.to('#heroCanvas', {
       opacity: 0.35, ease: 'none',
@@ -448,13 +638,42 @@
     gsap.to(o, { v: target, duration: 1.7, ease: 'power2.out', onUpdate: () => (el.textContent = fmt(o.v)) });
   }
   function initCounters() {
+    const timelineOwnsHero = HAS_GSAP && !REDUCED; // hero stats fire from the intro timeline
     $$('[data-count]').forEach((el) => {
+      if (timelineOwnsHero && el.closest('#hero')) return;
       const io = new IntersectionObserver((en) => {
         if (!en[0].isIntersecting) return; io.disconnect();
         animateCount(el);
       }, { threshold: 0.55 });
       io.observe(el);
     });
+  }
+
+  /* ============================================================
+     TAP / CLICK BLOOM — a sage ring of light from the contact
+     point; the touch visitor's Current. pooled + rate-limited
+     ============================================================ */
+  function initTapFX() {
+    const hero = $('#hero');
+    if (!hero || REDUCED) return;
+    const pool = Array.from({ length: 4 }, () => {
+      const s = document.createElement('span');
+      s.className = 'tapfx'; s.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(s);
+      return s;
+    });
+    let i = 0, last = 0;
+    hero.addEventListener('pointerdown', (e) => {
+      const now = performance.now();
+      if (now - last < 120) return;
+      last = now;
+      const s = pool[i++ % pool.length];
+      s.classList.remove('is-live');
+      void s.offsetWidth; // restart the animation cleanly
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      s.classList.add('is-live');
+    }, { passive: true });
   }
 
   /* ============================================================
@@ -708,6 +927,8 @@
     initSmooth();
     initCurrent();
     initAmbient();
+    initSealDepth();
+    initTapFX();
     initNav();
     initMagnetic();
     initReveals();

@@ -273,10 +273,74 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .ambient { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 
 /* ============================================================
-   HERO · “The Standard”
+   HERO · “The Standard” — layered editorial composition
+   background: living ledger canvas · mid: engraved seal · fore: type
    ============================================================ */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: center; background: var(--navy); overflow: hidden; }
 .hero__inner { position: relative; z-index: 2; width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 8.5rem var(--pad) 6.5rem; }
+/* text holds the left ~60% so the seal owns the right column */
+.hero__title, .hero__sub { max-width: min(15ch, 60vw); }
+.hero__sub { max-width: 46ch; }
+
+/* mid-ground signature — the engraved seal, its own parallax depth */
+.hero__seal {
+  position: absolute; z-index: 1;
+  right: max(calc((100vw - var(--maxw)) / 2), 2vw);
+  top: 50%;
+  width: clamp(300px, 34vw, 480px); aspect-ratio: 1;
+  translate: 0 -52%;
+  will-change: transform;
+  opacity: 0;
+}
+.hero.is-in .hero__seal { opacity: 1; transition: opacity 1.4s var(--ease-soft); }
+
+/* editorial furniture — vertical folio rail, desktop only */
+.hero__rail {
+  position: absolute; z-index: 1; right: 1.35rem; top: 50%;
+  translate: 0 -50%; rotate: 180deg;
+  writing-mode: vertical-rl;
+  font-size: 0.56rem; letter-spacing: 0.4em; color: var(--light-soft); opacity: 0;
+}
+.hero.is-in .hero__rail { opacity: 0.4; transition: opacity 1.2s var(--ease-soft) 0.9s; }
+
+/* the single gold word — slow prestige shimmer once idle */
+.hero__title .gold-grad { background-size: 220% 100%; background-position: 0% 0; }
+.hero.is-idle .hero__title .gold-grad { animation: goldshimmer 8.5s var(--ease-soft) infinite; }
+@keyframes goldshimmer {
+  0%, 62%, 100% { background-position: 0% 0; }
+  78% { background-position: 96% 0; }
+}
+
+/* primary CTA arrow — draws in once during the intro */
+.btn__arrow { width: 20px; height: 12px; margin-left: 0.15rem; overflow: visible; }
+.btn__arrow path { stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* cursor halo — hero-scoped ring of sage light (pointer only) */
+.halo {
+  position: fixed; top: 0; left: 0; z-index: var(--z-current); pointer-events: none;
+  width: 110px; height: 110px; border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 30%, var(--halo-c, rgba(169, 216, 188, 0.28)) 46%, transparent 62%);
+  filter: blur(6px);
+  mix-blend-mode: plus-lighter;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* tap / click bloom — ink-ring of sage light from the contact point */
+.tapfx {
+  position: fixed; top: 0; left: 0; z-index: var(--z-current); pointer-events: none;
+  width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  opacity: 0;
+}
+.tapfx.is-live { animation: tapbloom 0.55s var(--ease-out) forwards; }
+.tapfx::before, .tapfx::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+.tapfx::before { border: 1px solid rgba(169, 216, 188, 0.85); }
+.tapfx::after { background: radial-gradient(circle, rgba(95, 169, 126, 0.4) 0%, transparent 62%); }
+@keyframes tapbloom {
+  0% { opacity: 0.9; transform: scale(0.4); }
+  100% { opacity: 0; transform: scale(7.5); }
+}
 .hero__title {
   font-family: 'Fraunces', serif; font-weight: 460; letter-spacing: -0.015em;
   font-size: clamp(2.7rem, 7.2vw, 5.6rem); line-height: 1.06; color: var(--light);
@@ -591,6 +655,15 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .footer__row { grid-template-columns: 1fr 1fr; justify-content: start; }
   .hstat { padding-right: 1.4rem; margin-right: 1.4rem; }
 }
+@media (max-width: 1023px) {
+  .hero__rail { display: none; }
+}
+@media (max-width: 768px) {
+  /* the seal recedes to a watermark behind the composition on phones */
+  .hero__seal { width: clamp(240px, 62vw, 340px); right: -8vw; top: 30%; }
+  .hero.is-in .hero__seal { opacity: 0.5; }
+  .hero__title, .hero__sub { max-width: none; }
+}
 @media (max-width: 420px) {
   .creds__row { grid-template-columns: 1fr; }
   .hero__cta .btn { width: 100%; }
@@ -601,8 +674,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  .current, .cue-tray i { display: none; }
+  .current, .cue-tray i, .halo, .tapfx { display: none; }
   .hero__title .w { transform: none; }
+  .hero__seal, .hero__rail { opacity: 1 !important; }
+  .hero__rail { opacity: 0.4 !important; }
+  .hero.is-idle .hero__title .gold-grad { animation: none; }
+  .btn__arrow path { stroke-dashoffset: 0 !important; }
   .why__text .word { opacity: 1 !important; }
   .hstat::after { transform: scaleX(1); }
   .footer__wm-gold { opacity: 1; }
