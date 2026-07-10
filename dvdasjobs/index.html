@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="DVDAS Jobs — professional job consultancy. Serious careers, seriously placed. Career placement, resume engineering, interview mastery, corporate hiring." />
+  <meta name="theme-color" content="#FAFAFA" />
+  <title>DVDAS Jobs — Serious Careers. Seriously Placed.</title>
+  <!-- Social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DVDAS Jobs — Serious Careers. Seriously Placed." />
+  <meta property="og:description" content="Professional job consultancy: career placement, resume engineering, interview mastery, and corporate hiring solutions." />
+  <meta property="og:site_name" content="DVDAS Jobs" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DVDAS Jobs — Serious Careers. Seriously Placed." />
+  <meta name="twitter:description" content="Professional job consultancy: career placement, resume engineering, interview mastery, and corporate hiring solutions." />
+  <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='19' font-weight='900' fill='%23FAFAFA' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a href="#hero" class="skip-link">Skip to content</a>
+
+  <!-- ==================== AMBIENT LAYERS ==================== -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="bg-grid" id="bgGrid" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="scroll-progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <!-- ==================== PRELOADER ==================== -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__count mono" id="preCount">000</div>
+    <div class="preloader__brand" id="preBrand" aria-hidden="true"></div>
+    <div class="preloader__rule" id="preRule"></div>
+    <div class="preloader__curtain" id="preCurtain"></div>
+  </div>
+
+  <!-- ==================== CURSOR ==================== -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor__ring" id="cursorRing"><span class="cursor__label" id="cursorLabel"></span></div>
+    <div class="cursor__dot" id="cursorDot"></div>
+  </div>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <header class="nav" id="nav">
+    <a href="#hero" class="nav__logo" id="logo" aria-label="DVDAS Jobs home"></a>
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="#services" data-nav-link><i>01</i>Services</a>
+      <a href="#process" data-nav-link><i>02</i>Process</a>
+      <a href="#results" data-nav-link><i>03</i>Results</a>
+      <a href="#voices" data-nav-link><i>04</i>Voices</a>
+      <a href="#contact" data-nav-link><i>05</i>Contact</a>
+      <span class="nav__ind" id="navInd" aria-hidden="true"></span>
+    </nav>
+    <a href="#contact" class="btn btn--ink nav__cta" data-magnetic>Get Placed</a>
+    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ==================== MOBILE MENU ==================== -->
+  <div class="mmenu" id="mobileMenu" aria-hidden="true">
+    <span class="mmenu__edge" aria-hidden="true"></span>
+    <nav class="mmenu__links" aria-label="Mobile">
+      <a href="#services" data-mm><i>01</i><span>Services</span></a>
+      <a href="#process" data-mm><i>02</i><span>Process</span></a>
+      <a href="#results" data-mm><i>03</i><span>Results</span></a>
+      <a href="#voices" data-mm><i>04</i><span>Voices</span></a>
+      <a href="#contact" data-mm><i>05</i><span>Contact</span></a>
+    </nav>
+    <div class="mmenu__social mono">
+      <a href="#" data-mm>LINKEDIN</a><a href="#" data-mm>X</a><a href="#" data-mm>INSTAGRAM</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- ==================== 2. HERO ==================== -->
+    <section class="hero sec-light" id="hero" aria-label="DVDAS Jobs — professional job consultancy">
+      <canvas class="hero__particles" id="heroParticles" aria-hidden="true"></canvas>
+      <div class="wm" data-wm aria-hidden="true">CAREERS</div>
+      <span class="frag mono" style="top:24%;left:6%" data-frag>REMOTE</span>
+      <span class="frag mono" style="top:38%;right:7%" data-frag>SENIOR</span>
+      <span class="frag mono" style="bottom:30%;left:10%" data-frag>OFFER SIGNED</span>
+      <span class="frag mono" style="bottom:22%;right:12%" data-frag>+40% SALARY</span>
+      <div class="hero__inner">
+        <p class="eyebrow mono" data-scramble>// PROFESSIONAL JOB CONSULTANCY</p>
+        <h1 class="hero__title" id="heroTitle">
+          <span class="line"><span data-word>SERIOUS</span> <span data-word>CAREERS.</span></span>
+          <span class="line"><em class="serif" data-serif>Seriously</em> <span data-word>PLACED.</span></span>
+        </h1>
+        <p class="hero__type mono" aria-label="Career Placement. Resume Engineering. Interview Mastery. Corporate Hiring."><span id="typeLine"></span><i class="hero__caret" aria-hidden="true"></i></p>
+        <p class="hero__sub" data-fade>DVDAS Jobs connects vetted professionals with companies that deserve them.</p>
+        <div class="hero__cta" data-fade>
+          <a href="#contact" class="btn btn--ink" data-magnetic>Get Placed</a>
+          <a href="#paths" class="btn btn--ghost" data-magnetic>Hire Talent</a>
+        </div>
+        <div class="hero__stats" data-fade>
+          <div class="hstat"><span class="hstat__n" data-count="4800" data-suffix="+" data-grouped>0</span><span class="hstat__l mono">PLACEMENTS</span></div>
+          <div class="hstat"><span class="hstat__n" data-count="92" data-suffix="%">0</span><span class="hstat__l mono">OFFER RATE</span></div>
+          <div class="hstat"><span class="hstat__n" data-count="120" data-suffix="+">0</span><span class="hstat__l mono">PARTNER COMPANIES</span></div>
+        </div>
+      </div>
+      <div class="hero__cue mono" aria-hidden="true">SCROLL<i></i></div>
+    </section>
+
+    <!-- ==================== 3. MARQUEE ==================== -->
+    <section class="trust sec-light" aria-label="Trusted by hiring teams">
+      <p class="trust__label mono">TRUSTED BY HIRING TEAMS AT</p>
+      <div class="marquee" data-mq="1"><div class="marquee__track" id="mqA"></div><div class="marquee__track" aria-hidden="true"></div></div>
+      <div class="marquee marquee--rev" data-mq="-1"><div class="marquee__track" id="mqB"></div><div class="marquee__track" aria-hidden="true"></div></div>
+    </section>
+
+    <div class="wipe" data-wipe="ink" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 4. MANIFESTO ==================== -->
+    <section class="manifesto sec-dark" id="manifesto" aria-label="Manifesto">
+      <div class="wm wm--dark" data-wm aria-hidden="true">PLACEMENT</div>
+      <span class="frag frag--dark mono" style="top:22%;right:8%" data-frag>OFFER SIGNED</span>
+      <span class="frag frag--dark mono" style="bottom:26%;left:7%" data-frag>+40% SALARY</span>
+      <p class="manifesto__text" id="manifestoText">Your career is not a lottery. <em class="serif" id="manifestoEm">It’s a strategy.</em></p>
+    </section>
+
+    <!-- ==================== 5. SERVICES ==================== -->
+    <section class="services sec-dark" id="services" aria-label="Services">
+      <div class="services__head">
+        <p class="eyebrow mono" data-reveal>// 01 — WHAT WE DO</p>
+        <h2 class="stitle" data-reveal>Four Disciplines.<br />One Outcome: <em class="serif">Hired.</em></h2>
+      </div>
+      <div class="services__stack" id="svcStack">
+
+        <article class="svc" data-svc="0">
+          <div class="svc__body">
+            <span class="svc__idx mono">SVC/01</span>
+            <h3 class="svc__title">Career Placement</h3>
+            <p class="svc__desc">We match vetted candidates with top employers across industries. Not job boards — curated introductions that end in offers.</p>
+            <ul class="svc__caps">
+              <li><i class="mono" data-capidx="01">00</i>Curated employer network<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="02">00</i>Role-fit assessment<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="03">00</i>Direct hiring-manager access<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="04">00</i>Offer-stage advocacy<span class="cap-rule"></span></li>
+            </ul>
+            <a href="#contact" class="arrow-link mono" data-magnetic>EXPLORE <span class="arrow-link__a"><b>→</b><b>→</b></span></a>
+          </div>
+          <div class="svc__visual" data-visual="match" aria-hidden="true">
+            <svg viewBox="0 0 300 240" class="match-svg">
+              <g class="match-nodes-l"></g><g class="match-nodes-r"></g><g class="match-lines"></g>
+            </svg>
+            <div class="stamp" data-stamp>MATCHED</div>
+          </div>
+        </article>
+
+        <article class="svc" data-svc="1">
+          <div class="svc__body">
+            <span class="svc__idx mono">SVC/02</span>
+            <h3 class="svc__title">Resume &amp; Profile Engineering</h3>
+            <p class="svc__desc">ATS-optimized resumes, LinkedIn overhauls, portfolio polish. Your paper trail, rebuilt to pass machines and impress humans.</p>
+            <ul class="svc__caps">
+              <li><i class="mono" data-capidx="01">00</i>ATS-proof resume rebuilds<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="02">00</i>LinkedIn positioning<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="03">00</i>Portfolio &amp; case-study polish<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="04">00</i>Keyword &amp; scoring audits<span class="cap-rule"></span></li>
+            </ul>
+            <a href="#contact" class="arrow-link mono" data-magnetic>EXPLORE <span class="arrow-link__a"><b>→</b><b>→</b></span></a>
+          </div>
+          <div class="svc__visual" data-visual="resume" aria-hidden="true">
+            <div class="resume">
+              <div class="resume__bar" style="width:55%"></div>
+              <div class="resume__bar" style="width:88%"></div>
+              <div class="resume__bar" style="width:74%"></div>
+              <div class="resume__bar" style="width:92%"></div>
+              <div class="resume__bar" style="width:63%"></div>
+              <div class="resume__bar" style="width:80%"></div>
+              <div class="resume__score mono">SCORE <b data-score>0</b>/100</div>
+              <div class="stamp stamp--tilt" data-stamp>ATS OPTIMIZED</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="svc" data-svc="2">
+          <div class="svc__body">
+            <span class="svc__idx mono">SVC/03</span>
+            <h3 class="svc__title">Interview Mastery</h3>
+            <p class="svc__desc">Mock interviews, salary negotiation coaching, offer strategy. You walk in rehearsed and walk out with leverage.</p>
+            <ul class="svc__caps">
+              <li><i class="mono" data-capidx="01">00</i>Structured mock interviews<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="02">00</i>Salary negotiation coaching<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="03">00</i>Offer &amp; counter strategy<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="04">00</i>Executive presence drills<span class="cap-rule"></span></li>
+            </ul>
+            <a href="#contact" class="arrow-link mono" data-magnetic>EXPLORE <span class="arrow-link__a"><b>→</b><b>→</b></span></a>
+          </div>
+          <div class="svc__visual" data-visual="chat" aria-hidden="true">
+            <div class="chat">
+              <div class="chat__b chat__b--q">Walk me through a hard decision you owned.</div>
+              <div class="chat__b chat__b--a">Sure — context, constraint, call, and the result: +18% retention.</div>
+              <div class="chat__b chat__b--q">And your salary expectation?</div>
+              <div class="chat__b chat__b--a">Based on scope, the band starts at…</div>
+              <div class="chat__meter"><span class="mono">CONFIDENCE</span><div class="chat__meter-track"><div class="chat__meter-fill" data-meter></div></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="svc" data-svc="3">
+          <div class="svc__body">
+            <span class="svc__idx mono">SVC/04</span>
+            <h3 class="svc__title">Corporate Hiring Solutions</h3>
+            <p class="svc__desc">End-to-end recruitment for companies — sourcing, screening, shortlisting. You interview three, not three hundred.</p>
+            <ul class="svc__caps">
+              <li><i class="mono" data-capidx="01">00</i>Targeted sourcing<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="02">00</i>Structured screening<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="03">00</i>Guaranteed shortlists<span class="cap-rule"></span></li>
+              <li><i class="mono" data-capidx="04">00</i>Time-to-hire reporting<span class="cap-rule"></span></li>
+            </ul>
+            <a href="#contact" class="arrow-link mono" data-magnetic>EXPLORE <span class="arrow-link__a"><b>→</b><b>→</b></span></a>
+          </div>
+          <div class="svc__visual" data-visual="funnel" aria-hidden="true">
+            <svg viewBox="0 0 300 240" class="funnel-svg">
+              <path class="funnel-line" d="M40,30 L260,30 L210,100 L90,100 Z" />
+              <path class="funnel-line" d="M90,100 L210,100 L180,160 L120,160 Z" />
+              <path class="funnel-line" d="M120,160 L180,160 L165,205 L135,205 Z" />
+              <g class="funnel-dots"></g>
+            </svg>
+            <div class="funnel__row mono">SHORTLIST <span data-shortlist><b></b><b></b><b></b></span></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <div class="wipe" data-wipe="paper" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 6. RESULTS ==================== -->
+    <section class="results sec-light" id="results" aria-label="Results">
+      <div class="results__dots" aria-hidden="true"></div>
+      <div class="results__row">
+        <div class="rstat"><span class="rstat__n" data-count="4800" data-suffix="+" data-grouped>0</span><span class="rstat__l mono">CAREERS PLACED</span></div>
+        <div class="rstat"><span class="rstat__n" data-count="92" data-suffix="%">0</span><span class="rstat__l mono">OFFER RATE</span></div>
+        <div class="rstat"><span class="rstat__n" data-count="120" data-suffix="+">0</span><span class="rstat__l mono">PARTNER COMPANIES</span></div>
+        <div class="rstat"><span class="rstat__n" data-count="14">0</span><span class="rstat__l mono">DAYS AVG. TO FIRST INTERVIEW</span></div>
+      </div>
+    </section>
+
+    <!-- ==================== 7. PROCESS ==================== -->
+    <section class="process sec-light" id="process" aria-label="The placement path">
+      <div class="process__head">
+        <p class="eyebrow mono" data-reveal>// 02 — THE PLACEMENT PATH</p>
+        <h2 class="stitle" data-reveal>From First Call<br />to <em class="serif">Signed Offer.</em></h2>
+      </div>
+      <div class="process__vp" id="processVp">
+        <div class="process__track" id="processTrack">
+          <article class="step">
+            <span class="step__num" aria-hidden="true">01</span>
+            <div class="step__body">
+              <svg class="step__icon" viewBox="0 0 48 48"><circle cx="24" cy="18" r="8"/><path d="M10 40c2-8 8-11 14-11s12 3 14 11"/></svg>
+              <h3>Consult</h3>
+              <p>A working session on your history, targets, and constraints. We leave with a placement thesis.</p>
+              <div class="step__tags mono"><span>45 MIN</span><span>1:1</span><span>NO COST</span></div>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__num" aria-hidden="true">02</span>
+            <div class="step__body">
+              <svg class="step__icon" viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="2"/><path d="M16 16h16M16 24h16M16 32h10"/></svg>
+              <h3>Engineer</h3>
+              <p>Resume, LinkedIn, and portfolio rebuilt to pass ATS filters and read like leadership.</p>
+              <div class="step__tags mono"><span>ATS 95+</span><span>5 DAYS</span><span>2 REVISIONS</span></div>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__num" aria-hidden="true">03</span>
+            <div class="step__body">
+              <svg class="step__icon" viewBox="0 0 48 48"><circle cx="14" cy="24" r="6"/><circle cx="34" cy="12" r="6"/><circle cx="34" cy="36" r="6"/><path d="M19 21l10-6M19 27l10 6"/></svg>
+              <h3>Connect</h3>
+              <p>Curated introductions to hiring managers — not portals. Interviews begin inside two weeks.</p>
+              <div class="step__tags mono"><span>14 DAYS</span><span>DIRECT</span><span>VETTED</span></div>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__num" aria-hidden="true">04</span>
+            <div class="step__body">
+              <svg class="step__icon" viewBox="0 0 48 48"><path d="M8 30l10 8 22-26"/><path d="M10 42h28"/></svg>
+              <h3>Sign</h3>
+              <p>Negotiation support through the final call. You sign the strongest version of the offer.</p>
+              <div class="step__tags mono"><span>+AVG 18%</span><span>COACHED</span><span>CLOSED</span></div>
+            </div>
+          </article>
+        </div>
+        <div class="process__line" aria-hidden="true"><span id="processFill"></span><i class="pnode" data-node></i><i class="pnode" data-node></i><i class="pnode" data-node></i><i class="pnode" data-node></i></div>
+      </div>
+    </section>
+
+    <!-- ==================== 8. SPLIT ==================== -->
+    <section class="split" id="paths" aria-label="Candidates and companies">
+      <div class="split__half split__half--light" data-half>
+        <div class="split__inner">
+          <p class="eyebrow mono">FOR CANDIDATES</p>
+          <h3 class="split__title" data-float-title>I need<br />a <em class="serif">job.</em></h3>
+          <ul class="split__list">
+            <li>A personal placement strategist</li>
+            <li>ATS-proof materials, rebuilt</li>
+            <li>Negotiation in your corner</li>
+          </ul>
+          <a href="#contact" class="btn btn--ink" data-magnetic>Get Placed <b class="btn__arr">→</b></a>
+        </div>
+      </div>
+      <div class="split__half split__half--dark" data-half>
+        <div class="split__inner">
+          <p class="eyebrow mono">FOR COMPANIES</p>
+          <h3 class="split__title" data-float-title>I need<br /><em class="serif">talent.</em></h3>
+          <ul class="split__list">
+            <li>Vetted shortlists in 14 days</li>
+            <li>Structured, bias-checked screening</li>
+            <li>Guarantee-backed placements</li>
+          </ul>
+          <a href="#contact" class="btn btn--bone" data-magnetic>Hire Talent <b class="btn__arr">→</b></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wipe" data-wipe="ink" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 9. TESTIMONIALS ==================== -->
+    <section class="voices sec-dark" id="voices" aria-label="Testimonials">
+      <div class="voices__head">
+        <p class="eyebrow mono" data-reveal>// 03 — SIGNED &amp; HIRED</p>
+        <h2 class="stitle" data-reveal>They Were<br /><em class="serif">Seriously</em> Placed.</h2>
+      </div>
+      <div class="voices__carousel" id="voicesCarousel"><div class="voices__track" id="voicesTrack"></div></div>
+      <div class="voices__dots" id="voicesDots" role="tablist" aria-label="Testimonial slides"></div>
+    </section>
+
+    <div class="wipe" data-wipe="paper" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 10. FAQ ==================== -->
+    <section class="faq sec-light" aria-label="Frequently asked questions">
+      <div class="faq__head">
+        <p class="eyebrow mono" data-reveal>// 04 — STRAIGHT ANSWERS</p>
+        <h2 class="stitle" data-reveal>Asked.<br /><em class="serif">Answered.</em></h2>
+      </div>
+      <div class="faq__list" id="faqList"></div>
+    </section>
+
+    <div class="wipe" data-wipe="ink" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 11. CTA — THE OFFER LETTER ==================== -->
+    <section class="launch sec-dark" id="launch" aria-label="Start your placement">
+      <canvas class="launch__particles" id="ctaParticles" aria-hidden="true"></canvas>
+      <div class="wm wm--dark" data-wm aria-hidden="true">HIRED</div>
+      <div class="launch__inner">
+        <h2 class="launch__title" id="launchTitle">YOUR OFFER LETTER IS WAITING.</h2>
+        <div class="letter" id="letter" aria-hidden="true">
+          <span class="letter__head mono">OFFER OF EMPLOYMENT</span>
+          <span class="letter__bar" style="width:82%"></span>
+          <span class="letter__bar" style="width:64%"></span>
+          <span class="letter__bar" style="width:75%"></span>
+          <span class="letter__bar" style="width:48%"></span>
+          <svg class="letter__sig" viewBox="0 0 200 50"><path id="sigPath" d="M8,36 C24,10 30,44 44,30 C56,18 58,40 74,30 C88,22 90,38 106,28 C118,20 122,40 140,26 C150,18 156,34 170,24 C178,18 186,26 192,20" /></svg>
+          <span class="letter__sign mono">AUTHORIZED — DVDAS JOBS</span>
+        </div>
+        <a href="#contact" class="btn btn--bone btn--xl" data-magnetic>Start Your Placement</a>
+        <button class="launch__mail mono" id="copyMail" data-magnetic aria-label="Copy email address">talent@dvdasjobs.com</button>
+      </div>
+      <div class="toast mono" id="toast" role="status" aria-live="polite">COPIED</div>
+    </section>
+
+    <div class="wipe" data-wipe="paper" aria-hidden="true"><div class="wipe__panel"></div></div>
+
+    <!-- ==================== 12. CONTACT ==================== -->
+    <section class="contact sec-light" id="contact" aria-label="Contact">
+      <div class="contact__panel">
+        <form class="contact__form" id="contactForm" novalidate>
+          <p class="eyebrow mono" data-reveal>// 05 — CONTACT</p>
+          <h2 class="stitle" data-reveal>Tell us where<br />you’re <em class="serif">headed.</em></h2>
+          <div class="seg" role="radiogroup" aria-label="I am a">
+            <span class="seg__knob" id="segKnob" aria-hidden="true"></span>
+            <button type="button" class="seg__opt mono is-active" data-seg="candidate" aria-pressed="true">CANDIDATE</button>
+            <button type="button" class="seg__opt mono" data-seg="company" aria-pressed="false">COMPANY</button>
+          </div>
+          <div class="field">
+            <input type="text" id="fName" name="name" required autocomplete="name" placeholder=" " />
+            <label for="fName">Your name</label>
+            <span class="field__err">Please enter your name</span>
+          </div>
+          <div class="field">
+            <input type="email" id="fEmail" name="email" required autocomplete="email" placeholder=" " />
+            <label for="fEmail">Email address</label>
+            <span class="field__err">Enter a valid email</span>
+          </div>
+          <div class="field">
+            <textarea id="fMsg" name="message" rows="3" required placeholder=" "></textarea>
+            <label for="fMsg">Where are you headed?</label>
+            <span class="field__err">Tell us a little more</span>
+          </div>
+          <button type="submit" class="btn btn--ink contact__submit" id="submitBtn">
+            <span class="contact__label">Send Message</span>
+            <span class="contact__spinner" aria-hidden="true"></span>
+            <svg class="contact__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          </button>
+        </form>
+        <aside class="contact__aside">
+          <div class="contact__block"><span class="contact__k mono">DVDAS HQ</span><span class="contact__v mono" id="clock">--:--:--</span></div>
+          <div class="contact__block"><span class="contact__k mono">RESPONSE</span><span class="contact__badge"><i></i>Replies within 24h</span></div>
+          <div class="contact__block"><span class="contact__k mono">CANDIDATES</span><span class="contact__v">No cost. Ever.</span></div>
+          <div class="contact__social">
+            <a href="#" data-magnetic aria-label="LinkedIn">IN</a>
+            <a href="#" data-magnetic aria-label="X">X</a>
+            <a href="#" data-magnetic aria-label="Instagram">IG</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 13. FOOTER ==================== -->
+  <footer class="footer sec-dark" aria-label="Footer">
+    <div class="footer__cols">
+      <div class="footer__brand">
+        <span class="footer__logo">DVDAS<span class="blink">.</span></span>
+        <p>Serious careers, seriously placed. A professional job consultancy for people and companies who mean it.</p>
+      </div>
+      <div class="footer__col">
+        <h4 class="mono">SERVICES</h4>
+        <a href="#services">Career Placement</a>
+        <a href="#services">Resume Engineering</a>
+        <a href="#services">Interview Mastery</a>
+        <a href="#services">Corporate Hiring</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="mono">COMPANY</h4>
+        <a href="#results">Results</a>
+        <a href="#voices">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer__col footer__news">
+        <h4 class="mono">NEWSLETTER</h4>
+        <form class="footer__form" id="newsForm">
+          <input type="email" placeholder="you@serious.com" aria-label="Email for newsletter" required />
+          <button type="submit" aria-label="Subscribe">→</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer__wm" id="footerWm" aria-hidden="true"></div>
+    <div class="footer__bar">
+      <span class="mono">© 2026 DVDAS JOBS — SERIOUSLY PLACED.</span>
+      <button class="back-top" id="backTop" aria-label="Back to top">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="back-top__t" cx="18" cy="18" r="16"/><circle class="back-top__r" id="backRing" cx="18" cy="18" r="16"/></svg>
+        <i></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- ==================== SCRIPTS (CDN) ==================== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
