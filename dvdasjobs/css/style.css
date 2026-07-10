@@ -290,7 +290,7 @@ ul { list-style: none; }
 /* ============================================================
    MARQUEE
    ============================================================ */
-.trust { padding: 4rem 0 5rem; background: var(--paper); position: relative; z-index: 2; }
+.trust { padding: 4rem 0 5rem; background: var(--paper); position: relative; z-index: 2; overflow: hidden; }
 .trust__label { text-align: center; font-size: 0.62rem; letter-spacing: 0.3em; color: var(--gray-1); margin-bottom: 2.2rem; }
 .marquee { display: flex; width: max-content; will-change: transform; }
 .marquee + .marquee { margin-top: 1.4rem; }
@@ -632,6 +632,9 @@ ul { list-style: none; }
   .nav__links, .nav__cta { display: none; }
   .nav__burger { display: block; }
   .svc { position: static; }
+  .process__track { flex-direction: column; width: auto; padding-bottom: 3rem; }
+  .step { width: auto; }
+  .process__line { display: none; }
   .results__row { grid-template-columns: 1fr 1fr; }
   .rstat + .rstat::before { display: none; }
   .split { flex-direction: column; }
