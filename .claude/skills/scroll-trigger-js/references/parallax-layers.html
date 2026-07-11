@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pattern: Multi-Layer Depth Parallax</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: #0b0b12; color: #f4f4f8; }
+  .spacer { height: 50vh; display: grid; place-items: center; opacity: .5; }
+  .parallax-stage { height: 100vh; position: relative; overflow: hidden; }
+  .layer { position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: clamp(1.5rem, 4vw, 3rem); }
+  .layer-bg { background: radial-gradient(circle at 30% 30%, #1e293b, #0b0b12 70%); }
+  .layer-mid { color: rgba(244,244,248,.15); font-size: clamp(4rem, 14vw, 10rem); font-weight: 800; }
+  .layer-fg { color: #f4f4f8; }
+</style>
+</head>
+<body>
+  <div class="spacer">scroll ↓</div>
+
+  <section class="parallax-stage" id="stage">
+    <div class="layer layer-bg" data-speed="0.2"></div>
+    <div class="layer layer-mid" data-speed="0.5">DEPTH</div>
+    <div class="layer layer-fg" data-speed="1">Foreground Content</div>
+  </section>
+
+  <div class="spacer">scroll continues ↓</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pattern: each layer moves at a different fraction of scroll distance
+    // (read from data-speed), all driven by one shared, scrubbed
+    // ScrollTrigger on the stage — layers with speed < 1 lag behind real
+    // scroll, producing the depth illusion. speed = 1 means "moves with
+    // the page" (no offset).
+    document.querySelectorAll("#stage .layer").forEach((layer) => {
+      const speed = Number(layer.dataset.speed);
+      const travel = 200 * (1 - speed); // px of parallax offset over the stage's scroll range
+
+      gsap.fromTo(layer, { y: -travel / 2 }, {
+        y: travel / 2,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#stage",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+  </script>
+</body>
+</html>

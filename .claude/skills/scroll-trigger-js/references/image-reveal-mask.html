@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pattern: Clip-Path Reveal on Scroll</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: #0f0f14; color: #f4f4f8; }
+  .spacer { height: 50vh; display: grid; place-items: center; opacity: .5; }
+  .reveal-wrap { max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem; }
+  .reveal-media { width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
+    clip-path: inset(0 45% 0 45% round 16px);
+    background: linear-gradient(135deg,#f97316,#ec4899,#8b5cf6);
+    display: grid; place-items: center; font-size: 1.5rem; }
+</style>
+</head>
+<body>
+  <div class="spacer">scroll ↓</div>
+
+  <div class="reveal-wrap">
+    <div class="reveal-media" id="media">Revealed Content</div>
+  </div>
+
+  <div class="spacer">scroll continues ↓</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pattern: animate clip-path inset() values directly. GSAP can tween
+    // CSS custom properties too if you prefer a CSS-driven clip-path
+    // built from var(--l)/var(--r); tweening the property string directly
+    // (as here) is simpler for a one-off reveal.
+    gsap.fromTo("#media",
+      { clipPath: "inset(0% 45% 0% 45% round 16px)" },
+      {
+        clipPath: "inset(0% 0% 0% 0% round 16px)",
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#media",
+          start: "top 85%",
+          end: "top 35%",
+          scrub: 1
+        }
+      }
+    );
+  </script>
+</body>
+</html>

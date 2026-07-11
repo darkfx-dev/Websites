@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pattern: Fixed Scroll Progress Bar</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: #0f0f14; color: #f4f4f8; }
+  .progress-track { position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+    background: rgba(255,255,255,.08); z-index: 10; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#22d3ee,#7c3aed); }
+  .content { max-width: 640px; margin: 0 auto; padding: 8rem 1.5rem; }
+  .content section { min-height: 60vh; display: grid; place-items: center;
+    border-top: 1px solid rgba(255,255,255,.08); font-size: 1.5rem; opacity: .8; }
+</style>
+</head>
+<body>
+  <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
+
+  <div class="content">
+    <section>Section A</section>
+    <section>Section B</section>
+    <section>Section C</section>
+    <section>Section D</section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pattern: a single full-document ScrollTrigger whose onUpdate
+    // drives a width tween — cheaper than re-querying scroll position
+    // on a raw `scroll` listener, and frame-synced by GSAP's ticker.
+    gsap.to("#fill", {
+      width: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: document.body,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.3
+      }
+    });
+  </script>
+</body>
+</html>

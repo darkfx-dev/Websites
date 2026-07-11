@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pattern: Animated Counter on Enter</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: #101014; color: #f4f4f8; }
+  .spacer { height: 60vh; display: grid; place-items: center; opacity: .5; }
+  .stats { max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
+  .stat .num { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: #22d3ee; }
+  .stat .label { opacity: .7; margin-top: .25rem; }
+</style>
+</head>
+<body>
+  <div class="spacer">scroll ↓</div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><div class="num" data-target="128">0</div><div class="label">Projects</div></div>
+    <div class="stat"><div class="num" data-target="97">0</div><div class="label">Happy Clients</div></div>
+    <div class="stat"><div class="num" data-target="5400">0</div><div class="label">Commits</div></div>
+  </div>
+
+  <div class="spacer">scroll continues ↓</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pattern: tween a plain-object proxy's numeric value and write the
+    // rounded result into textContent on every tick — GSAP can't directly
+    // interpolate innerText, so route the tween through onUpdate.
+    document.querySelectorAll("#stats .num").forEach((el) => {
+      const target = Number(el.dataset.target);
+      const proxy = { value: 0 };
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 85%",
+        once: true,
+        onEnter() {
+          gsap.to(proxy, {
+            value: target,
+            duration: 1.4,
+            ease: "power1.out",
+            onUpdate() {
+              el.textContent = Math.round(proxy.value).toLocaleString();
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

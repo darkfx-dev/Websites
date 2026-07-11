@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pattern: Pin + Progress Reveal</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: #0b0b12; color: #f4f4f8; }
+  .spacer { height: 60vh; display: grid; place-items: center; opacity: .5; }
+  .pin-stage { height: 100vh; display: grid; place-items: center; overflow: hidden; position: relative; }
+  .pin-stage .frame { width: min(70vw, 640px); aspect-ratio: 16/9; border-radius: 12px;
+    background: linear-gradient(135deg,#6d5efc,#22d3ee); display: grid; place-items: center;
+    font-size: clamp(1.2rem, 3vw, 2rem); }
+  .pin-stage .steps { position: absolute; inset: auto 4vw 4vh auto; display: flex; gap: .5rem; }
+  .pin-stage .steps span { width: 10px; height: 10px; border-radius: 50%; background: #4b4b63; }
+  .pin-stage .steps span.active { background: #22d3ee; }
+</style>
+</head>
+<body>
+  <div class="spacer">scroll ↓</div>
+
+  <section class="pin-stage" id="stage">
+    <div class="frame" id="frameText">Step 1</div>
+    <div class="steps" id="steps">
+      <span class="active"></span><span></span><span></span><span></span>
+    </div>
+  </section>
+
+  <div class="spacer">scroll continues ↓</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pattern: pin a section for N viewport-heights of scroll, then step
+    // through discrete states as scroll progress crosses fractional thresholds.
+    const labels = ["Step 1", "Step 2", "Step 3", "Step 4"];
+    const dots = document.querySelectorAll("#steps span");
+    const frameText = document.getElementById("frameText");
+
+    ScrollTrigger.create({
+      trigger: "#stage",
+      start: "top top",
+      end: "+=300%",       // pin duration = 3 viewport-heights of scroll
+      pin: true,
+      scrub: true,
+      onUpdate(self) {
+        const step = Math.min(labels.length - 1, Math.floor(self.progress * labels.length));
+        frameText.textContent = labels[step];
+        dots.forEach((d, i) => d.classList.toggle("active", i === step));
+      }
+    });
+  </script>
+</body>
+</html>
