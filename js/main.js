@@ -1,4 +1,8 @@
 import * as THREE from "three";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -15,7 +19,7 @@ gsap.ticker.add((time) => {
 gsap.ticker.lagSmoothing(0);
 
 /* ---------- SplitText hero reveal ---------- */
-const heroSplit = new SplitText(".hero__title", { type: "chars" });
+const heroSplit = new SplitText(".hero__title", { type: "chars", charsClass: "char" });
 
 gsap.from(heroSplit.chars, {
   yPercent: 120,
