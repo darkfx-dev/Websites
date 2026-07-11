@@ -9,7 +9,6 @@
   const frame = document.querySelector(".hero-video-frame");
   const videoA = document.getElementById("hero-video-a");
   const videoB = document.getElementById("hero-video-b");
-  const posterFallback = document.getElementById("hero-poster-fallback");
   const heroSection = document.getElementById("hero");
 
   if (!frame || !videoA || !videoB || !heroSection) return;
@@ -59,16 +58,31 @@
     rafId = requestAnimationFrame(tick);
   }
 
+  let retryArmed = false;
+
+  // some sandboxed/embedded viewers block autoplay outright even when muted —
+  // if that happens, retry on the first real user interaction instead of
+  // giving up and sitting on the static poster forever
+  function armInteractionRetry() {
+    if (retryArmed) return;
+    retryArmed = true;
+    const retry = () => {
+      retryArmed = false;
+      const p = videoA.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    ["pointerdown", "touchstart", "keydown", "wheel", "scroll"].forEach((evt) =>
+      window.addEventListener(evt, retry, { once: true, passive: true })
+    );
+  }
+
   function start() {
     if (running) return;
     running = true;
     const playPromise = videoA.play();
     if (playPromise && playPromise.catch) {
       playPromise.catch(() => {
-        // autoplay was blocked (rare with muted+playsinline, but guard anyway)
-        frame.hidden = true;
-        posterFallback.hidden = false;
-        running = false;
+        armInteractionRetry();
       });
     }
     rafId = requestAnimationFrame(tick);

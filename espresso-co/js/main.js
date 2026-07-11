@@ -1,6 +1,4 @@
 (function () {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger, window.Draggable);
   }
@@ -44,14 +42,6 @@
     const startHero = () => window.EspressoHeroVideo && window.EspressoHeroVideo.start();
 
     document.body.style.overflow = "hidden";
-
-    if (prefersReducedMotion) {
-      preloader.style.display = "none";
-      curtain.style.display = "none";
-      document.body.style.overflow = "";
-      startHero();
-      return;
-    }
 
     const len = markPath.getTotalLength();
     markPath.style.strokeDasharray = len;
@@ -107,7 +97,7 @@
      1b. Ambient cursor glow — warm light trailing the pointer
   --------------------------------------------------------------*/
   function initCursorGlow() {
-    if (prefersReducedMotion || window.matchMedia("(hover: none)").matches) return;
+    if (window.matchMedia("(hover: none)").matches) return;
     const glow = document.createElement("div");
     glow.id = "cursor-glow";
     glow.setAttribute("aria-hidden", "true");
@@ -133,7 +123,6 @@
      2. Magnetic hover-pull
   --------------------------------------------------------------*/
   function initMagnetic() {
-    if (prefersReducedMotion) return;
     const RADIUS = 80;
     document.querySelectorAll("[data-magnetic]").forEach((el) => {
       el.classList.add("magnetic");
@@ -179,10 +168,6 @@
     );
     targets.forEach((el) => {
       const spans = wrapMaskWords(el);
-      if (prefersReducedMotion) {
-        gsap.set(spans, { y: 0 });
-        return;
-      }
       gsap.set(spans, { y: "110%" });
       ScrollTrigger.create({
         trigger: el,
@@ -198,10 +183,6 @@
   --------------------------------------------------------------*/
   function initHeroHeadline() {
     const spans = document.querySelectorAll("#hero .mask-word > span");
-    if (prefersReducedMotion) {
-      gsap.set(spans, { y: 0 });
-      return;
-    }
     gsap.set(spans, { y: "110%" });
     // fires right after the curtain wipe hands off to the now-playing video
     gsap.to(spans, {
@@ -234,18 +215,13 @@
 
     gsap.set(wipe, { yPercent: 100 });
 
-    if (prefersReducedMotion) {
-      wipe.remove();
-      return;
-    }
-
     gsap
       .timeline({
         scrollTrigger: {
           trigger: "#hero",
           start: "bottom bottom",
           end: "+=100%",
-          scrub: 0.7,
+          scrub: 0.3,
         },
       })
       .to(wipe, { yPercent: 0, ease: "none" })
@@ -276,7 +252,6 @@
 
     // first-appearance entrance — each card rises and settles into place
     cards.forEach((card, i) => {
-      if (prefersReducedMotion) return;
       gsap.from(card, {
         opacity: 0,
         y: 60,
@@ -287,9 +262,8 @@
       });
     });
 
-    // outgoing card scales/dims as the next one slides over it — damped
-    // with a short gsap.to instead of an instant gsap.set for a smoother,
-    // trailing feel rather than a value that snaps 1:1 with the scrollbar
+    // outgoing card scales/dims as the next one slides over it — tied
+    // directly to scroll progress so it tracks the scrollbar 1:1
     stickies.forEach((sticky, i) => {
       if (i === 0) return;
       const prevCard = cards[i - 1];
@@ -297,13 +271,11 @@
         trigger: sticky,
         start: "top bottom",
         end: "top top",
+        scrub: true,
         onUpdate: (self) => {
-          gsap.to(prevCard, {
+          gsap.set(prevCard, {
             scale: 1 - self.progress * 0.08,
             filter: `brightness(${1 - self.progress * 0.45})`,
-            duration: 0.35,
-            ease: "power1.out",
-            overwrite: "auto",
           });
         },
       });
@@ -314,7 +286,7 @@
      5b. Roast card tilt — subtle depth on pointer movement
   --------------------------------------------------------------*/
   function initCardTilt() {
-    if (prefersReducedMotion || window.matchMedia("(hover: none)").matches) return;
+    if (window.matchMedia("(hover: none)").matches) return;
     document.querySelectorAll(".stack-card-media").forEach((media) => {
       const texture = media.querySelector(".roast-texture");
       if (!texture) return;
@@ -347,7 +319,7 @@
           trigger: layer.parentElement,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1.2,
+          scrub: 0.4,
         },
       });
     });
@@ -364,7 +336,7 @@
         trigger: "#ritual",
         start: "top top",
         end: "+=140%",
-        scrub: 0.8,
+        scrub: 0.3,
         pin: true,
       },
     });
@@ -398,10 +370,10 @@
         trigger: section,
         start: "top top",
         end: () => `+=${section.offsetHeight - window.innerHeight}`,
-        scrub: 0.6,
+        scrub: 0.25,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          gsap.to(fill, { scaleX: self.progress, duration: 0.3, ease: "power1.out", overwrite: "auto" });
+          gsap.set(fill, { scaleX: self.progress });
           const litCount = Math.round(self.progress * steps.length);
           steps.forEach((step, i) => step.classList.toggle("is-lit", i < litCount));
         },
@@ -425,21 +397,15 @@
 
           gsap.set(divider, { scaleY: 0 });
           gsap.to(divider, { scaleY: 1, duration: 0.6, ease: "power2.out" });
-          if (!prefersReducedMotion) {
-            gsap.from(stat, { opacity: 0, y: 26, duration: 0.7, ease: "power2.out" });
-          }
+          gsap.from(stat, { opacity: 0, y: 26, duration: 0.7, ease: "power2.out" });
 
-          if (prefersReducedMotion) {
-            numEl.textContent = target;
-          } else {
-            const counter = { val: 0 };
-            gsap.to(counter, {
-              val: target,
-              duration: 1.4,
-              ease: "power2.out",
-              onUpdate: () => (numEl.textContent = Math.round(counter.val)),
-            });
-          }
+          const counter = { val: 0 };
+          gsap.to(counter, {
+            val: target,
+            duration: 1.4,
+            ease: "power2.out",
+            onUpdate: () => (numEl.textContent = Math.round(counter.val)),
+          });
           io.unobserve(stat);
         });
       },
@@ -480,7 +446,6 @@
      9b. Testimonials — stagger entrance for the cards themselves
   --------------------------------------------------------------*/
   function initTestimonialsReveal() {
-    if (prefersReducedMotion) return;
     const cards = gsap.utils.toArray(".testi-card");
     if (!cards.length) return;
     gsap.from(cards, {
@@ -499,7 +464,6 @@
      10. FAQ accordion
   --------------------------------------------------------------*/
   function initFaqReveal() {
-    if (prefersReducedMotion) return;
     const items = gsap.utils.toArray(".faq-item");
     if (!items.length) return;
     gsap.from(items, {
@@ -552,7 +516,7 @@
     resize();
     window.addEventListener("resize", resize);
 
-    const particles = Array.from({ length: prefersReducedMotion ? 0 : 36 }, () => ({
+    const particles = Array.from({ length: 36 }, () => ({
       x: Math.random(),
       y: Math.random(),
       r: 30 + Math.random() * 90,
@@ -585,27 +549,25 @@
     );
     io.observe(section);
 
-    if (!prefersReducedMotion) {
-      const letters = section.querySelectorAll(".letter-lift");
-      section.addEventListener("mousemove", (e) => {
-        const rect = section.getBoundingClientRect();
-        letters.forEach((letter) => {
-          const lr = letter.getBoundingClientRect();
-          const cx = lr.left + lr.width / 2 - rect.left;
-          const cy = lr.top + lr.height / 2 - rect.top;
-          const dx = e.clientX - rect.left - cx;
-          const dy = e.clientY - rect.top - cy;
-          const dist = Math.hypot(dx, dy);
-          const radius = 90;
-          if (dist < radius) {
-            const lift = (1 - dist / radius) * 14;
-            gsap.to(letter, { y: -lift, duration: 0.3, ease: "power2.out" });
-          } else {
-            gsap.to(letter, { y: 0, duration: 0.4, ease: "power2.out" });
-          }
-        });
+    const letters = section.querySelectorAll(".letter-lift");
+    section.addEventListener("mousemove", (e) => {
+      const rect = section.getBoundingClientRect();
+      letters.forEach((letter) => {
+        const lr = letter.getBoundingClientRect();
+        const cx = lr.left + lr.width / 2 - rect.left;
+        const cy = lr.top + lr.height / 2 - rect.top;
+        const dx = e.clientX - rect.left - cx;
+        const dy = e.clientY - rect.top - cy;
+        const dist = Math.hypot(dx, dy);
+        const radius = 90;
+        if (dist < radius) {
+          const lift = (1 - dist / radius) * 14;
+          gsap.to(letter, { y: -lift, duration: 0.3, ease: "power2.out" });
+        } else {
+          gsap.to(letter, { y: 0, duration: 0.4, ease: "power2.out" });
+        }
       });
-    }
+    });
   }
 
   /* -------------------------------------------------------------
@@ -615,10 +577,8 @@
     const btn = document.getElementById("back-to-top");
     if (!btn) return;
     btn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
-
-    if (prefersReducedMotion) return;
 
     gsap.from([".footer-grid", ".footer-bottom"], {
       opacity: 0,
@@ -632,7 +592,7 @@
     gsap.to(".footer-watermark", {
       yPercent: -12,
       ease: "none",
-      scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: 1 },
+      scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: 0.4 },
     });
   }
 
