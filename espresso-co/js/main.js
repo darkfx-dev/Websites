@@ -1,6 +1,7 @@
 (function () {
-  if (window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger, window.Draggable);
+  if (window.gsap) {
+    gsap.registerPlugin(ScrollTrigger, SplitText, ScrollSmoother, Draggable);
+    console.log("GSAP loaded, version:", gsap.version);
   }
 
   /* -------------------------------------------------------------
