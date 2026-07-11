@@ -14,14 +14,6 @@
 
   if (!frame || !videoA || !videoB || !heroSection) return;
 
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (prefersReducedMotion) {
-    frame.hidden = true;
-    posterFallback.hidden = false;
-    return;
-  }
-
   let active = videoA;
   let idle = videoB;
   let crossfading = false;
