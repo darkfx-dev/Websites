@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Espresso Co. — The Ritual of the Rise</title>
+<meta name="description" content="Espresso Co. — single-origin coffee, roasted for the ritual of the first rising sip." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230A0806'/%3E%3Cpath d='M28 45h44v14a22 22 0 0 1-22 22 22 22 0 0 1-22-22z' fill='none' stroke='%23C89666' stroke-width='4'/%3E%3Cpath d='M72 50h4a9 9 0 0 1 0 18h-4' fill='none' stroke='%23C89666' stroke-width='4'/%3E%3Cpath d='M40 40c0-6 6-6 6-12M52 40c0-6 6-6 6-12' stroke='%23E8C79A' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================= PRELOADER ============================= -->
+<div id="preloader" aria-hidden="true">
+  <svg viewBox="0 0 200 90" role="img" aria-label="Espresso Co.">
+    <path id="mark-path" d="M20 70 C20 40, 45 20, 75 20 C95 20, 100 35, 90 45 C80 55, 65 50, 65 38 M110 70 L110 20 M110 40 L150 40 M110 70 L150 20 M165 20 L165 70 M165 20 L185 20 M165 42 L182 42 M165 70 L185 70" />
+  </svg>
+  <div class="mark-line"></div>
+</div>
+<div id="curtain" aria-hidden="true"></div>
+
+<!-- ============================= NAVBAR ============================= -->
+<header class="navbar" id="navbar">
+  <a href="#hero" class="wordmark">Espresso&nbsp;Co.</a>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#origins">Origins</a></li>
+      <li><a href="#ritual">Ritual</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+  <a href="#cta" class="btn btn-primary magnetic" data-magnetic>Find a Roastery</a>
+</header>
+
+<main id="main">
+
+  <!-- ============================= 2. HERO ============================= -->
+  <section id="hero" aria-label="Hero">
+    <div class="hero-video-frame">
+      <video id="hero-video-a" class="is-active" muted loop playsinline preload="auto" poster="assets/video/espresso-hero-poster.jpg">
+        <source src="assets/video/espresso-hero.mp4" type="video/mp4" />
+      </video>
+      <video id="hero-video-b" muted loop playsinline preload="auto" poster="assets/video/espresso-hero-poster.jpg">
+        <source src="assets/video/espresso-hero.mp4" type="video/mp4" />
+      </video>
+      <img class="hero-poster" id="hero-poster-fallback" src="assets/video/espresso-hero-poster.jpg" alt="A white cup of espresso with crema, steam curling above it against a warm dark background" hidden />
+    </div>
+    <div class="hero-vignette"></div>
+
+    <div class="hero-content">
+      <p class="eyebrow hero-eyebrow">Single-Origin &middot; Slow Roasted</p>
+      <h1 class="hero-headline">
+        <span class="mask-word"><span>Every</span></span>
+        <span class="mask-word"><span>cup</span></span>
+        <span class="mask-word"><span>begins</span></span>
+        <span class="mask-word"><span>with</span></span>
+        <span class="mask-word"><span class="accent">a&nbsp;rise.</span></span>
+      </h1>
+      <p class="hero-sub">Steam curls, crema blooms, and for ten quiet seconds nothing else in the room matters. That's the moment Espresso&nbsp;Co. is built around.</p>
+      <div class="hero-cta-row">
+        <a href="#origins" class="btn btn-primary magnetic" data-magnetic>Explore the Roasts</a>
+        <a href="#ritual" class="btn btn-ghost magnetic" data-magnetic>Read the Ritual</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span class="stem"></span>Scroll</div>
+  </section>
+
+  <!-- ==================== 3. LIQUID MORPH — real 300-frame sequence ==================== -->
+  <section id="liquid-morph" aria-label="The rise, in detail">
+    <div class="liquid-sticky">
+      <canvas id="liquid-canvas" width="1280" height="720" role="img" aria-label="Espresso rising from the cup and curling into a ribboned knot above the crema"></canvas>
+      <div class="liquid-caption">
+        <span class="eyebrow">Frame by frame &middot; shot, not simulated</span>
+        <p>The rise, slowed down until you can see every twist.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. ORIGINS / ROAST SHOWCASE  [ZIP-READY SLOT] ==================== -->
+  <section id="origins" aria-label="Origins and roasts">
+    <div class="parallax-layer" data-speed="0.25" aria-hidden="true"></div>
+    <div class="parallax-layer parallax-layer-b" data-speed="0.45" aria-hidden="true"></div>
+    <div class="origins-intro">
+      <p class="eyebrow">Origins</p>
+      <h2>Four roasts, one obsession.</h2>
+      <p>Every bag is dated, every batch is small. This is where the beans declare themselves.</p>
+    </div>
+
+    <div class="stack-track">
+      <div class="stack-card-sticky">
+        <article class="stack-card glass-dark" data-roast="ethiopia">
+          <div class="stack-card-media">
+            <div class="roast-texture" style="background-image: linear-gradient(135deg, #E8C79A, #C89666 45%, #7A4C2E 100%);"></div>
+          </div>
+          <div class="roast-card-body">
+            <span class="roast-level">Light Roast &middot; Washed</span>
+            <h3>Ethiopian Yirgacheffe</h3>
+            <p>Bergamot, jasmine, a finish like black tea. Bright enough to make dark roast drinkers double-take.</p>
+            <span class="zip-flag">[ZIP-READY SLOT — real pour-over / roasting footage drops in here]</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack-card-sticky">
+        <article class="stack-card glass-dark" data-roast="blend">
+          <div class="stack-card-media">
+            <div class="roast-texture" style="background-image: linear-gradient(135deg, #A9713F, #5C3820 55%, #2B1A12 100%);"></div>
+          </div>
+          <div class="roast-card-body">
+            <span class="roast-level">Dark Roast &middot; Signature Blend</span>
+            <h3>House Espresso Blend</h3>
+            <p>Cocoa nib, brown sugar, a long roasted-walnut finish. Built for milk, but never lost in it.</p>
+            <span class="zip-flag">[ZIP-READY SLOT — real pour-over / roasting footage drops in here]</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack-card-sticky">
+        <article class="stack-card glass-dark" data-roast="decaf">
+          <div class="stack-card-media">
+            <div class="roast-texture" style="background-image: linear-gradient(135deg, #D9B98C, #8A5C36 50%, #3E271A 100%);"></div>
+          </div>
+          <div class="roast-card-body">
+            <span class="roast-level">Medium Roast &middot; Swiss Water Decaf</span>
+            <h3>Decaf Reserve</h3>
+            <p>All the ritual, none of the 2am regret. Toffee and toasted almond, full body intact.</p>
+            <span class="zip-flag">[ZIP-READY SLOT — real pour-over / roasting footage drops in here]</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack-card-sticky">
+        <article class="stack-card glass-dark" data-roast="seasonal">
+          <div class="stack-card-media">
+            <div class="roast-texture" style="background-image: linear-gradient(135deg, #E3A65C, #B8935A 45%, #4A2E1C 100%);"></div>
+          </div>
+          <div class="roast-card-body">
+            <span class="roast-level">Medium-Dark &middot; Seasonal Lot</span>
+            <h3>Harvest Reserve</h3>
+            <p>A rotating single farm lot, roasted in batches under 12kg. Ask what's pouring this month.</p>
+            <span class="zip-flag">[ZIP-READY SLOT — real pour-over / roasting footage drops in here]</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= 5. THE RITUAL ============================= -->
+  <section id="ritual" aria-label="The Ritual">
+    <div class="parallax-layer" data-speed="0.3" aria-hidden="true"></div>
+    <p class="ritual-text" id="ritual-text">
+      <span class="ritual-word">Coffee</span> <span class="ritual-word">is</span> <span class="ritual-word">not</span> <span class="ritual-word">consumed.</span>
+      <span class="ritual-word">It</span> <span class="ritual-word">is</span> <span class="ritual-word">observed,</span>
+      <span class="ritual-word">then</span> <span class="ritual-word">earned,</span>
+      <span class="ritual-word">then,</span> <span class="ritual-word">finally,</span>
+      <span class="ritual-word is-gold">savored.</span>
+    </p>
+  </section>
+
+  <!-- ============================= 6. PROCESS ============================= -->
+  <section id="process" aria-label="Our process">
+    <div class="process-sticky">
+      <div class="process-heading">
+        <p class="eyebrow">Process</p>
+        <h2>Bean to cup.</h2>
+      </div>
+      <div class="process-track" id="process-track">
+        <div class="process-step" data-step="1">
+          <span class="process-num">01</span>
+          <h3>Source</h3>
+          <p>Direct-trade relationships with growers across three continents, visited in person every season.</p>
+          <div class="process-line"></div>
+        </div>
+        <div class="process-step" data-step="2">
+          <span class="process-num">02</span>
+          <h3>Roast</h3>
+          <p>Small-batch drum roasting, profiled per lot, logged to the minute and the degree.</p>
+          <div class="process-line"></div>
+        </div>
+        <div class="process-step" data-step="3">
+          <span class="process-num">03</span>
+          <h3>Grind</h3>
+          <p>Ground to order on burr grinders calibrated daily — never before the bag is opened.</p>
+          <div class="process-line"></div>
+        </div>
+        <div class="process-step" data-step="4">
+          <span class="process-num">04</span>
+          <h3>Brew</h3>
+          <p>Espresso, pour-over, or French press — the ritual changes, the standard doesn't.</p>
+          <div class="process-line"></div>
+        </div>
+      </div>
+      <div class="process-progress"><div class="process-progress-fill" id="process-progress-fill"></div></div>
+    </div>
+  </section>
+
+  <!-- ============================= 7. STATS ============================= -->
+  <section id="stats" aria-label="Espresso Co. in numbers">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="divider"></div>
+        <div class="stat-num" data-count-to="184">0</div>
+        <div class="stat-label">Roast batches / month</div>
+        <span class="stat-flag">placeholder figure</span>
+      </div>
+      <div class="stat">
+        <div class="divider"></div>
+        <div class="stat-num" data-count-to="12">0</div>
+        <div class="stat-label">Origin countries sourced</div>
+        <span class="stat-flag">placeholder figure</span>
+      </div>
+      <div class="stat">
+        <div class="divider"></div>
+        <div class="stat-num" data-count-to="46">0</div>
+        <div class="stat-label">Cups served / minute*</div>
+        <span class="stat-flag">placeholder figure</span>
+      </div>
+      <div class="stat">
+        <div class="divider"></div>
+        <div class="stat-num" data-count-to="9">0</div>
+        <div class="stat-label">Years roasting</div>
+        <span class="stat-flag">placeholder figure</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= 8. TESTIMONIALS ============================= -->
+  <section id="testimonials" aria-label="Testimonials">
+    <div class="testimonials-head">
+      <p class="eyebrow">Word of Mouth</p>
+      <h2>What keeps people coming back.</h2>
+    </div>
+    <div class="carousel-viewport" id="carousel-viewport">
+      <div class="carousel-track" id="carousel-track">
+        <article class="testi-card glass-dark">
+          <span class="quote-glyph">&ldquo;</span>
+          <p class="quote">The Yirgacheffe changed how I think about light roast entirely. It tastes like someone actually visited the farm.</p>
+          <div class="testi-meta">
+            <div><div class="testi-name">Priya N.</div><div class="testi-role">Subscriber, 2 years</div></div>
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </article>
+        <article class="testi-card glass-dark">
+          <span class="quote-glyph">&ldquo;</span>
+          <p class="quote">Ordered the decaf out of guilt and now it's what I reach for after 6pm on purpose.</p>
+          <div class="testi-meta">
+            <div><div class="testi-name">Marcus D.</div><div class="testi-role">Roastery visitor</div></div>
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </article>
+        <article class="testi-card glass-dark">
+          <span class="quote-glyph">&ldquo;</span>
+          <p class="quote">The seasonal lot sells out every single time and every single time I understand why.</p>
+          <div class="testi-meta">
+            <div><div class="testi-name">Elena R.</div><div class="testi-role">Subscriber, 4 years</div></div>
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </article>
+        <article class="testi-card glass-dark">
+          <span class="quote-glyph">&ldquo;</span>
+          <p class="quote">House Blend is the only espresso I've found that survives being drowned in oat milk and still tastes like something.</p>
+          <div class="testi-meta">
+            <div><div class="testi-name">Tomás V.</div><div class="testi-role">Café owner</div></div>
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= 9. FAQ ============================= -->
+  <section id="faq" aria-label="Frequently asked questions">
+    <div class="faq-wrap">
+      <h2>Questions, answered.</h2>
+
+      <div class="faq-item is-open">
+        <h3><button class="faq-question" aria-expanded="true">
+          What brewing methods do your beans support?
+          <span class="faq-toggle" aria-hidden="true"></span>
+        </button></h3>
+        <div class="faq-answer">
+          <p>Every bag lists a recommended grind for espresso, pour-over, French press, and AeroPress, along with a suggested dose and ratio for each.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <h3><button class="faq-question" aria-expanded="false">
+          How does the subscription work?
+          <span class="faq-toggle" aria-hidden="true"></span>
+        </button></h3>
+        <div class="faq-answer">
+          <p>Choose a roast and a cadence — weekly, biweekly, or monthly. Skip, swap, or cancel anytime from your account, no phone calls required.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <h3><button class="faq-question" aria-expanded="false">
+          Where do the beans come from?
+          <span class="faq-toggle" aria-hidden="true"></span>
+        </button></h3>
+        <div class="faq-answer">
+          <p>Direct-trade lots from Ethiopia, Colombia, and Guatemala, sourced through relationships our roasters maintain in person, season over season.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <h3><button class="faq-question" aria-expanded="false">
+          How should I store my beans?
+          <span class="faq-toggle" aria-hidden="true"></span>
+        </button></h3>
+        <div class="faq-answer">
+          <p>Airtight, away from light and heat, and ideally finished within four weeks of the roast date printed on every bag.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= 10. CTA ============================= -->
+  <section id="cta" aria-label="Order">
+    <canvas id="cta-canvas"></canvas>
+    <div class="cta-content">
+      <h2 id="cta-headline">
+        <span class="letter-lift">Y</span><span class="letter-lift">o</span><span class="letter-lift">u</span><span class="letter-lift">r</span>&nbsp;<span class="letter-lift">n</span><span class="letter-lift">e</span><span class="letter-lift">x</span><span class="letter-lift">t</span>&nbsp;<span class="letter-lift">c</span><span class="letter-lift">u</span><span class="letter-lift">p</span>&nbsp;<span class="letter-lift">i</span><span class="letter-lift">s</span>&nbsp;<span class="letter-lift">w</span><span class="letter-lift">a</span><span class="letter-lift">i</span><span class="letter-lift">t</span><span class="letter-lift">i</span><span class="letter-lift">n</span><span class="letter-lift">g</span><span class="letter-lift">.</span>
+      </h2>
+      <a href="#" class="btn btn-primary magnetic" data-magnetic>Shop the Roasts</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer>
+  <div class="footer-watermark" aria-hidden="true">Espresso Co.</div>
+  <div class="footer-grid">
+    <div>
+      <p class="wordmark">Espresso&nbsp;Co.</p>
+      <p style="margin-top:1rem; color: var(--steam); max-width: 32ch;">Roasted in small batches, for people who notice the difference.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul class="footer-links">
+        <li><a href="#origins">Roasts</a></li>
+        <li><a href="#">Subscriptions</a></li>
+        <li><a href="#">Gift Sets</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#ritual">Our Ritual</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Newsletter</a></li>
+        <li><a href="#">Find a Roastery</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Espresso Co. All rights reserved.</span>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+  </div>
+</footer>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/vendor/Draggable.min.js"></script>
+<script src="js/hero-video.js" defer></script>
+<script src="js/scroll-sequence.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
