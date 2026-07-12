@@ -423,8 +423,10 @@
     <!-- Steps 4–5: section choreography + global polish -->
     <script src="js/main.js"></script>
 
-    <!-- STEP 6 RESERVED: js/seal.js → Three.js glass-and-gold seal,
-         mounts into #hero-seal-mount. Awaiting dedicated brief. -->
+    <!-- Step 6: Three.js glass-and-gold seal → #hero-seal-mount.
+         Local vendored build; page degrades to the CSS seal without it. -->
+    <script src="js/vendor/three.min.js"></script>
+    <script src="js/seal.js"></script>
 
 </body>
 </html>

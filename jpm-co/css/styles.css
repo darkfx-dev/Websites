@@ -425,7 +425,26 @@ a { color: inherit; }
 }
 @keyframes seal-turn { to { transform: rotate(360deg); } }
 
+/* When the Three.js seal mounts, the canvas takes over the disc visuals;
+   the placeholder sheds its chrome but keeps the DOM initials overlaid
+   (selectable, crisp, and readable by assistive tech). */
+#hero-seal-mount canvas {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+.hero__seal.has-webgl .hero__seal-placeholder {
+    background: none;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    pointer-events: none;
+}
+.hero__seal.has-webgl .hero__seal-placeholder::before { display: none; }
+
 .hero__seal-initials {
+    position: relative; /* stays above the WebGL canvas */
     font-family: var(--font-display);
     font-size: 2.6rem;
     color: var(--white);
