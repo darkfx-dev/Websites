@@ -39,6 +39,9 @@ body {
   background: var(--color-cream);
   color: var(--color-text-dark);
   line-height: var(--line-height-normal);
+  /* 100vw full-bleed sections include the scrollbar gutter on desktop;
+     clip that sliver rather than allowing a horizontal scrollbar */
+  overflow-x: hidden;
 }
 
 /* ===== Header & Navigation ===== */
@@ -261,14 +264,20 @@ main {
   font-size: 0.95rem;
 }
 
-/* ===== Services Section ===== */
+/* ===== Services Section — scroll-pinned stacking cards ===== */
 .services {
   background: var(--color-navy);
   color: var(--color-cream);
-  padding: var(--spacing-2xl) 0;
-  margin: 0 calc(-1 * var(--spacing-lg));
-  padding-left: var(--spacing-lg);
-  padding-right: var(--spacing-lg);
+  /* Explicit 100vw full-bleed (not negative margins): GSAP's pin
+     measures offsetWidth, and negative margins collapse during pinning */
+  width: 100vw;
+  margin: 0 0 0 calc((100% - 100vw) / 2);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  /* Fill the viewport while pinned so nothing peeks below the stack */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .services h2 {
@@ -277,39 +286,51 @@ main {
   color: var(--color-cream);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--spacing-xl);
+  text-align: center;
 }
 
+/* Stage that the cards stack within (absolute children) */
 .services-list {
+  position: relative;
   list-style: none;
   padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-xl);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 640px;
+  height: min(58vh, 440px);
 }
 
 .service {
-  padding: var(--spacing-lg);
-  background: rgba(245, 242, 234, 0.05);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  /* Opaque elevated surface: faint cream tint composited over navy
+     (palette tokens only) so a rising card cleanly covers the one beneath */
+  background: linear-gradient(
+      rgba(245, 242, 234, 0.06),
+      rgba(245, 242, 234, 0.06)
+    ),
+    var(--color-navy);
+  border: 1px solid rgba(245, 242, 234, 0.08);
   border-left: 3px solid var(--color-gold);
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-.service:hover {
-  background: rgba(245, 242, 234, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+  will-change: transform, opacity;
 }
 
 .service-title {
   font-family: var(--font-serif);
-  font-size: 1.3rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   color: var(--color-cream);
   margin: 0 0 var(--spacing-sm);
   font-weight: 600;
 }
 
 .service-desc {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: rgba(245, 242, 234, 0.85);
   margin: 0;
   line-height: var(--line-height-loose);

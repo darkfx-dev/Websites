@@ -74,3 +74,39 @@ if (aboutContent) {
     ease: "power2.out",
   });
 }
+
+/* ============================================================
+ * Section 2 — Services: scroll-pinned stacking cards.
+ * The section pins; as the user scrolls, each card rises from
+ * below to lay over the previous one (like a deck being dealt),
+ * while the card beneath scales down + dims for a sense of depth.
+ * Only transform + opacity are animated. Restrained on purpose.
+ * ============================================================ */
+const serviceCards = gsap.utils.toArray("#services .service");
+
+if (serviceCards.length > 1) {
+  // First card in place; the rest wait just below the stage.
+  serviceCards.forEach((card, i) => {
+    gsap.set(card, { zIndex: i, yPercent: i === 0 ? 0 : 110 });
+  });
+
+  const stackTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#services",
+      start: "top top",
+      // ~0.7 viewport of scroll per card feels calm, not frantic
+      end: () => "+=" + serviceCards.length * window.innerHeight * 0.7,
+      pin: true,
+      scrub: 0.6,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  serviceCards.forEach((card, i) => {
+    if (i === 0) return;
+    const prev = serviceCards[i - 1];
+    stackTl
+      .to(prev, { scale: 0.94, opacity: 0.5, ease: "none" }, i)
+      .to(card, { yPercent: 0, ease: "none" }, i);
+  });
+}
