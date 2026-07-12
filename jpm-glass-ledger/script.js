@@ -32,3 +32,22 @@ console.log("✓ Lenis initialized");
 
 // Verify Three.js loaded
 console.log("✓ Three.js version:", THREE.REVISION);
+
+/* ============================================================
+ * Hero headline — word-by-word reveal on page load
+ * (This is the only animated section in this step.)
+ * ============================================================ */
+const heroHeadline = document.querySelector("#hero-heading");
+
+if (heroHeadline) {
+  const splitHeadline = new SplitText(heroHeadline, { type: "words" });
+
+  gsap.from(splitHeadline.words, {
+    duration: 0.8,
+    opacity: 0,
+    y: 20,
+    stagger: 0.1,
+    ease: "power2.out",
+    delay: 0.3,
+  });
+}
