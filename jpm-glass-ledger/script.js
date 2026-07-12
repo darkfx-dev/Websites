@@ -110,3 +110,33 @@ if (serviceCards.length > 1) {
       .to(card, { yPercent: 0, ease: "none" }, i);
   });
 }
+
+/* ============================================================
+ * Section 3 — Team: swipeable carousel on mobile (<= 768px),
+ * plain single row on desktop. Swiper is created only when the
+ * mobile media query matches and destroyed when it stops
+ * matching, so desktop carries zero carousel behavior.
+ * ============================================================ */
+let teamSwiper = null;
+const teamMq = window.matchMedia("(max-width: 768px)");
+
+function syncTeamCarousel(mq) {
+  if (mq.matches && !teamSwiper) {
+    teamSwiper = new Swiper(".team-swiper", {
+      slidesPerView: 1.2,
+      centeredSlides: true,
+      spaceBetween: 16,
+      grabCursor: true,
+      pagination: {
+        el: ".team-swiper .swiper-pagination",
+        clickable: true,
+      },
+    });
+  } else if (!mq.matches && teamSwiper) {
+    teamSwiper.destroy(true, true);
+    teamSwiper = null;
+  }
+}
+
+syncTeamCarousel(teamMq);
+teamMq.addEventListener("change", syncTeamCarousel);

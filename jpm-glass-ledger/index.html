@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JPM &amp; Co. — Chartered Accountants</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1D33'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='14' font-weight='700' fill='%23C9A961' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E" />
+  <!-- Swiper (team carousel on mobile) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -97,28 +99,32 @@
     <!-- 4. Team -->
     <section id="team" class="team" aria-labelledby="team-heading">
       <h2 id="team-heading">[Team heading placeholder]</h2>
-      <ul class="team-list">
-        <li class="team-member">
-          <span class="team-avatar" aria-hidden="true">JP</span>
-          <h3 class="team-name">[Full name placeholder]</h3>
-          <p class="team-role">[Role placeholder]</p>
-        </li>
-        <li class="team-member">
-          <span class="team-avatar" aria-hidden="true">MC</span>
-          <h3 class="team-name">[Full name placeholder]</h3>
-          <p class="team-role">[Role placeholder]</p>
-        </li>
-        <li class="team-member">
-          <span class="team-avatar" aria-hidden="true">AR</span>
-          <h3 class="team-name">[Full name placeholder]</h3>
-          <p class="team-role">[Role placeholder]</p>
-        </li>
-        <li class="team-member">
-          <span class="team-avatar" aria-hidden="true">SL</span>
-          <h3 class="team-name">[Full name placeholder]</h3>
-          <p class="team-role">[Role placeholder]</p>
-        </li>
-      </ul>
+      <!-- Swiper carousel below 768px; plain single row on desktop -->
+      <div class="team-swiper swiper">
+        <ul class="team-list swiper-wrapper">
+          <li class="team-member swiper-slide">
+            <span class="team-avatar" aria-hidden="true">JP</span>
+            <h3 class="team-name">[Full name placeholder]</h3>
+            <p class="team-role">[Role placeholder]</p>
+          </li>
+          <li class="team-member swiper-slide">
+            <span class="team-avatar" aria-hidden="true">MC</span>
+            <h3 class="team-name">[Full name placeholder]</h3>
+            <p class="team-role">[Role placeholder]</p>
+          </li>
+          <li class="team-member swiper-slide">
+            <span class="team-avatar" aria-hidden="true">AR</span>
+            <h3 class="team-name">[Full name placeholder]</h3>
+            <p class="team-role">[Role placeholder]</p>
+          </li>
+          <li class="team-member swiper-slide">
+            <span class="team-avatar" aria-hidden="true">SL</span>
+            <h3 class="team-name">[Full name placeholder]</h3>
+            <p class="team-role">[Role placeholder]</p>
+          </li>
+        </ul>
+        <div class="swiper-pagination" aria-hidden="true"></div>
+      </div>
     </section>
 
     <!-- 5. Contact -->
@@ -168,6 +174,9 @@
 
   <!-- Lenis Smooth Scroll -->
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@latest"></script>
+
+  <!-- Swiper (team carousel on mobile) -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
   <!-- Three.js Core -->
   <script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>

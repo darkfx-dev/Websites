@@ -350,18 +350,57 @@ main {
   margin: 0 0 var(--spacing-xl);
 }
 
+/* Mobile-first: Swiper drives layout below 768px (its .swiper-wrapper
+   flex row applies); above, we restore a plain single row and disable
+   every carousel behavior. */
+.team-swiper {
+  /* Room for the pagination dots below the slides */
+  padding-bottom: var(--spacing-xl);
+}
+
 .team-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-xl);
 }
 
 .team-member {
   text-align: center;
   padding: var(--spacing-lg);
+}
+
+/* Understated pagination dots, Glass Ledger palette (mobile only) */
+.team-swiper .swiper-pagination-bullet {
+  width: 7px;
+  height: 7px;
+  background: rgba(11, 29, 51, 0.25);
+  opacity: 1;
+}
+
+.team-swiper .swiper-pagination-bullet-active {
+  background: var(--color-sage);
+}
+
+@media (min-width: 769px) {
+  /* Desktop: plain single row, no carousel, no dots */
+  .team-swiper {
+    padding-bottom: 0;
+  }
+
+  .team-swiper .swiper-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xl);
+    transform: none !important;
+  }
+
+  .team-swiper .swiper-slide {
+    width: auto !important;
+  }
+
+  .team-swiper .swiper-pagination {
+    display: none;
+  }
 }
 
 .team-avatar {
