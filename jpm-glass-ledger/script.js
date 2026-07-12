@@ -29,3 +29,6 @@ function raf(time) {
 requestAnimationFrame(raf);
 
 console.log("✓ Lenis initialized");
+
+// Verify Three.js loaded
+console.log("✓ Three.js version:", THREE.REVISION);
