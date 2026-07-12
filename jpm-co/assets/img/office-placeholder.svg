@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 540" role="img" aria-label="Placeholder for a photograph of the JPM and Co. office">
+    <!-- Placeholder until office photography is supplied.
+         Styled to the Glass Ledger palette so the layout reads finished. -->
+    <rect width="720" height="540" fill="#10233D"/>
+    <g stroke="#C7D3E4" stroke-opacity="0.12" stroke-width="1">
+        <line x1="0" y1="90"  x2="720" y2="90"/>
+        <line x1="0" y1="150" x2="720" y2="150"/>
+        <line x1="0" y1="210" x2="720" y2="210"/>
+        <line x1="0" y1="270" x2="720" y2="270"/>
+        <line x1="0" y1="330" x2="720" y2="330"/>
+        <line x1="0" y1="390" x2="720" y2="390"/>
+        <line x1="0" y1="450" x2="720" y2="450"/>
+    </g>
+    <line x1="130" y1="0" x2="130" y2="540" stroke="#C9A227" stroke-opacity="0.25" stroke-width="1"/>
+    <g fill="none" stroke="#3D9EFF" stroke-width="1.5" opacity="0.85" transform="translate(310 200)">
+        <path d="M0 140 L0 40 L50 8 L100 40 L100 140 Z"/>
+        <path d="M28 140 L28 96 L72 96 L72 140"/>
+        <path d="M22 56 h16 M62 56 h16 M22 76 h16 M62 76 h16"/>
+    </g>
+    <text x="360" y="420" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#C7D3E4" opacity="0.7">Office photography — coming soon</text>
+    <text x="360" y="448" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" letter-spacing="3" fill="#C9A227" opacity="0.8">MARCELO BUSINESS CORRIDOR · SURAT</text>
+</svg>
