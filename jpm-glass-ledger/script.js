@@ -513,9 +513,28 @@ if (contactSection) {
 
   scene.add(new THREE.AmbientLight(0x223349, 0.35));
 
+  /* ---------- Base tilt: look slightly down onto the face ----------
+     The ring/glass are lathe-revolved solids whose ONLY visible
+     silhouette change under spin.rotation.y comes from spinning around
+     an axis (Y) perpendicular to the face normal (Z) — i.e. a literal
+     coin flip, which is edge-on for an instant every 180°. A pure Y-spin
+     viewed dead-on therefore always has that instant; tilting the whole
+     rig down means that instant is no longer viewed edge-on-flat but
+     from slightly above, so the ring's beveled surfaces (which are NOT
+     parallel to the flat face) keep catching light and stay legible
+     as a bright ellipse instead of vanishing to a line. */
+  const BASE_TILT_X = THREE.MathUtils.degToRad(16);
+  scrollRig.rotation.x = BASE_TILT_X;
+
   /* ---------- State 1+2: idle rotation + breathing ---------- */
   const SPIN_PERIOD = 20; // seconds per full turn (18–22s spec window)
   const SWEEP_PERIOD = 75;
+  // Ease the rotation's angular speed (not its period) so the seal
+  // lingers near face-on and passes quickly through the two edge-on
+  // instants each revolution, cutting the time spent looking thin.
+  // phi = linear - EDGE_EASE*sin(2*linear); derivative stays positive
+  // (0.52..1.48x speed) so rotation is still smooth and monotonic.
+  const EDGE_EASE = 0.24;
 
   let breatheTween = null;
   function syncBreathing() {
@@ -550,7 +569,7 @@ if (contactSection) {
       },
     })
     .to(scrollRig.scale, { x: 1.15, y: 1.15, z: 1.15, ease: "none" }, 0)
-    .to(scrollRig.rotation, { x: 0.12, ease: "none" }, 0);
+    .to(scrollRig.rotation, { x: BASE_TILT_X + 0.12, ease: "none" }, 0);
 
   /* ---------- State 4: pointer tilt (desktop > 1024px only) ---------- */
   const heroSection = document.querySelector("#hero");
@@ -599,8 +618,12 @@ if (contactSection) {
 
   gsap.ticker.add((time) => {
     // Idle rotation reads the ticker clock directly, so speed stays
-    // identical across refresh rates and frame drops.
-    spin.rotation.y = (time * Math.PI * 2) / SPIN_PERIOD;
+    // identical across refresh rates and frame drops. The linear phase
+    // is warped by EDGE_EASE so real-world speed dips near face-on
+    // (lingers) and rises near edge-on (rushes through) each half-turn,
+    // while still completing one full revolution every SPIN_PERIOD.
+    const linearPhase = (time * Math.PI * 2) / SPIN_PERIOD;
+    spin.rotation.y = linearPhase - EDGE_EASE * Math.sin(2 * linearPhase);
 
     const sweepA = (time * Math.PI * 2) / SWEEP_PERIOD;
     sweepLight.position.set(Math.cos(sweepA) * 3, Math.sin(sweepA * 0.7) * 1.6, 2 + Math.sin(sweepA) * 0.8);

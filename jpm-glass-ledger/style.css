@@ -111,7 +111,12 @@ main {
 }
 
 /* Quiet backdrop footage — deliberately veiled so it reads as ambient
-   texture; the 3D seal is the hero's only moment of spectacle. */
+   texture; the 3D seal is the hero's only moment of spectacle.
+   The source footage itself contains a rendered medallion shape, which
+   without heavy blur reads as a "ghost" duplicate of the real 3D seal —
+   blur destroys that shape entirely, leaving only soft ambient color/motion.
+   Scaled up slightly so the blur's edge falloff never shows at the
+   section boundary. */
 .hero-bg-video {
   position: absolute;
   inset: 0;
@@ -120,6 +125,8 @@ main {
   object-fit: cover;
   z-index: 0;
   pointer-events: none;
+  filter: blur(36px) brightness(0.6) saturate(0.75);
+  transform: scale(1.15);
 }
 
 .hero-overlay {
@@ -127,13 +134,14 @@ main {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Heavier veil than the About section (~80-85%): the footage may only
-     whisper. Slightly lighter toward the seal side for a faint glow. */
+  /* Heaviest directly behind the seal (right side) — that's exactly
+     where the footage's own medallion shape would otherwise show
+     through and compete with the real one. */
   background: linear-gradient(
     100deg,
-    rgba(11, 29, 51, 0.92) 0%,
-    rgba(11, 29, 51, 0.88) 55%,
-    rgba(11, 29, 51, 0.78) 100%
+    rgba(11, 29, 51, 0.88) 0%,
+    rgba(11, 29, 51, 0.9) 45%,
+    rgba(11, 29, 51, 0.94) 100%
   );
 }
 
