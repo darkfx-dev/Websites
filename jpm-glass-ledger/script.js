@@ -56,23 +56,79 @@ if (heroHeadline) {
 }
 
 /* ============================================================
- * Section 1 — About / Trust: fade + slide the text content in
- * on scroll. Only the text wrapper is animated (transform +
- * opacity); the background video is never touched by JS.
+ * Section heading reveals — the hero's word-by-word settle,
+ * extended to every section heading so the whole page speaks
+ * one typographic language. Same ease/served-timing family as
+ * the hero (power2.out), triggered on approach, played once.
+ * Pattern: SplitText words + single ScrollTrigger per heading.
  * ============================================================ */
-const aboutContent = document.querySelector(".about-content");
+gsap.utils
+  .toArray(".about h2, .services h2, .team h2, .contact h2")
+  .forEach((heading) => {
+    const split = new SplitText(heading, { type: "words" });
+    gsap.from(split.words, {
+      scrollTrigger: {
+        trigger: heading,
+        start: "top 85%",
+      },
+      duration: 0.7,
+      opacity: 0,
+      y: 24,
+      stagger: 0.06,
+      ease: "power2.out",
+    });
+  });
 
-if (aboutContent) {
-  gsap.from(aboutContent, {
+/* ============================================================
+ * Section 1 — About / Trust: a settled sequence instead of one
+ * flat block-fade. The heading's words land first (above), then
+ * intro, stats, and credentials cascade in as a single staggered
+ * group (one trigger for the group — cheaper, and the stagger
+ * stays coherent regardless of scroll speed; see
+ * scroll-trigger-js/staggered-card-reveal pattern).
+ * Only transform + opacity are animated.
+ * ============================================================ */
+const aboutBlocks = gsap.utils.toArray(
+  ".about-intro, .about .trust-stat, .about .credentials-heading, .about .credentials-list li"
+);
+
+if (aboutBlocks.length) {
+  gsap.from(aboutBlocks, {
     scrollTrigger: {
       trigger: "#about",
-      start: "top 80%",
+      start: "top 75%",
     },
     duration: 0.8,
     opacity: 0,
     y: 30,
+    stagger: 0.09,
     ease: "power2.out",
   });
+}
+
+/* About backdrop parallax: the video drifts a few percent against the
+ * scroll (scrubbed, transform-only), giving the section physical depth.
+ * Pattern: parallax-effects / parallax-layers references — same scrub
+ * config, amplitude cut from -50% to single digits for this brand.
+ * Pre-scaled so the drift never exposes the video's edges. */
+const aboutVideo = document.querySelector(".about-bg-video");
+
+if (aboutVideo) {
+  gsap.set(aboutVideo, { scale: 1.18 });
+  gsap.fromTo(
+    aboutVideo,
+    { yPercent: -6 },
+    {
+      yPercent: 6,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#about",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+    }
+  );
 }
 
 /* ============================================================
@@ -141,10 +197,38 @@ function syncTeamCarousel(mq) {
 syncTeamCarousel(teamMq);
 teamMq.addEventListener("change", syncTeamCarousel);
 
+/* Team reveal: on desktop the four members cascade in as one staggered
+ * group (staggered-card-reveal pattern). On mobile the members are
+ * Swiper slides whose transforms belong to Swiper, so GSAP must not
+ * touch them — the carousel fades in as a single quiet unit instead.
+ * gsap.matchMedia tears each variant down cleanly on breakpoint cross. */
+gsap.matchMedia().add(
+  {
+    isDesktop: "(min-width: 769px)",
+    isMobile: "(max-width: 768px)",
+  },
+  (ctx) => {
+    const target = ctx.conditions.isDesktop ? ".team-member" : ".team-swiper";
+    gsap.from(target, {
+      scrollTrigger: {
+        trigger: "#team",
+        start: "top 78%",
+      },
+      duration: 0.7,
+      opacity: 0,
+      y: 36,
+      stagger: ctx.conditions.isDesktop ? 0.1 : 0,
+      ease: "power2.out",
+    });
+  }
+);
+
 /* ============================================================
  * Section 4 — Contact: a single gentle fade-in on scroll.
  * Deliberately the quietest moment on the page — a resting
- * point, mirroring the About reveal pattern but softer (y: 20).
+ * point. Timing refined to the reference demos' settling
+ * register: slightly longer, deeper ease-out (power3), so the
+ * page's final gesture is its softest.
  * ============================================================ */
 const contactSection = document.querySelector("#contact");
 
@@ -154,12 +238,33 @@ if (contactSection) {
       trigger: "#contact",
       start: "top 80%",
     },
-    duration: 0.8,
+    duration: 0.9,
     opacity: 0,
-    y: 20,
-    ease: "power2.out",
+    y: 24,
+    ease: "power3.out",
   });
 }
+
+/* ============================================================
+ * Atmosphere — a scrubbed warm shift in the page ground as the
+ * reader leaves the navy/dark bands (hero→services) and settles
+ * into the ledger-paper sections (team→contact). Deliberately
+ * near-subliminal: the cream warms by a few degrees, nothing more.
+ * ============================================================ */
+gsap.fromTo(
+  document.body,
+  { backgroundColor: "#F5F2EA" },
+  {
+    backgroundColor: "#F7F0E2",
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#team",
+      start: "top bottom",
+      end: "bottom center",
+      scrub: true,
+    },
+  }
+);
 
 /* ============================================================
  * THE SEAL — the hero's glass-and-gold medallion.

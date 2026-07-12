@@ -21,7 +21,14 @@
   --spacing-md: 1.5rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
-  --spacing-2xl: 4rem;
+  /* Section rhythm breathes with the viewport: private-banking layouts
+     earn their calm through air, and a fixed 4rem reads cramped on tall
+     screens while clamp() keeps small phones sane. */
+  --spacing-2xl: clamp(4rem, 9vh, 6.5rem);
+
+  /* Display type: large serifs set slightly tight read as engraved
+     rather than typed — an editorial norm for lettering at this scale. */
+  --display-tracking: -0.015em;
 
   /* Line height */
   --line-height-tight: 1.2;
@@ -31,6 +38,15 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* Display-scale serif headings share one engraved tracking value */
+#hero-heading,
+.about h2,
+.services h2,
+.team h2,
+.contact h2 {
+  letter-spacing: var(--display-tracking);
 }
 
 body {
@@ -222,7 +238,8 @@ main {
 }
 
 /* Decorative background video — sits behind the overlay + content.
-   Never animated via JS; only transform/opacity are touched elsewhere. */
+   Scroll-scrubbed parallax drift (transform-only, pre-scaled in JS so
+   the drift never exposes the video's edges). */
 .about-bg-video {
   position: absolute;
   inset: 0;
