@@ -33,31 +33,41 @@
 
     <!-- 2. About / Trust -->
     <section id="about" class="about" aria-labelledby="about-heading">
-      <h2 id="about-heading">[About / Trust heading placeholder]</h2>
-      <p class="about-intro">[Introductory paragraph placeholder — the firm's standing and philosophy.]</p>
+      <!-- Background video (muted, looping, decorative) -->
+      <video class="about-bg-video" autoplay muted loop playsinline preload="auto"
+             poster="about-poster.jpg" aria-hidden="true">
+        <source src="about-video.mp4" type="video/mp4" />
+      </video>
+      <!-- Navy overlay for text legibility over the moving footage -->
+      <div class="about-overlay" aria-hidden="true"></div>
 
-      <dl class="trust-stats">
-        <div class="trust-stat">
-          <dt>Years of experience</dt>
-          <dd>[00]</dd>
-        </div>
-        <div class="trust-stat">
-          <dt>Clients served</dt>
-          <dd>[000]</dd>
-        </div>
-        <div class="trust-stat">
-          <dt>Partners</dt>
-          <dd>[00]</dd>
-        </div>
-      </dl>
+      <div class="about-content">
+        <h2 id="about-heading">[About / Trust heading placeholder]</h2>
+        <p class="about-intro">[Introductory paragraph placeholder — the firm's standing and philosophy.]</p>
 
-      <h3 class="credentials-heading">[Credentials &amp; certifications placeholder]</h3>
-      <ul class="credentials-list">
-        <li>[Certification placeholder 1]</li>
-        <li>[Certification placeholder 2]</li>
-        <li>[Certification placeholder 3]</li>
-        <li>[Membership placeholder]</li>
-      </ul>
+        <dl class="trust-stats">
+          <div class="trust-stat">
+            <dt>Years of experience</dt>
+            <dd>[00]</dd>
+          </div>
+          <div class="trust-stat">
+            <dt>Clients served</dt>
+            <dd>[000]</dd>
+          </div>
+          <div class="trust-stat">
+            <dt>Partners</dt>
+            <dd>[00]</dd>
+          </div>
+        </dl>
+
+        <h3 class="credentials-heading">[Credentials &amp; certifications placeholder]</h3>
+        <ul class="credentials-list">
+          <li>[Certification placeholder 1]</li>
+          <li>[Certification placeholder 2]</li>
+          <li>[Certification placeholder 3]</li>
+          <li>[Membership placeholder]</li>
+        </ul>
+      </div>
     </section>
 
     <!-- 3. Services -->
