@@ -140,3 +140,23 @@ function syncTeamCarousel(mq) {
 
 syncTeamCarousel(teamMq);
 teamMq.addEventListener("change", syncTeamCarousel);
+
+/* ============================================================
+ * Section 4 — Contact: a single gentle fade-in on scroll.
+ * Deliberately the quietest moment on the page — a resting
+ * point, mirroring the About reveal pattern but softer (y: 20).
+ * ============================================================ */
+const contactSection = document.querySelector("#contact");
+
+if (contactSection) {
+  gsap.from(contactSection, {
+    scrollTrigger: {
+      trigger: "#contact",
+      start: "top 80%",
+    },
+    duration: 0.8,
+    opacity: 0,
+    y: 20,
+    ease: "power2.out",
+  });
+}
