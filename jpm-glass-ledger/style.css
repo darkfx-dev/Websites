@@ -96,10 +96,12 @@ main {
 
 /* ===== Hero Section ===== */
 .hero {
+  position: relative;
+  overflow: hidden;
   background: var(--color-navy);
   color: var(--color-cream);
   padding: var(--spacing-2xl) 0;
-  min-height: 60vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   gap: var(--spacing-2xl);
@@ -108,8 +110,37 @@ main {
   padding-right: var(--spacing-lg);
 }
 
+/* Quiet backdrop footage — deliberately veiled so it reads as ambient
+   texture; the 3D seal is the hero's only moment of spectacle. */
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Heavier veil than the About section (~80-85%): the footage may only
+     whisper. Slightly lighter toward the seal side for a faint glow. */
+  background: linear-gradient(
+    100deg,
+    rgba(11, 29, 51, 0.92) 0%,
+    rgba(11, 29, 51, 0.88) 55%,
+    rgba(11, 29, 51, 0.78) 100%
+  );
+}
+
 .hero-copy {
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 #hero-heading {
@@ -137,16 +168,38 @@ main {
   margin-top: var(--spacing-md);
 }
 
+/* Mount point for the 3D seal: ~60vh of the viewport on desktop,
+   ~40vh on mobile (set below). The canvas/poster fills this box. */
 .hero-seal {
   flex: 1;
-  height: 400px;
-  background: rgba(245, 242, 234, 0.1);
-  border: 2px solid rgba(201, 169, 97, 0.2);
-  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+  height: 60vh;
+  min-height: 300px;
   display: grid;
   place-items: center;
-  color: rgba(245, 242, 234, 0.3);
-  font-size: 0.9rem;
+}
+
+.hero-seal canvas,
+.hero-seal .seal-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-lg);
+  }
+
+  .hero-seal {
+    height: 40vh;
+    min-height: 220px;
+    width: 100%;
+  }
 }
 
 /* ===== About / Trust Section ===== */
@@ -319,6 +372,16 @@ main {
   border-radius: 8px;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
   will-change: transform, opacity;
+}
+
+/* Gold line icons above each card title; consistent box, no effect on
+   the stacking animation (static child content within animated cards) */
+.service-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.92;
 }
 
 .service-title {

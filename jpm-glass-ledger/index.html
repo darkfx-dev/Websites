@@ -26,11 +26,21 @@
   <main>
     <!-- 1. Hero -->
     <section id="hero" class="hero" aria-labelledby="hero-heading">
+      <!-- Quiet background footage behind everything; heavily veiled so the
+           3D seal stays the sole focal point. Never animated via JS. -->
+      <video class="hero-bg-video" autoplay muted loop playsinline preload="auto"
+             poster="hero-poster.jpg" aria-hidden="true">
+        <source src="hero-video.mp4" type="video/mp4" />
+        <source src="hero-video.webm" type="video/webm" />
+      </video>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
       <div class="hero-copy">
         <h1 id="hero-heading">[Hero headline placeholder]</h1>
         <p class="hero-subheading">[Hero subheadline placeholder — a line about trust, precision, and stewardship.]</p>
       </div>
-      <!-- Reserved space for the seal (to be added in a later step) -->
+      <!-- The 3D glass-and-gold seal mounts here (canvas injected by script.js;
+           falls back to a static poster for reduced-motion / no-WebGL) -->
       <div class="hero-seal" aria-hidden="true" data-slot="seal"></div>
     </section>
 
@@ -79,18 +89,22 @@
       <h2 id="services-heading">[Services heading placeholder]</h2>
       <ul class="services-list">
         <li class="service">
+          <img class="service-icon" src="icon-tax-filing.png" alt="" width="72" height="72" loading="lazy" />
           <h3 class="service-title">Tax Filing</h3>
           <p class="service-desc">[Tax Filing description placeholder.]</p>
         </li>
         <li class="service">
+          <img class="service-icon" src="icon-audit.png" alt="" width="72" height="72" loading="lazy" />
           <h3 class="service-title">Audit</h3>
           <p class="service-desc">[Audit description placeholder.]</p>
         </li>
         <li class="service">
+          <img class="service-icon" src="icon-advisory.png" alt="" width="72" height="72" loading="lazy" />
           <h3 class="service-title">Advisory</h3>
           <p class="service-desc">[Advisory description placeholder.]</p>
         </li>
         <li class="service">
+          <img class="service-icon" src="icon-bookkeeping.png" alt="" width="72" height="72" loading="lazy" />
           <h3 class="service-title">Bookkeeping</h3>
           <p class="service-desc">[Bookkeeping description placeholder.]</p>
         </li>
@@ -179,11 +193,12 @@
   <!-- Swiper (team carousel on mobile) -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-  <!-- Three.js Core -->
-  <script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
+  <!-- Three.js Core (r128 — pinned as npm 0.128.0; the "three@r128" alias
+       does not resolve on jsDelivr and would 404 in production) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
   <!-- Three.js OrbitControls (optional but recommended) -->
-  <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <script src="script.js"></script>
 </body>
