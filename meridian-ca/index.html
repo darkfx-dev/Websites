@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian &amp; Co. — Chartered Accountants</title>
+<meta name="description" content="Meridian & Co. Chartered Accountants. Audit, taxation, advisory and compliance for businesses that measure twice.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23060b1e'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Georgia'>M</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-deep: #060b1e;
+    --navy: #0d1b3d;
+    --blue: #3f6fff;
+    --blue-soft: #7fa0ff;
+    --white: #f4f6fb;
+    --ink: #0a0c12;
+    --line: rgba(244, 246, 251, 0.14);
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "Manrope", -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  html, body { overflow-x: hidden; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+  body {
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: var(--sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--blue); color: var(--white); }
+
+  canvas#scene { position: fixed; top: 0; left: 0; z-index: 0; display: block; }
+
+  /* ---------- grain ---------- */
+  .grain {
+    position: fixed; inset: -50%;
+    width: 200%; height: 200%;
+    z-index: 40; pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 8s steps(10) infinite;
+  }
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-3%, 2%); }
+    40% { transform: translate(2%, -3%); }
+    60% { transform: translate(-2%, -2%); }
+    80% { transform: translate(3%, 3%); }
+  }
+
+  /* ---------- loader ---------- */
+  #loader {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--navy-deep);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 28px;
+  }
+  #loader .monogram {
+    font-family: var(--serif); font-weight: 300;
+    font-size: clamp(56px, 8vw, 96px); line-height: 1;
+    color: var(--white);
+  }
+  #loader .monogram em { font-style: italic; color: var(--blue-soft); }
+  #loader .bar {
+    width: 160px; height: 1px; background: var(--line);
+    position: relative; overflow: hidden;
+  }
+  #loader .bar i {
+    position: absolute; inset: 0; background: var(--blue);
+    transform: scaleX(0); transform-origin: left;
+    display: block;
+  }
+  #loader .tag {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(244,246,251,0.45);
+  }
+
+  /* ---------- progress ---------- */
+  #progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    z-index: 60; pointer-events: none;
+  }
+  #progress i {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--blue-soft), var(--white));
+    transform: scaleX(0); transform-origin: left;
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px clamp(20px, 4vw, 56px);
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(6, 11, 30, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; flex-direction: column; line-height: 1.15; cursor: pointer; }
+  .brand .name { font-family: var(--serif); font-size: 21px; font-weight: 500; letter-spacing: 0.01em; }
+  .brand .name em { font-style: italic; color: var(--blue-soft); }
+  .brand .sub {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: rgba(244,246,251,0.5); margin-top: 3px;
+  }
+  .nav-links { display: flex; gap: 34px; align-items: center; }
+  .nav-links a {
+    color: rgba(244,246,251,0.72); text-decoration: none;
+    font-size: 13.5px; font-weight: 500; letter-spacing: 0.04em;
+    transition: color 0.25s ease; position: relative;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -6px;
+    width: 100%; height: 1px; background: var(--blue-soft);
+    transform: scaleX(0); transform-origin: right; transition: transform 0.35s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav-cta {
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    color: var(--ink) !important; background: var(--white);
+    padding: 11px 22px; border-radius: 100px;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .nav-cta::after { display: none; }
+  .nav-cta:hover { background: var(--blue-soft); transform: translateY(-1px); }
+
+  /* ---------- layout ---------- */
+  .scroll-container { position: relative; z-index: 1; pointer-events: none; }
+  .section {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0 clamp(20px, 6vw, 96px);
+    position: relative;
+  }
+  .content { pointer-events: auto; width: 100%; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; font-weight: 400;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--blue-soft);
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 26px;
+  }
+  .eyebrow::before { content: ""; width: 36px; height: 1px; background: var(--blue); }
+
+  h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
+  h1 em, h2 em { font-style: italic; color: var(--blue-soft); }
+
+  /* ---------- hero ---------- */
+  #hero { justify-content: flex-start; }
+  #hero .content { max-width: 1060px; }
+  #hero h1 {
+    font-size: clamp(44px, 7.4vw, 108px);
+    line-height: 1.02; margin-bottom: 30px;
+    text-shadow: 0 2px 40px rgba(6, 11, 30, 0.85);
+  }
+  #hero p, #hero .eyebrow { text-shadow: 0 1px 24px rgba(6, 11, 30, 0.9); }
+  #hero h1 .w { display: inline-block; overflow: hidden; vertical-align: bottom; }
+  #hero h1 .wi { display: inline-block; transform: translateY(115%); }
+  #hero p {
+    font-size: clamp(15px, 1.4vw, 19px); line-height: 1.7;
+    color: rgba(244,246,251,0.72); max-width: 520px; margin-bottom: 42px;
+    font-weight: 300;
+  }
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    padding: 15px 30px; border-radius: 100px;
+    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  }
+  .btn.primary { background: var(--white); color: var(--ink); }
+  .btn.primary:hover { background: var(--blue-soft); transform: translateY(-2px); }
+  .btn.ghost { color: var(--white); border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--blue-soft); transform: translateY(-2px); }
+  .btn .arr { transition: transform 0.25s ease; }
+  .btn:hover .arr { transform: translateX(4px); }
+
+  .scroll-hint {
+    position: absolute; bottom: 38px; left: clamp(20px, 6vw, 96px);
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(244,246,251,0.45);
+  }
+  .scroll-hint .line {
+    width: 1px; height: 44px; background: var(--line);
+    position: relative; overflow: hidden;
+  }
+  .scroll-hint .line::after {
+    content: ""; position: absolute; top: -50%; left: 0;
+    width: 100%; height: 50%; background: var(--blue-soft);
+    animation: drop 1.8s ease-in-out infinite;
+  }
+  @keyframes drop { 0% { top: -50%; } 100% { top: 110%; } }
+
+  /* ---------- about ---------- */
+  #about .content { max-width: 880px; margin-left: auto; }
+  #about h2 { font-size: clamp(34px, 4.6vw, 64px); line-height: 1.08; margin-bottom: 28px; }
+  #about p {
+    font-size: clamp(15px, 1.35vw, 18px); line-height: 1.8;
+    color: rgba(244,246,251,0.7); max-width: 560px; font-weight: 300;
+  }
+  .mini-stats {
+    display: flex; gap: clamp(28px, 4vw, 64px);
+    margin-top: 48px; flex-wrap: wrap;
+  }
+  .mini-stats .ms { border-left: 1px solid var(--line); padding-left: 20px; }
+  .mini-stats .num {
+    font-family: var(--serif); font-size: clamp(30px, 3vw, 44px);
+    color: var(--white); line-height: 1;
+  }
+  .mini-stats .num span { color: var(--blue-soft); }
+  .mini-stats .lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: rgba(244,246,251,0.5); margin-top: 10px;
+  }
+
+  /* ---------- services ---------- */
+  #services .content { max-width: 1280px; margin: 0 auto; }
+  #services h2 { font-size: clamp(34px, 4.6vw, 64px); margin-bottom: 14px; }
+  #services .lead { color: rgba(244,246,251,0.65); font-weight: 300; margin-bottom: 54px; max-width: 480px; line-height: 1.7; }
+  .cards {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .card {
+    background: var(--white); color: var(--ink);
+    border-radius: 18px; padding: 30px 26px;
+    min-height: 320px;
+    display: flex; flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    position: relative; overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px -20px rgba(63, 111, 255, 0.35);
+  }
+  .card .idx {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+    color: rgba(10,12,18,0.4); margin-bottom: auto;
+  }
+  .card h3 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(20px, 1.8vw, 26px); line-height: 1.15;
+    margin: 18px 0 12px;
+  }
+  .card p { font-size: 13.5px; line-height: 1.65; color: rgba(10,12,18,0.62); }
+  .card .go {
+    margin-top: 22px; font-size: 12.5px; font-weight: 700;
+    letter-spacing: 0.06em; color: var(--ink);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .card .go .arr { transition: transform 0.25s ease; color: var(--blue); }
+  .card:hover .go .arr { transform: translateX(5px); }
+  .card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+  }
+  .card:hover::before { transform: scaleX(1); }
+
+  /* ---------- numbers ---------- */
+  #numbers .content { max-width: 1180px; margin: 0 auto; text-align: center; }
+  #numbers h2 { font-size: clamp(34px, 4.6vw, 64px); margin-bottom: 70px; }
+  #numbers .eyebrow { justify-content: center; }
+  #numbers .eyebrow::before { display: none; }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .stat {
+    padding: 36px 18px;
+    border: 1px solid var(--line); border-radius: 16px;
+    background: rgba(6, 11, 30, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .stat .val {
+    font-family: var(--serif); font-size: clamp(38px, 4vw, 60px);
+    line-height: 1; color: var(--white);
+  }
+  .stat .val .pre, .stat .val .suf { color: var(--blue-soft); font-size: 0.6em; }
+  .stat .cap {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: rgba(244,246,251,0.5); margin-top: 16px;
+  }
+
+  /* ---------- process ---------- */
+  #process .content { max-width: 1180px; margin: 0 auto; }
+  #process h2 { font-size: clamp(34px, 4.6vw, 64px); margin-bottom: 60px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .step {
+    padding: 34px 26px 40px;
+    border-left: 1px solid var(--line);
+    position: relative;
+  }
+  .step:last-child { border-right: 1px solid var(--line); }
+  .step .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--blue); box-shadow: 0 0 18px var(--blue);
+    position: absolute; top: -4px; left: -5px;
+  }
+  .step .no {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+    color: var(--blue-soft); margin-bottom: 18px;
+  }
+  .step h3 {
+    font-family: var(--serif); font-weight: 500; font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .step p { font-size: 13.5px; line-height: 1.7; color: rgba(244,246,251,0.6); font-weight: 300; }
+
+  /* ---------- voice ---------- */
+  #voice .content { max-width: 900px; margin: 0 auto; text-align: center; }
+  #voice blockquote {
+    font-family: var(--serif); font-weight: 300;
+    font-size: clamp(26px, 3.6vw, 48px); line-height: 1.3;
+  }
+  #voice blockquote em { color: var(--blue-soft); }
+  #voice cite {
+    display: block; margin-top: 36px; font-style: normal;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(244,246,251,0.5);
+  }
+
+  /* ---------- contact ---------- */
+  #contact { align-items: stretch; padding-top: 14vh; padding-bottom: 0; flex-direction: column; justify-content: center; }
+  #contact .content { max-width: 1180px; margin: 0 auto; text-align: center; }
+  #contact h2 { font-size: clamp(42px, 6.4vw, 94px); line-height: 1.04; margin-bottom: 26px; }
+  #contact .lead {
+    color: rgba(244,246,251,0.68); font-weight: 300; line-height: 1.75;
+    max-width: 480px; margin: 0 auto 44px;
+  }
+  .contact-meta {
+    display: flex; gap: clamp(24px, 4vw, 72px); justify-content: center;
+    margin-top: 64px; flex-wrap: wrap;
+  }
+  .contact-meta a, .contact-meta span {
+    color: rgba(244,246,251,0.6); text-decoration: none;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+    transition: color 0.25s ease;
+  }
+  .contact-meta a:hover { color: var(--blue-soft); }
+  footer {
+    width: 100%; max-width: 1180px; margin: 90px auto 0;
+    padding: 26px clamp(20px, 4vw, 0px) 34px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap;
+    pointer-events: auto;
+  }
+  footer p, footer a {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+    color: rgba(244,246,251,0.4); text-decoration: none;
+  }
+  footer a:hover { color: var(--blue-soft); }
+  footer .links { display: flex; gap: 26px; }
+
+  .reveal { opacity: 0; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1024px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .step { border-right: none !important; }
+  }
+  @media (max-width: 640px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .cards, .stat-grid, .steps { grid-template-columns: 1fr; }
+    .card { min-height: 0; }
+    #about .content { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="monogram">M<em>&amp;</em>Co.</div>
+  <div class="bar"><i id="loadbar"></i></div>
+  <div class="tag">Chartered Accountants</div>
+</div>
+
+<div id="progress"><i></i></div>
+<div class="grain"></div>
+
+<nav id="nav">
+  <div class="brand" onclick="goTop()">
+    <span class="name">Meridian <em>&amp;</em> Co.</span>
+    <span class="sub">Chartered Accountants</span>
+  </div>
+  <div class="nav-links">
+    <a href="#services" data-scroll>Services</a>
+    <a href="#numbers" data-scroll>Numbers</a>
+    <a href="#process" data-scroll>Approach</a>
+    <a href="#contact" data-scroll class="nav-cta">Book a consultation</a>
+  </div>
+</nav>
+
+<div class="scroll-container">
+
+  <section class="section" id="hero">
+    <div class="content">
+      <div class="eyebrow reveal-hero">Audit · Tax · Advisory</div>
+      <h1 id="hero-title">Clarity in every figure.</h1>
+      <p class="reveal-hero">We are chartered accountants for businesses that measure twice. Rigour in the detail, candour in the counsel, and numbers you can build decisions on.</p>
+      <div class="btn-row reveal-hero">
+        <a href="#contact" data-scroll class="btn primary">Book a consultation <span class="arr">→</span></a>
+        <a href="#services" data-scroll class="btn ghost">Explore services</a>
+      </div>
+    </div>
+    <div class="scroll-hint reveal-hero"><span class="line"></span> Scroll to explore</div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="content">
+      <div class="eyebrow reveal">Who we are</div>
+      <h2 class="reveal">Counsel you can <em>count</em> on.</h2>
+      <p class="reveal">For over two decades, Meridian &amp; Co. has advised founders, family businesses and listed companies alike. We believe good accounting is quiet: filings on time, positions defensible, and no surprises in the boardroom.</p>
+      <div class="mini-stats">
+        <div class="ms reveal"><div class="num">25<span>+</span></div><div class="lbl">Years of practice</div></div>
+        <div class="ms reveal"><div class="num">12</div><div class="lbl">Partners</div></div>
+        <div class="ms reveal"><div class="num">6</div><div class="lbl">Industries served</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="content">
+      <div class="eyebrow reveal">What we do</div>
+      <h2 class="reveal">Four disciplines. <em>One standard.</em></h2>
+      <p class="lead reveal">Every engagement is partner-led and planned around your reporting calendar, not ours.</p>
+      <div class="cards">
+        <div class="card reveal">
+          <div class="idx">ACC · 110</div>
+          <h3>Audit &amp; Assurance</h3>
+          <p>Statutory, internal and management audits that stand up to regulators, investors and boards.</p>
+          <span class="go">Learn more <span class="arr">→</span></span>
+        </div>
+        <div class="card reveal">
+          <div class="idx">TAX · 200</div>
+          <h3>Taxation</h3>
+          <p>Direct, indirect and international tax. Planned early, filed precisely, defended confidently.</p>
+          <span class="go">Learn more <span class="arr">→</span></span>
+        </div>
+        <div class="card reveal">
+          <div class="idx">ADV · 300</div>
+          <h3>Corporate Advisory</h3>
+          <p>Structuring, valuations, due diligence and deal support for the moments that matter most.</p>
+          <span class="go">Learn more <span class="arr">→</span></span>
+        </div>
+        <div class="card reveal">
+          <div class="idx">CMP · 400</div>
+          <h3>Accounting &amp; Compliance</h3>
+          <p>Bookkeeping, payroll, ROC and regulatory filings, kept quietly in perfect order all year.</p>
+          <span class="go">Learn more <span class="arr">→</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="numbers">
+    <div class="content">
+      <div class="eyebrow reveal">The record</div>
+      <h2 class="reveal">Measured in <em>outcomes.</em></h2>
+      <div class="stat-grid">
+        <div class="stat reveal">
+          <div class="val"><span class="pre">₹</span><span class="count" data-target="1200">0</span><span class="suf"> Cr+</span></div>
+          <div class="cap">Transactions advised</div>
+        </div>
+        <div class="stat reveal">
+          <div class="val"><span class="count" data-target="99.4" data-decimals="1">0</span><span class="suf">%</span></div>
+          <div class="cap">On-time filings</div>
+        </div>
+        <div class="stat reveal">
+          <div class="val"><span class="count" data-target="500">0</span><span class="suf">+</span></div>
+          <div class="cap">Active clients</div>
+        </div>
+        <div class="stat reveal">
+          <div class="val"><span class="count" data-target="25">0</span><span class="suf">yrs</span></div>
+          <div class="cap">Of uninterrupted practice</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="process">
+    <div class="content">
+      <div class="eyebrow reveal">How we work</div>
+      <h2 class="reveal">A method, not a <em>mystery.</em></h2>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="dot"></span>
+          <div class="no">WEEK 0</div>
+          <h3>Listen</h3>
+          <p>Discovery and scoping. We learn your entity structure, calendar and risk points before we quote.</p>
+        </div>
+        <div class="step reveal">
+          <span class="dot"></span>
+          <div class="no">WEEK 1</div>
+          <h3>Map</h3>
+          <p>A written engagement plan: deliverables, owners and dates. You always know what happens next.</p>
+        </div>
+        <div class="step reveal">
+          <span class="dot"></span>
+          <div class="no">WEEKS 2–6</div>
+          <h3>Execute</h3>
+          <p>Fieldwork, reviews and filings, partner-checked. Progress is reported to you weekly, not quarterly.</p>
+        </div>
+        <div class="step reveal">
+          <span class="dot"></span>
+          <div class="no">ONGOING</div>
+          <h3>Advise</h3>
+          <p>Findings translated into forward counsel: what the numbers say, and what to do about them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="voice">
+    <div class="content">
+      <blockquote class="reveal">“Meridian didn't just file our returns. They rebuilt how we <em>see our own numbers.</em>”</blockquote>
+      <cite class="reveal">Group CFO · Manufacturing · Client since 2014</cite>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="content">
+      <div class="eyebrow reveal" style="justify-content:center">Get in touch</div>
+      <h2 class="reveal">Let's talk <em>numbers.</em></h2>
+      <p class="lead reveal">A first consultation costs nothing and commits you to nothing. Bring your questions; we'll bring the candour.</p>
+      <div class="btn-row reveal" style="justify-content:center">
+        <a href="mailto:desk@meridianco.example" class="btn primary">Book a consultation <span class="arr">→</span></a>
+      </div>
+      <div class="contact-meta reveal">
+        <a href="mailto:desk@meridianco.example">desk@meridianco.example</a>
+        <a href="tel:+911140000000">+91 11 4000 0000</a>
+        <span>Level 4, Meridian House · New Delhi</span>
+      </div>
+    </div>
+    <footer>
+      <p>© 2026 Meridian &amp; Co. Chartered Accountants</p>
+      <div class="links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </footer>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+/* ============================================================
+   Meridian & Co. — scroll-driven 3D experience
+   World map (along -Z):
+     z ~  0   : particle bar-chart constellation (hero/about)
+     z -18→-80: corridor of glowing ledger columns (services)
+     aerial   : skyline view (numbers)
+     z -132   : finale ring + glow (voice/contact)
+   ============================================================ */
+gsap.registerPlugin(ScrollTrigger);
+
+const isMobile = window.innerWidth < 768;
+const DPR = Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2);
+
+/* ---------- smooth scroll (Lenis + GSAP ticker sync) ---------- */
+let lenis = null;
+if (typeof Lenis !== "undefined") {
+  lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+function goTop() { lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: "smooth" }); }
+document.querySelectorAll("[data-scroll]").forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
+    e.preventDefault();
+    lenis ? lenis.scrollTo(target, { duration: 1.6 }) : target.scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+/* ---------- three.js scene ---------- */
+let webgl = true;
+let scene, camera, renderer;
+let morphMat = null, points = null;
+const floaters = [], growthSprites = [];
+let ring = null, ringGlow = null;
+const camAnim = { x: 0, y: 2.2, z: 24, lookX: 0, lookY: 3.5, lookZ: 0 };
+const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
+const clock = new THREE.Clock();
+
+/* background / fog mood along the journey */
+const moods = [
+  new THREE.Color(0x0a1430),
+  new THREE.Color(0x060b1e),
+  new THREE.Color(0x03070f),
+  new THREE.Color(0x0a1633),
+];
+let journey = 0;
+
+try {
+  scene = new THREE.Scene();
+  scene.background = moods[0].clone();
+  scene.fog = new THREE.FogExp2(0x0a1430, 0.014);
+
+  camera = new THREE.PerspectiveCamera(64, innerWidth / innerHeight, 0.1, 300);
+  camera.position.set(camAnim.x, camAnim.y, camAnim.z);
+
+  renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: false });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(DPR);
+  renderer.domElement.id = "scene";
+  document.body.appendChild(renderer.domElement);
+
+  /* ----- lights ----- */
+  scene.add(new THREE.AmbientLight(0x3a4a77, 0.55));
+  const key = new THREE.DirectionalLight(0xe8eeff, 0.75);
+  key.position.set(6, 14, 8);
+  scene.add(key);
+  const ringLight = new THREE.PointLight(0x3f6fff, 1.4, 55);
+  ringLight.position.set(0, 4, -128);
+  scene.add(ringLight);
+
+  /* ----- grid floor ----- */
+  const grid = new THREE.GridHelper(420, 110, 0x1c3466, 0x0c1730);
+  grid.position.set(0, 0, -60);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.5;
+  scene.add(grid);
+
+  /* ----- glow sprite texture (shared) ----- */
+  function glowTexture() {
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const x = c.getContext("2d");
+    const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "rgba(255,255,255,1)");
+    g.addColorStop(0.3, "rgba(255,255,255,0.4)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g;
+    x.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(c);
+  }
+  const glowTex = glowTexture();
+  function addGlow(pos, color, scale, opacity) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: glowTex, color, blending: THREE.AdditiveBlending,
+      transparent: true, opacity: opacity || 0.8, depthWrite: false,
+    }));
+    s.scale.setScalar(scale);
+    s.position.copy(pos);
+    scene.add(s);
+    return s;
+  }
+
+  /* =========================================================
+     1) Morphing particles — scatter → rising bar-chart
+     ========================================================= */
+  (function createMorphParticles() {
+    const count = isMobile ? 2200 : 4600;
+    const geo = new THREE.BufferGeometry();
+    const start = new Float32Array(count * 3);
+    const target = new Float32Array(count * 3);
+
+    const bars = 7;
+    for (let i = 0; i < count; i++) {
+      start[i * 3]     = (Math.random() - 0.5) * 44;
+      start[i * 3 + 1] = Math.random() * 22 - 3;
+      start[i * 3 + 2] = (Math.random() - 0.5) * 24 - 8; /* keep cloud away from the lens */
+
+      const b = i % bars;                      // which bar
+      const h = 1.6 + b * 1.15 + Math.random() * 0.7;  // ascending trend
+      target[i * 3]     = (b - (bars - 1) / 2) * 2.3 + (Math.random() - 0.5) * 1.0;
+      target[i * 3 + 1] = Math.pow(Math.random(), 0.8) * h + 0.15;
+      target[i * 3 + 2] = (Math.random() - 0.5) * 1.0;
+    }
+    geo.setAttribute("position", new THREE.BufferAttribute(start.slice(), 3));
+    geo.setAttribute("aStart", new THREE.BufferAttribute(start, 3));
+    geo.setAttribute("aTarget", new THREE.BufferAttribute(target, 3));
+
+    morphMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uProgress: { value: 0 },
+        uTime: { value: 0 },
+        uColor1: { value: new THREE.Color(0xdfe8ff) },
+        uColor2: { value: new THREE.Color(0x4d7cff) },
+        uPixelRatio: { value: DPR },
+      },
+      vertexShader: `
+        uniform float uProgress, uTime, uPixelRatio;
+        attribute vec3 aTarget, aStart;
+        varying float vY;
+        void main() {
+          vec3 pos = mix(aStart, aTarget, uProgress);
+          float free = 1.0 - uProgress;
+          pos += vec3(
+            sin(uTime * 0.6 + pos.y * 1.4) * 0.35 * free + sin(uTime + pos.y * 4.0) * 0.05,
+            cos(uTime * 0.5 + pos.x * 1.4) * 0.35 * free,
+            sin(uTime * 0.4 + pos.z) * 0.3 * free
+          );
+          vY = pos.y;
+          vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+          gl_PointSize = min(2.2 * uPixelRatio * (170.0 / -mv.z), 5.5 * uPixelRatio);
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor1, uColor2;
+        uniform float uProgress;
+        varying float vY;
+        void main() {
+          float d = length(gl_PointCoord - vec2(0.5));
+          if (d > 0.5) discard;
+          float alpha = (1.0 - smoothstep(0.0, 0.5, d)) * mix(0.45, 0.9, uProgress);
+          vec3 col = mix(uColor2, uColor1, clamp(vY / 9.0, 0.0, 1.0) * uProgress + 0.25 * (1.0 - uProgress));
+          gl_FragColor = vec4(col, alpha);
+        }
+      `,
+      transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+
+    points = new THREE.Points(geo, morphMat);
+    points.position.set(0, 0, 0);
+    scene.add(points);
+  })();
+
+  /* =========================================================
+     2) Corridor of ledger columns  (z -18 → -80)
+     ========================================================= */
+  (function createColumns() {
+    const colGeo = new THREE.BoxGeometry(1, 1, 1);
+    const n = isMobile ? 34 : 62;
+    for (let i = 0; i < n; i++) {
+      const side = i % 2 === 0 ? 1 : -1;
+      const z = -18 - Math.random() * 64;
+      const x = side * (5 + Math.random() * 9);
+      const h = 2 + Math.random() * 11;
+      const w = 0.5 + Math.random() * 0.9;
+      const lit = Math.random() < 0.3;
+      const mat = new THREE.MeshStandardMaterial({ color: 0x0d1b3d });
+      mat.emissive = new THREE.Color(lit ? 0x2853d9 : 0x0a1428);
+      mat.emissiveIntensity = lit ? 0.85 : 0.4;
+      mat.metalness = 0.35;
+      mat.roughness = 0.55;
+      const m = new THREE.Mesh(colGeo, mat);
+      m.scale.set(w, h, w);
+      m.position.set(x, h / 2, z);
+      scene.add(m);
+      if (lit && !isMobile) addGlow(new THREE.Vector3(x, h + 0.4, z), 0x3f6fff, 2.4, 0.35);
+    }
+  })();
+
+  /* =========================================================
+     3) Growth line — ascending glow points through corridor
+     ========================================================= */
+  (function createGrowthLine() {
+    const pts = 14;
+    for (let i = 0; i < pts; i++) {
+      const t = i / (pts - 1);
+      const p = new THREE.Vector3(
+        Math.sin(t * Math.PI * 2.2) * 2.2,
+        1.2 + t * 10.5,
+        -20 - t * 58
+      );
+      const s = addGlow(p, i === pts - 1 ? 0xffffff : 0x6f96ff, 1.1 + t * 1.6, 0.55);
+      growthSprites.push({ s, base: p.y, seed: i });
+    }
+  })();
+
+  /* =========================================================
+     4) Floating wireframe accents
+     ========================================================= */
+  (function createFloaters() {
+    const defs = [
+      { g: new THREE.IcosahedronGeometry(1.6, 0), p: [10, 6, 6], r: 0.14 },
+      { g: new THREE.OctahedronGeometry(1.2, 0), p: [-11, 8, -6], r: 0.2 },
+      { g: new THREE.IcosahedronGeometry(2.2, 0), p: [12, 9, -46], r: 0.1 },
+      { g: new THREE.TorusGeometry(1.4, 0.04, 8, 48), p: [-10, 11, -64], r: 0.16 },
+    ];
+    defs.forEach((d) => {
+      const m = new THREE.Mesh(d.g, new THREE.MeshBasicMaterial({
+        color: 0x38539e, wireframe: true, transparent: true, opacity: 0.5,
+      }));
+      m.position.set(d.p[0], d.p[1], d.p[2]);
+      scene.add(m);
+      floaters.push({ m, r: d.r, y0: d.p[1], seed: Math.random() * 10 });
+    });
+  })();
+
+  /* =========================================================
+     5) Finale ring + core glow  (z -132)
+     ========================================================= */
+  (function createRing() {
+    ring = new THREE.Group();
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(3.1, 0.05, 16, 140),
+      new THREE.MeshStandardMaterial({
+        color: 0xf4f6fb, emissive: 0xcdd9ff, emissiveIntensity: 1.1,
+        metalness: 0.6, roughness: 0.3,
+      })
+    );
+    ring.add(torus);
+    const torus2 = new THREE.Mesh(
+      new THREE.TorusGeometry(3.7, 0.02, 12, 140),
+      new THREE.MeshBasicMaterial({ color: 0x3f6fff, transparent: true, opacity: 0.6 })
+    );
+    torus2.rotation.x = Math.PI / 7;
+    ring.add(torus2);
+
+    const core = new THREE.Mesh(
+      new THREE.SphereGeometry(0.7, 24, 24),
+      new THREE.MeshStandardMaterial({ color: 0x3f6fff, emissive: 0x3f6fff, emissiveIntensity: 1.6 })
+    );
+    ring.add(core);
+    const shell = new THREE.Mesh(
+      new THREE.SphereGeometry(1.5, 20, 20),
+      new THREE.MeshBasicMaterial({
+        color: 0x3f6fff, transparent: true, opacity: 0.14,
+        blending: THREE.AdditiveBlending, side: THREE.BackSide,
+      })
+    );
+    ring.add(shell);
+
+    ring.position.set(0, 3.4, -132);
+    scene.add(ring);
+    ringGlow = addGlow(new THREE.Vector3(0, 3.4, -132), 0x5d84ff, 10, 0.5);
+  })();
+
+  /* ---------- mouse parallax ---------- */
+  document.addEventListener("mousemove", (e) => {
+    mouse.x = (e.clientX / innerWidth - 0.5) * 2;
+    mouse.y = (e.clientY / innerHeight - 0.5) * 2;
+  });
+
+  /* ---------- resize ---------- */
+  window.addEventListener("resize", () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  /* ---------- render loop ---------- */
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    if (morphMat) morphMat.uniforms.uTime.value = t;
+    if (points) points.rotation.y = Math.sin(t * 0.05) * 0.08 * (1 - (morphMat ? morphMat.uniforms.uProgress.value * 0.7 : 0));
+
+    floaters.forEach((f) => {
+      f.m.rotation.x += f.r * 0.004;
+      f.m.rotation.y += f.r * 0.006;
+      f.m.position.y = f.y0 + Math.sin(t * 0.5 + f.seed) * 0.5;
+    });
+    growthSprites.forEach((g) => {
+      g.s.position.y = g.base + Math.sin(t * 0.8 + g.seed) * 0.18;
+    });
+    if (ring) {
+      ring.rotation.y = t * 0.22;
+      ring.rotation.x = Math.sin(t * 0.3) * 0.14;
+      if (ringGlow) ringGlow.material.opacity = 0.42 + Math.sin(t * 1.4) * 0.1;
+    }
+
+    /* mood blend */
+    const seg = Math.min(Math.floor(journey * (moods.length - 1)), moods.length - 2);
+    const st = journey * (moods.length - 1) - seg;
+    scene.fog.color.copy(moods[seg]).lerp(moods[seg + 1], st);
+    scene.background.copy(scene.fog.color);
+
+    /* camera with smoothed mouse parallax */
+    mouse.sx += (mouse.x - mouse.sx) * 0.04;
+    mouse.sy += (mouse.y - mouse.sy) * 0.04;
+    camera.position.set(
+      camAnim.x + mouse.sx * 0.45,
+      camAnim.y - mouse.sy * 0.28,
+      camAnim.z
+    );
+    camera.lookAt(camAnim.lookX, camAnim.lookY, camAnim.lookZ);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+} catch (err) {
+  webgl = false;
+  console.warn("WebGL unavailable, falling back to flat page.", err);
+}
+
+/* ============================================================
+   Scroll choreography
+   ============================================================ */
+
+/* master camera timeline — one unit per section transition */
+if (webgl) {
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".scroll-container",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1.2,
+      onUpdate: (self) => { journey = self.progress; },
+    },
+  });
+
+  /* hero → about : constellation assembles, drift to side view */
+  tl.to(morphMat.uniforms.uProgress, { value: 1, duration: 0.9, ease: "power2.inOut" }, 0);
+  tl.to(camAnim, { x: -10, y: 4.6, z: 15, lookX: 0, lookY: 3.4, lookZ: -2, duration: 1 }, 0);
+
+  /* about → services : swing behind chart, face the corridor */
+  tl.to(camAnim, { x: 0, y: 3.4, z: 3, lookX: 0, lookY: 4.2, lookZ: -30, duration: 1 }, 1);
+
+  /* services : fly down the ledger corridor */
+  tl.to(camAnim, { x: 0, y: 3.8, z: -40, lookX: 0, lookY: 4.4, lookZ: -74, duration: 1 }, 2);
+
+  /* numbers : rise to aerial skyline view */
+  tl.to(camAnim, { x: 0, y: 17, z: -58, lookX: 0, lookY: 1.5, lookZ: -96, duration: 1 }, 3);
+
+  /* process : descend on a diagonal */
+  tl.to(camAnim, { x: 7.5, y: 5.2, z: -90, lookX: 0, lookY: 3.4, lookZ: -118, duration: 1 }, 4);
+
+  /* voice → contact : settle facing the ring */
+  tl.to(camAnim, { x: 0, y: 3.4, z: -113, lookX: 0, lookY: 3.4, lookZ: -132, duration: 1 }, 5);
+}
+
+/* progress bar */
+gsap.to("#progress i", {
+  scaleX: 1,
+  ease: "none",
+  scrollTrigger: { trigger: ".scroll-container", start: "top top", end: "bottom bottom", scrub: 0.3 },
+});
+
+/* nav state */
+ScrollTrigger.create({
+  start: 60,
+  onEnter: () => document.getElementById("nav").classList.add("scrolled"),
+  onLeaveBack: () => document.getElementById("nav").classList.remove("scrolled"),
+});
+
+/* section content reveals */
+gsap.utils.toArray(".reveal").forEach((el) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 44 },
+    {
+      opacity: 1, y: 0, duration: 1.1, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 84%", toggleActions: "play none none reverse" },
+    }
+  );
+});
+
+/* hero fades out as you leave it */
+gsap.to("#hero .content", {
+  opacity: 0, y: -70, ease: "none",
+  scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom 35%", scrub: true },
+});
+gsap.to(".scroll-hint", {
+  opacity: 0, ease: "none",
+  scrollTrigger: { trigger: "#hero", start: "top top", end: "20% top", scrub: true },
+});
+
+/* animated counters */
+gsap.utils.toArray(".count").forEach((el) => {
+  const target = parseFloat(el.dataset.target);
+  const decimals = parseInt(el.dataset.decimals || "0", 10);
+  const obj = { v: 0 };
+  ScrollTrigger.create({
+    trigger: el, start: "top 88%", once: true,
+    onEnter: () => gsap.to(obj, {
+      v: target, duration: 2.2, ease: "power3.out",
+      onUpdate: () => {
+        el.textContent = decimals
+          ? obj.v.toFixed(decimals)
+          : Math.round(obj.v).toLocaleString("en-IN");
+      },
+    }),
+  });
+});
+
+/* ============================================================
+   Intro — loader + hero title
+   ============================================================ */
+(function heroTitleSplit() {
+  const h1 = document.getElementById("hero-title");
+  const words = h1.textContent.trim().split(" ");
+  h1.innerHTML = words
+    .map((w) => `<span class="w"><span class="wi">${w}</span></span>`)
+    .join(" ");
+})();
+
+gsap.set(".reveal-hero", { opacity: 0, y: 26 });
+
+const loadTl = gsap.timeline();
+loadTl.to("#loadbar", { scaleX: 1, duration: 1.1, ease: "power2.inOut" });
+
+window.addEventListener("load", () => {
+  loadTl
+    .to("#loadbar", { scaleX: 1, duration: 0.2 })
+    .to("#loader", { opacity: 0, duration: 0.7, ease: "power2.inOut", pointerEvents: "none" })
+    .set("#loader", { display: "none" })
+    .to("#hero-title .wi", {
+      y: 0, duration: 1.15, ease: "power4.out", stagger: 0.09,
+    }, "-=0.35")
+    .to(".reveal-hero", {
+      opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.1,
+    }, "-=0.7");
+});
+
+/* safety: never trap the user behind the loader */
+setTimeout(() => {
+  const l = document.getElementById("loader");
+  if (l && l.style.display !== "none") {
+    gsap.to(l, { opacity: 0, duration: 0.5, onComplete: () => (l.style.display = "none") });
+    gsap.to("#hero-title .wi", { y: 0, duration: 1, ease: "power4.out", stagger: 0.08 });
+    gsap.to(".reveal-hero", { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 });
+  }
+}, 5000);
+</script>
+</body>
+</html>
