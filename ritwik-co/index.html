@@ -328,6 +328,119 @@
   .r-in { opacity: 0; transform: translateY(36px); }
   @media (prefers-reduced-motion: reduce) { .r-in { transform: none; } }
 
+  /* ---------- pricing ----------
+     Structure adapted from a 21st.dev three-tier pattern
+     (highlighted middle tier, feature lists), restyled fully
+     into the monochrome light language. */
+  .tiers {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 54px; align-items: stretch;
+  }
+  .tier {
+    border: 1px solid var(--hairline); border-radius: 18px;
+    background: var(--bg-lift); padding: 30px 26px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .tier .t-name {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--txt-dim); margin-bottom: 18px;
+  }
+  .tier .t-price {
+    font-family: var(--display); font-weight: 750; font-stretch: 112%;
+    font-size: clamp(30px, 3.2vw, 42px); line-height: 1;
+  }
+  .tier .t-price small {
+    font-family: var(--mono); font-size: 11px; font-weight: 400;
+    color: var(--txt-faint); letter-spacing: 0.06em; margin-left: 6px;
+  }
+  .tier .t-for { color: var(--txt-dim); font-size: 13.5px; margin: 12px 0 22px; line-height: 1.55; }
+  .tier ul { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; }
+  .tier li {
+    font-size: 13.5px; color: var(--txt-dim);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .tier li::before { content: "+"; font-family: var(--mono); color: var(--txt-faint); }
+  .tier .btn { margin-top: auto; justify-content: center; }
+  /* the one tier that carries persistent light */
+  .tier.hot {
+    border-color: rgba(245, 245, 245, 0.45);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 34px rgba(255,255,255,0.07), inset 0 0 24px rgba(255,255,255,0.03);
+  }
+  .tier.hot .t-name { color: var(--txt); text-shadow: var(--glow-core); }
+  .tier .t-badge {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.26em;
+    text-transform: uppercase; color: #0a0a0a; background: #f5f5f5;
+    border-radius: 999px; padding: 5px 12px;
+    box-shadow: var(--glow-core), var(--glow-halo);
+    align-self: flex-start; margin-bottom: 16px;
+  }
+  .price-note {
+    margin-top: 18px; font-family: var(--mono); font-size: 10.5px;
+    color: var(--txt-faint); letter-spacing: 0.05em;
+  }
+
+  /* ---------- process ---------- */
+  .flow { margin-top: 54px; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .ph {
+    border-left: 1px solid var(--hairline);
+    padding: 6px 22px 10px; position: relative;
+  }
+  .ph .spark {
+    position: absolute; top: 0; left: -3.5px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #f5f5f5; box-shadow: var(--glow-core), var(--glow-halo);
+  }
+  .ph .when {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em;
+    text-transform: uppercase; color: var(--txt-faint); margin-bottom: 14px;
+  }
+  .ph h3 { font-family: var(--display); font-weight: 650; font-stretch: 108%; font-size: 21px; margin-bottom: 10px; }
+  .ph p { font-size: 13.5px; line-height: 1.65; color: var(--txt-dim); }
+
+  /* ---------- contact ---------- */
+  #contact { text-align: center; padding-bottom: 40px; }
+  #contact h2 { font-size: clamp(42px, 8vw, 96px); }
+  #contact .sub { margin: 0 auto; }
+  #contact .label { justify-content: center; }
+  #contact .label::before { display: none; }
+  .reach { display: flex; gap: 14px; justify-content: center; margin-top: 42px; flex-wrap: wrap; }
+  /* the strongest light on the page lives on this button */
+  .btn.beacon {
+    background: #f5f5f5; color: #0a0a0a; font-size: 15px; padding: 17px 34px;
+  }
+  .btn.beacon .glow { opacity: 0.55; transition: opacity 0.3s ease; }
+  .btn.beacon:hover .glow, .btn.beacon:active .glow { opacity: 1; }
+  .handle {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid var(--hairline); border-radius: 999px;
+    background: none; color: var(--txt); cursor: pointer;
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.04em;
+    padding: 16px 26px; transition: border-color 0.25s ease;
+  }
+  .handle:hover, .handle:active { border-color: rgba(245,245,245,0.45); }
+  .handle .net { color: var(--txt-faint); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
+  footer {
+    margin-top: 90px; padding: 26px 0 34px;
+    border-top: 1px solid var(--hairline);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+    color: var(--txt-faint);
+  }
+  #toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translate(-50%, 80px);
+    background: #f5f5f5; color: #0a0a0a; border-radius: 999px;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em;
+    padding: 11px 22px; z-index: 80; opacity: 0; pointer-events: none;
+    box-shadow: var(--glow-halo);
+  }
+
+  @media (max-width: 900px) {
+    .tiers { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: repeat(2, 1fr); row-gap: 34px; }
+  }
+  @media (max-width: 520px) { .flow { grid-template-columns: 1fr; } }
+
   /* ---------- reduced motion: opacity-only world ---------- */
   @media (prefers-reduced-motion: reduce) {
     #marquee .track, #cue .tube::after, #hero h1 .pulse { animation: none !important; }
@@ -465,9 +578,116 @@
     </div>
   </section>
 
-  <!-- SECTIONS: pricing / process / contact appended in later stages -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="label r-in">Pricing · Value first</div>
+      <h2 class="r-in">Pay for the feeling,<br>not the pages.</h2>
+      <p class="sub r-in">Clients don't remember page counts. They remember how the site felt. Pick the level of feeling you want.</p>
+      <!-- EDIT: placeholder pricing. Adjust amounts, inclusions and delivery
+           windows to your real offer before sending this to a prospect. -->
+      <div class="tiers">
+        <div class="tier r-in">
+          <span class="t-name">Launch</span>
+          <div class="t-price">₹9,999<small>FROM</small></div>
+          <p class="t-for">A one-page animated site that makes a small business look established.</p>
+          <ul>
+            <li>Single page, up to 5 sections</li>
+            <li>GSAP scroll reveals + smooth scroll</li>
+            <li>Mobile-first build and testing</li>
+            <li>Delivered in 4 to 5 days</li>
+            <li>One revision round</li>
+          </ul>
+          <a href="#contact" data-scroll class="btn line lit">Start with Launch<span class="glow"></span></a>
+        </div>
+        <div class="tier hot r-in">
+          <span class="t-badge">Most booked</span>
+          <span class="t-name">Signature</span>
+          <div class="t-price">₹24,999<small>FROM</small></div>
+          <p class="t-for">The full scroll experience. What this page is doing, tuned to your brand.</p>
+          <ul>
+            <li>Everything in Launch</li>
+            <li>One hero moment: scroll-video or 3D</li>
+            <li>Velocity marquees, kinetic type</li>
+            <li>Live preview link from day one</li>
+            <li>Delivered in about a week</li>
+            <li>Two revision rounds</li>
+          </ul>
+          <a href="#contact" data-scroll class="btn solid lit">Book Signature<span class="glow"></span></a>
+        </div>
+        <div class="tier r-in">
+          <span class="t-name">Flagship</span>
+          <div class="t-price">Custom</div>
+          <p class="t-for">Multi-page builds, custom 3D worlds, brand systems, ongoing care.</p>
+          <ul>
+            <li>Everything in Signature</li>
+            <li>Multi-page architecture</li>
+            <li>Custom WebGL scene design</li>
+            <li>Priority scheduling + support</li>
+            <li>Scoped and quoted per project</li>
+          </ul>
+          <a href="#contact" data-scroll class="btn line lit">Talk Flagship<span class="glow"></span></a>
+        </div>
+      </div>
+      <p class="price-note r-in">// prices are starting points; every quote is confirmed before work begins</p>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="label r-in">Process · No mystery</div>
+      <h2 class="r-in">Brief me on Monday,<br>launch by the weekend.</h2>
+      <p class="sub r-in">An AI-assisted build process means the slow parts of web development are gone. What remains is judgment, taste and testing on a real phone.</p>
+      <div class="flow" style="margin-top:54px">
+        <div class="ph r-in">
+          <span class="spark"></span>
+          <div class="when">Day 0</div>
+          <h3>Brief</h3>
+          <p>A DM works. Tell me what you do, who it's for, and one site you envy. I reply with a plan and a fixed quote within 24 hours.</p>
+        </div>
+        <div class="ph r-in">
+          <span class="spark"></span>
+          <div class="when">Days 1–3</div>
+          <h3>Build sprint</h3>
+          <p>I build fast with an AI-assisted workflow and send you a live preview URL from the first day. You watch it evolve in real time.</p>
+        </div>
+        <div class="ph r-in">
+          <span class="spark"></span>
+          <div class="when">Days 4–5</div>
+          <h3>Review on your phone</h3>
+          <p>You comment straight from your phone. Included revision rounds are turned around in hours, not weeks.</p>
+        </div>
+        <div class="ph r-in">
+          <span class="spark"></span>
+          <div class="when">Launch</div>
+          <h3>Ship + handover</h3>
+          <p>Deployed to your domain with everything you need to own it. No lock-in, no hostage files.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="label r-in">Contact · Zero friction</div>
+      <h2 class="r-in">Your site should<br><span class="pulse">glow like this.</span></h2>
+      <p class="sub r-in">DM me what you do and I'll send back a plan and a price within 24 hours. No forms, no calls unless you want one.</p>
+      <div class="reach r-in">
+        <a class="btn beacon lit" href="https://instagram.com/darkxzyfx" target="_blank" rel="noopener">DM on Instagram <span class="arr">→</span><span class="glow"></span></a>
+        <button class="handle lit" id="discord-copy" aria-label="Copy Discord username darkfx">
+          <span class="net">Discord</span> darkfx <span aria-hidden="true">⧉</span><span class="glow"></span>
+        </button>
+      </div>
+      <footer>
+        <span>© 2026 RITWIK &amp; CO</span>
+        <span>BUILT BY HAND, ON A PHONE, WITH AI</span>
+        <a href="https://instagram.com/darkxzyfx" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">@DARKXZYFX</a>
+      </footer>
+    </div>
+  </section>
 
 </main>
+
+<div id="toast" role="status">Discord handle copied: darkfx</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -773,6 +993,26 @@ if (reduceMotion) {
     trigger: "#services", start: "top 55%", end: "bottom 70%",
     scrub: 0.5, /* linear: canvas tracks the thumb exactly */
     onUpdate: (self) => { draw(self.progress); hud(self.progress); },
+  });
+})();
+
+/* ============================================================
+   Contact: copy Discord handle (usernames have no profile URL,
+   so tap-to-copy is the lowest-friction path).
+   ============================================================ */
+(function discordCopy() {
+  const btn = document.getElementById("discord-copy");
+  const toast = document.getElementById("toast");
+  if (!btn) return;
+  let hideTimer;
+  btn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText("darkfx"); }
+    catch (e) { /* clipboard blocked: still show the handle in the toast */ }
+    gsap.to(toast, { opacity: 1, y: -80, duration: 0.45, ease: "power3.out" });
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      gsap.to(toast, { opacity: 0, y: 0, duration: 0.4, ease: "power2.in" });
+    }, 2200);
   });
 })();
 
