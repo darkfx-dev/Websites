@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ritwik &amp; Co — Premium Animated Websites</title>
+<title>Ritwik &amp; Co · Premium Animated Websites</title>
 <meta name="description" content="Ritwik & Co. Solo AI-powered developer building premium, animation-rich, scroll-driven websites. Fast turnaround, mobile-first, built to feel expensive.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a0a'/><text x='50' y='70' font-size='56' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>R</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Schibsted+Grotesk:wght@400;500;600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
   /* ==========================================================
-     RITWIK & CO — monochrome neon
+     RITWIK & CO, monochrome neon
      All "color" is light: white glow layered over near-black.
      Glow recipe everywhere: tight bright pass + wide soft pass,
      animated via OPACITY of pre-styled layers, never shadow values.
@@ -49,7 +49,7 @@
 
   /* ---------- reusable glow layer ----------
      .lit elements get a pre-rendered glow child (opacity 0),
-     JS/CSS toggles opacity only — cheap on mobile GPUs. */
+     JS/CSS toggles opacity only, cheap on mobile GPUs. */
   .lit { position: relative; isolation: isolate; }
   .lit .glow {
     content: ""; position: absolute; inset: -2px; border-radius: inherit;
@@ -126,7 +126,7 @@
     font-weight: 250; font-stretch: 72%; font-style: italic;
     color: var(--txt-faint); padding: 0 0.06em;
   }
-  /* slow ambient pulse on the headline — the one permanent glow */
+  /* slow ambient pulse on the headline, the one permanent glow */
   #hero h1 .pulse {
     animation: pulse 4.5s ease-in-out infinite;
   }
@@ -152,7 +152,7 @@
   .btn .arr { transition: transform 0.22s ease; }
   .btn:hover .arr, .btn:active .arr { transform: translateX(4px); }
 
-  /* scroll cue — neon tube treatment, clickable */
+  /* scroll cue, neon tube treatment, clickable */
   #cue {
     position: absolute; bottom: 30px; left: clamp(18px, 5vw, 64px);
     display: flex; align-items: center; gap: 14px;
@@ -197,6 +197,137 @@
   }
   @keyframes slide { to { transform: translateX(-50%); } }
 
+  /* ---------- work ---------- */
+  .work-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px; margin-top: 54px;
+  }
+  .work {
+    border: 1px solid var(--hairline); border-radius: 16px;
+    padding: 26px; min-height: 300px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; overflow: hidden; isolation: isolate;
+    background: var(--bg-lift);
+    transition: border-color 0.25s ease;
+  }
+  .work.wide { grid-column: span 2; min-height: 340px; }
+  @media (hover: hover) { .work:hover { border-color: rgba(245,245,245,0.4); } }
+  .work:active { border-color: rgba(245,245,245,0.4); }
+  .work .tag {
+    position: absolute; top: 22px; left: 24px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em;
+    color: var(--txt-faint);
+  }
+  .work h3 {
+    font-family: var(--display); font-weight: 650; font-stretch: 110%;
+    font-size: clamp(20px, 2.4vw, 30px); margin-bottom: 8px;
+  }
+  .work p { color: var(--txt-dim); font-size: 14px; line-height: 1.6; max-width: 44ch; }
+  .work .art {
+    position: absolute; inset: 0; z-index: -1; opacity: 0.55;
+    transition: opacity 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (hover: hover) { .work:hover .art { opacity: 0.9; } }
+  .work:active .art { opacity: 0.9; }
+  .work::after { /* bottom fade so text stays readable over art */
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, transparent 30%, rgba(10,10,10,0.88) 82%);
+  }
+  /* per-card monochrome artwork, CSS/SVG only, swapped for real shots later */
+  .art-type {
+    font-family: var(--display); font-weight: 900; font-stretch: 125%;
+    font-size: clamp(90px, 16vw, 190px); line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px rgba(245,245,245,0.22);
+    letter-spacing: -0.02em; transform: translateY(-12%);
+    user-select: none;
+  }
+  .art svg { width: 62%; max-width: 340px; opacity: 0.8; }
+  .art .strip { display: flex; gap: 6px; width: 78%; height: 44%; align-items: stretch; }
+  .art .strip i {
+    flex: 1; border: 1px solid rgba(245,245,245,0.16); border-radius: 4px;
+    background: linear-gradient(180deg, rgba(245,245,245,0.06), transparent);
+  }
+  .art .strip i:nth-child(3) {
+    border-color: rgba(245,245,245,0.5);
+    box-shadow: 0 0 14px rgba(255,255,255,0.18), inset 0 0 14px rgba(255,255,255,0.08);
+  }
+  .art .panes { position: relative; width: 60%; height: 56%; }
+  .art .panes i {
+    position: absolute; border-radius: 10px;
+    border: 1px solid rgba(245,245,245,0.18);
+    background: rgba(245,245,245,0.04);
+    backdrop-filter: blur(2px);
+  }
+  .art .panes i:nth-child(1) { inset: 0 30% 30% 0; }
+  .art .panes i:nth-child(2) { inset: 18% 12% 12% 18%; background: rgba(245,245,245,0.07); }
+  .art .panes i:nth-child(3) { inset: 40% 0 0 44%; background: rgba(245,245,245,0.05); }
+  .art .rings { position: relative; width: 150px; height: 150px; }
+  .art .rings i {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 1px solid rgba(245,245,245,0.2);
+  }
+  .art .rings i:nth-child(2) { inset: 26%; border-color: rgba(245,245,245,0.35); }
+  .art .rings i:nth-child(3) {
+    inset: 46%; background: #f5f5f5; border: none;
+    box-shadow: var(--glow-core), var(--glow-halo);
+  }
+
+  /* ---------- services + scrub demo ---------- */
+  #services .head { max-width: 720px; }
+  .svc-cols {
+    display: grid; grid-template-columns: 0.9fr 1.4fr;
+    gap: clamp(28px, 4vw, 64px); margin-top: 56px; align-items: start;
+  }
+  .svc-list { display: flex; flex-direction: column; }
+  .svc {
+    padding: 20px 4px; border-top: 1px solid var(--hairline);
+    display: flex; gap: 16px; align-items: baseline;
+  }
+  .svc:last-child { border-bottom: 1px solid var(--hairline); }
+  .svc .k {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--txt-faint); min-width: 64px;
+  }
+  .svc .t { font-weight: 500; font-size: 15px; }
+  .svc .d { color: var(--txt-dim); font-size: 13px; margin-top: 4px; line-height: 1.55; }
+
+  .demo-shell { position: relative; }
+  .demo-frame {
+    border: 1px solid var(--hairline); border-radius: 16px;
+    background: #0d0d0d; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 30px 80px -30px rgba(0,0,0,0.9);
+  }
+  .demo-frame canvas { display: block; width: 100%; height: auto; }
+  .demo-hud {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px; font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.24em; text-transform: uppercase; color: var(--txt-dim);
+  }
+  .demo-hud .bar {
+    flex: 1; height: 1px; background: var(--hairline);
+    margin: 0 16px; position: relative;
+  }
+  .demo-hud .bar i {
+    position: absolute; inset: 0; transform-origin: left; transform: scaleX(0);
+    background: #fff; box-shadow: var(--glow-core);
+  }
+  .demo-note {
+    margin-top: 10px; font-family: var(--mono); font-size: 10.5px;
+    color: var(--txt-faint); letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 900px) {
+    .svc-cols { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .work-grid { grid-template-columns: 1fr; }
+    .work.wide { grid-column: span 1; }
+  }
+
+  .r-in { opacity: 0; transform: translateY(36px); }
+  @media (prefers-reduced-motion: reduce) { .r-in { transform: none; } }
+
   /* ---------- reduced motion: opacity-only world ---------- */
   @media (prefers-reduced-motion: reduce) {
     #marquee .track, #cue .tube::after, #hero h1 .pulse { animation: none !important; }
@@ -227,7 +358,7 @@
         <span class="row"><span>RITWIK<em class="amp">&amp;</em>CO</span></span>
         <span class="row"><span class="pulse">BUILDS LIGHT.</span></span>
       </h1>
-      <p class="position h-in">I build websites that <strong>feel expensive</strong> — scroll-driven, animation-rich, buttery on the phone in your pocket. This page is the portfolio: <strong>everything moving here is what you're buying.</strong></p>
+      <p class="position h-in">I build websites that <strong>feel expensive</strong>: scroll-driven, animation-rich, buttery on the phone in your pocket. This page is the portfolio. <strong>Everything moving here is what you're buying.</strong></p>
       <div class="btns h-in">
         <a href="#work" data-scroll class="btn solid lit">See the work <span class="arr">→</span><span class="glow"></span></a>
         <a href="#contact" data-scroll class="btn line lit">Start a project<span class="glow"></span></a>
@@ -251,7 +382,90 @@
     </div>
   </div>
 
-  <!-- SECTIONS: work / services / pricing / process / contact appended in later stages -->
+  <section id="work">
+    <div class="wrap">
+      <div class="label r-in">Work · What I build</div>
+      <h2 class="r-in">Five kinds of <br>unforgettable.</h2>
+      <p class="sub r-in">Every card here is a build type I deliver. Tap one: the glow you feel is the same feedback system your visitors will get.</p>
+      <div class="work-grid">
+        <!-- SWAP: when real case studies are ready, replace each .art block
+             with a project screenshot (image tag or muted looping video tag)
+             and wrap the card in a link to the live project URL. -->
+        <div class="work wide lit r-in">
+          <span class="tag">AGENCY / KINETIC</span>
+          <div class="art"><span class="art-type">MOVE</span></div>
+          <h3>Animated agency sites</h3>
+          <p>Kinetic type, marquees, magnetic CTAs. Sites that behave like a showreel and still load fast.</p>
+          <span class="glow"></span>
+        </div>
+        <div class="work lit r-in">
+          <span class="tag">WEBGL / 3D</span>
+          <div class="art">
+            <svg viewBox="0 0 200 140" fill="none" stroke="rgba(245,245,245,0.3)" stroke-width="1">
+              <path d="M60 30 L140 30 L170 60 L170 110 L90 110 L60 80 Z"/>
+              <path d="M60 30 L60 80 L90 110 M140 30 L140 80 L170 110 M60 80 L140 80 L140 30 M140 80 L170 60"/>
+              <circle cx="140" cy="80" r="2.5" fill="#f5f5f5" stroke="none"/>
+            </svg>
+          </div>
+          <h3>3D hero builds</h3>
+          <p>WebGL scenes that respond to scroll, used only where they earn their load time.</p>
+          <span class="glow"></span>
+        </div>
+        <div class="work lit r-in">
+          <span class="tag">SCROLL / VIDEO</span>
+          <div class="art"><div class="strip"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <h3>Scroll-video experiences</h3>
+          <p>Frame sequences scrubbed by the reader's thumb. There's a live one two sections down.</p>
+          <span class="glow"></span>
+        </div>
+        <div class="work lit r-in">
+          <span class="tag">PRODUCT / UI</span>
+          <div class="art"><div class="panes"><i></i><i></i><i></i></div></div>
+          <h3>Glass &amp; product UI</h3>
+          <p>Layered panels, considered blur, dashboard polish for tools people use daily.</p>
+          <span class="glow"></span>
+        </div>
+        <div class="work lit r-in">
+          <span class="tag">MONO / LIGHT</span>
+          <div class="art"><div class="rings"><i></i><i></i><i></i></div></div>
+          <h3>Monochrome kinetic</h3>
+          <p>Type-led, light-driven, zero pigment. You're reading one right now.</p>
+          <span class="glow"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="head">
+        <div class="label r-in">Services · Shown, not told</div>
+        <h2 class="r-in">Watch a build<br>assemble itself.</h2>
+        <p class="sub r-in">Keep scrolling. The screen below is a scroll-scrubbed sequence, the exact technique I sell. Your thumb is the playhead.</p>
+      </div>
+      <div class="svc-cols">
+        <div class="svc-list">
+          <div class="svc r-in"><span class="k">GSAP</span><span><span class="t">Scroll choreography</span><br><span class="d">Timelines, pins and scrubs tied precisely to scroll position.</span></span></div>
+          <div class="svc r-in"><span class="k">SCRUB</span><span><span class="t">Scroll-video sections</span><br><span class="d">Canvas frame sequences, never stuttery native video scrubbing.</span></span></div>
+          <div class="svc r-in"><span class="k">LENIS</span><span><span class="t">Smooth scroll, synced right</span><br><span class="d">One frame loop shared with GSAP. No jitter, ever.</span></span></div>
+          <div class="svc r-in"><span class="k">WEBGL</span><span><span class="t">3D moments</span><br><span class="d">Only where they serve the story. Never a decoration tax.</span></span></div>
+          <div class="svc r-in"><span class="k">PERF</span><span><span class="t">Mobile-first budgets</span><br><span class="d">Built and tested on a real Android, not a desktop preview.</span></span></div>
+          <div class="svc r-in"><span class="k">SHIP</span><span><span class="t">Live preview from day one</span><br><span class="d">You watch it come together at a real URL, not screenshots.</span></span></div>
+        </div>
+        <div class="demo-shell r-in">
+          <div class="demo-frame"><canvas id="demo" width="1200" height="780" aria-label="Scroll-driven demo: a website wireframe assembling into a finished, glowing page"></canvas></div>
+          <div class="demo-hud">
+            <span id="demo-phase">Wireframe</span>
+            <span class="bar"><i id="demo-bar"></i></span>
+            <span id="demo-pct">0%</span>
+          </div>
+          <p class="demo-note">// live demo, drawn per scroll frame, not a video file</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTIONS: pricing / process / contact appended in later stages -->
 
 </main>
 
@@ -263,10 +477,10 @@ gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ============================================================
-   Smooth scroll — Lenis driven BY the GSAP ticker (single rAF).
+   Smooth scroll, Lenis driven BY the GSAP ticker (single rAF).
    Never give Lenis its own requestAnimationFrame loop:
    two frame loops make pinned/scrubbed elements jitter.
-   Touch stays native (Lenis default) — Android momentum wins.
+   Touch stays native (Lenis default), Android momentum wins.
    ============================================================ */
 let lenis = null;
 if (typeof Lenis !== "undefined" && !reduceMotion) {
@@ -296,7 +510,7 @@ ScrollTrigger.create({
 });
 
 /* ============================================================
-   Ambient light field — cheap 2D canvas, ~26 soft white orbs
+   Ambient light field, cheap 2D canvas, ~26 soft white orbs
    drifting slowly. Parallax: the field shifts at 40% of hero
    scroll (hero only). Skipped entirely under reduced motion.
    ============================================================ */
@@ -354,7 +568,7 @@ ScrollTrigger.create({
 })();
 
 /* ============================================================
-   Hero entrance — load sequence, not scroll.
+   Hero entrance, load sequence, not scroll.
    headline rows → label/position/CTAs, power3.out, tight stagger.
    ============================================================ */
 window.addEventListener("load", () => {
@@ -379,7 +593,7 @@ document.getElementById("cue").addEventListener("click", () => {
 });
 
 /* ============================================================
-   Marquee — CSS loop + scroll-velocity skew (transform only).
+   Marquee, CSS loop + scroll-velocity skew (transform only).
    ============================================================ */
 if (!reduceMotion) {
   const track = document.getElementById("mtrack");
@@ -388,6 +602,179 @@ if (!reduceMotion) {
     onUpdate: (self) => skew(gsap.utils.clamp(-6, 6, self.getVelocity() / -280)),
   });
 }
+
+/* ============================================================
+   Section reveals: once, staggered 70ms, decelerating in.
+   ============================================================ */
+if (reduceMotion) {
+  gsap.set(".r-in", { opacity: 1, y: 0 });
+} else {
+  ScrollTrigger.batch(".r-in", {
+    start: "top 88%", once: true,
+    onEnter: (els) => gsap.to(els, {
+      opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.07,
+    }),
+  });
+}
+
+/* ============================================================
+   Scroll-scrubbed build demo.
+   A frame-sequence effect drawn parametrically: draw(t) renders
+   the frame for scroll progress t directly, so there is nothing
+   to preload and zero frame memory, which matters on phones.
+   Scrub is linear (ease none) so the canvas tracks the thumb 1:1.
+   ============================================================ */
+(function scrubDemo() {
+  const cv = document.getElementById("demo");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const phaseEl = document.getElementById("demo-phase");
+  const barEl = document.getElementById("demo-bar");
+  const pctEl = document.getElementById("demo-pct");
+
+  const seg = (t, s, e) => Math.min(1, Math.max(0, (t - s) / (e - s)));
+
+  /* page elements inside the mock browser: [x, y, w, h, wireStart] */
+  const nav    = [90, 150, 1020, 54];
+  const heroA  = [90, 260, 620, 46];
+  const heroB  = [90, 322, 470, 46];
+  const cta    = [90, 408, 190, 52];
+  const cards  = [[90, 520, 326, 150], [437, 520, 326, 150], [784, 520, 326, 150]];
+  const all    = [
+    { r: nav,     s: 0.00 }, { r: heroA, s: 0.10 }, { r: heroB, s: 0.18 },
+    { r: cta,     s: 0.26 }, { r: cards[0], s: 0.34 }, { r: cards[1], s: 0.42 },
+    { r: cards[2], s: 0.50 },
+  ];
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    const wire = seg(t, 0, 0.42);      /* outlines draw in           */
+    const build = seg(t, 0.40, 0.74);  /* surfaces + type fill in    */
+    const light = seg(t, 0.74, 1);     /* the glow pass              */
+
+    /* browser chrome */
+    ctx.strokeStyle = "rgba(245,245,245,0.28)";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    rr(40, 40, W - 80, H - 80, 18); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(40, 106); ctx.lineTo(W - 40, 106); ctx.stroke();
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.arc(76 + i * 26, 73, 6, 0, 7);
+      ctx.fillStyle = "rgba(245,245,245,0.3)"; ctx.fill();
+    }
+
+    /* wireframe outlines, drawn in sequence */
+    ctx.setLineDash([7, 7]);
+    ctx.lineWidth = 1.5;
+    for (const el of all) {
+      const p = seg(wire, el.s, el.s + 0.30);
+      if (p <= 0) continue;
+      ctx.strokeStyle = `rgba(245,245,245,${0.34 * p * (1 - build * 0.8)})`;
+      const [x, y, w, h] = el.r;
+      rr(x, y, w * (0.35 + 0.65 * p), h, 8); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    /* build: surfaces + type bars */
+    if (build > 0) {
+      const fillEl = (r, i, base) => {
+        const p = seg(build, i * 0.09, i * 0.09 + 0.34);
+        if (p <= 0) return 0;
+        ctx.fillStyle = `rgba(${base},${base},${base},${p / 255 * 255 > 0 ? p : 0})`;
+        ctx.globalAlpha = p;
+        ctx.fillStyle = `rgb(${base},${base},${base})`;
+        const [x, y, w, h] = r;
+        rr(x, y, w, h, 8); ctx.fill();
+        ctx.globalAlpha = 1;
+        return p;
+      };
+      fillEl(nav, 0, 22);
+      /* headline bars read as light type */
+      const pA = seg(build, 0.12, 0.5);
+      if (pA > 0) { ctx.globalAlpha = pA; ctx.fillStyle = "rgb(216,216,216)"; rr(heroA[0], heroA[1], heroA[2], heroA[3], 8); ctx.fill(); ctx.globalAlpha = 1; }
+      const pB = seg(build, 0.2, 0.58);
+      if (pB > 0) { ctx.globalAlpha = pB; ctx.fillStyle = "rgb(150,150,150)"; rr(heroB[0], heroB[1], heroB[2], heroB[3], 8); ctx.fill(); ctx.globalAlpha = 1; }
+      fillEl(cta, 3, 245);
+      cards.forEach((c, i) => {
+        const p = fillEl(c, 4 + i, 26);
+        if (p > 0.4) { /* card text stubs */
+          ctx.globalAlpha = (p - 0.4) / 0.6;
+          ctx.fillStyle = "rgb(90,90,90)";
+          rr(c[0] + 18, c[1] + 92, c[2] * 0.6, 10, 5); ctx.fill();
+          rr(c[0] + 18, c[1] + 114, c[2] * 0.42, 10, 5); ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      });
+      /* nav items */
+      if (build > 0.3) {
+        ctx.globalAlpha = seg(build, 0.3, 0.6);
+        ctx.fillStyle = "rgb(120,120,120)";
+        for (let i = 0; i < 3; i++) rr(nav[0] + nav[2] - 78 * (i + 1), nav[1] + 20, 56, 12, 6), ctx.fill();
+        rr(nav[0] + 20, nav[1] + 16, 90, 20, 6); ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    /* light: the glow pass */
+    if (light > 0) {
+      /* CTA bloom */
+      ctx.save();
+      ctx.shadowColor = "rgba(255,255,255,0.9)";
+      ctx.shadowBlur = 34 * light;
+      ctx.fillStyle = "rgb(250,250,250)";
+      rr(cta[0], cta[1], cta[2], cta[3], 8); ctx.fill();
+      ctx.restore();
+      /* soft halo around CTA */
+      const g = ctx.createRadialGradient(cta[0] + 95, cta[1] + 26, 0, cta[0] + 95, cta[1] + 26, 220);
+      g.addColorStop(0, `rgba(255,255,255,${0.13 * light})`);
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(cta[0] - 220, cta[1] - 200, 640, 450);
+      /* headline glow */
+      ctx.save();
+      ctx.shadowColor = `rgba(255,255,255,${0.7 * light})`;
+      ctx.shadowBlur = 22 * light;
+      ctx.fillStyle = "rgb(232,232,232)";
+      rr(heroA[0], heroA[1], heroA[2], heroA[3], 8); ctx.fill();
+      ctx.restore();
+      /* LIVE badge */
+      ctx.globalAlpha = light;
+      ctx.fillStyle = "rgb(245,245,245)";
+      ctx.font = "500 20px 'Fragment Mono', monospace";
+      ctx.save();
+      ctx.shadowColor = "rgba(255,255,255,0.8)"; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.arc(W - 168, 74, 5, 0, 7); ctx.fill();
+      ctx.restore();
+      ctx.fillText("LIVE", W - 150, 81);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function hud(t) {
+    phaseEl.textContent = t < 0.42 ? "Wireframe" : t < 0.74 ? "Build" : "Light";
+    barEl.style.transform = `scaleX(${t})`;
+    pctEl.textContent = Math.round(t * 100) + "%";
+  }
+
+  if (reduceMotion) { draw(1); hud(1); return; }
+  draw(0);
+  ScrollTrigger.create({
+    trigger: "#services", start: "top 55%", end: "bottom 70%",
+    scrub: 0.5, /* linear: canvas tracks the thumb exactly */
+    onUpdate: (self) => { draw(self.progress); hud(self.progress); },
+  });
+})();
 
 /* mobile tap-glow: brief .tapped pulse on touch (no hover on Android) */
 document.addEventListener("touchstart", (e) => {
