@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritwik &amp; Co — Premium Animated Websites</title>
+<meta name="description" content="Ritwik & Co. Solo AI-powered developer building premium, animation-rich, scroll-driven websites. Fast turnaround, mobile-first, built to feel expensive.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a0a'/><text x='50' y='70' font-size='56' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Schibsted+Grotesk:wght@400;500;600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================
+     RITWIK & CO — monochrome neon
+     All "color" is light: white glow layered over near-black.
+     Glow recipe everywhere: tight bright pass + wide soft pass,
+     animated via OPACITY of pre-styled layers, never shadow values.
+     ========================================================== */
+  :root {
+    --bg: #0a0a0a;
+    --bg-lift: #111111;
+    --txt: #f5f5f5;
+    --txt-dim: rgba(245, 245, 245, 0.58);
+    --txt-faint: rgba(245, 245, 245, 0.34);
+    --hairline: rgba(245, 245, 245, 0.12);
+    --display: "Archivo", Arial, sans-serif;
+    --body: "Schibsted Grotesk", -apple-system, sans-serif;
+    --mono: "Fragment Mono", monospace;
+    /* layered neon: tight core + soft halo */
+    --glow-core: 0 0 2px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.35);
+    --glow-halo: 0 0 24px rgba(255,255,255,0.18), 0 0 60px rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+  body {
+    background: var(--bg);
+    color: var(--txt);
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection { background: #f5f5f5; color: #0a0a0a; }
+
+  canvas#ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ---------- reusable glow layer ----------
+     .lit elements get a pre-rendered glow child (opacity 0),
+     JS/CSS toggles opacity only — cheap on mobile GPUs. */
+  .lit { position: relative; isolation: isolate; }
+  .lit .glow {
+    content: ""; position: absolute; inset: -2px; border-radius: inherit;
+    box-shadow: var(--glow-core), var(--glow-halo);
+    opacity: 0; transition: opacity 0.25s ease; pointer-events: none; z-index: -1;
+  }
+  @media (hover: hover) { .lit:hover .glow { opacity: 1; } }
+  .lit:active .glow, .lit.tapped .glow { opacity: 1; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px clamp(18px, 4vw, 48px);
+    transition: background 0.35s ease, backdrop-filter 0.35s ease;
+  }
+  nav.scrolled {
+    background: rgba(10, 10, 10, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .wordmark {
+    font-family: var(--display); font-weight: 800;
+    font-stretch: 115%; font-size: 17px; letter-spacing: 0.02em;
+    text-decoration: none; color: var(--txt); cursor: pointer;
+  }
+  .wordmark span { color: var(--txt-faint); font-weight: 400; }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
+  .nav-links a {
+    color: var(--txt-dim); text-decoration: none;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+  }
+  .nav-links a:hover, .nav-links a:active { color: var(--txt); text-shadow: var(--glow-core); }
+  .nav-links .cta {
+    color: #0a0a0a; background: #f5f5f5;
+    font-family: var(--body); font-weight: 600; font-size: 13px; letter-spacing: 0;
+    padding: 10px 20px; border-radius: 999px;
+  }
+  .nav-links .cta:hover, .nav-links .cta:active { color: #0a0a0a; text-shadow: none; }
+
+  /* ---------- layout primitives ---------- */
+  main { position: relative; z-index: 1; }
+  section { padding: clamp(96px, 14vh, 160px) clamp(18px, 5vw, 64px); position: relative; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.34em;
+    text-transform: uppercase; color: var(--txt-faint);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  }
+  .label::before { content: ""; width: 28px; height: 1px; background: var(--txt-faint); }
+  h2 {
+    font-family: var(--display); font-weight: 700; font-stretch: 108%;
+    font-size: clamp(32px, 5vw, 58px); line-height: 1.04;
+    letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 18px;
+  }
+  .sub { color: var(--txt-dim); font-size: clamp(14.5px, 1.3vw, 17px); line-height: 1.7; max-width: 54ch; }
+
+  /* ---------- hero ---------- */
+  #hero {
+    min-height: 100svh; display: flex; flex-direction: column;
+    justify-content: center; padding-top: 120px;
+  }
+  #hero h1 {
+    font-family: var(--display); font-weight: 850; font-stretch: 120%;
+    font-size: clamp(52px, 12.5vw, 168px); line-height: 0.94;
+    letter-spacing: -0.02em; text-transform: uppercase;
+    margin: 18px 0 30px;
+  }
+  #hero h1 .row { display: block; overflow: hidden; }
+  #hero h1 .row > span { display: inline-block; transform: translateY(110%); }
+  #hero h1 .amp {
+    font-weight: 250; font-stretch: 72%; font-style: italic;
+    color: var(--txt-faint); padding: 0 0.06em;
+  }
+  /* slow ambient pulse on the headline — the one permanent glow */
+  #hero h1 .pulse {
+    animation: pulse 4.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { text-shadow: 0 0 14px rgba(255,255,255,0.14); }
+    50%      { text-shadow: 0 0 22px rgba(255,255,255,0.32), 0 0 70px rgba(255,255,255,0.10); }
+  }
+  #hero .position {
+    font-size: clamp(15px, 1.5vw, 19px); color: var(--txt-dim);
+    line-height: 1.65; max-width: 46ch;
+  }
+  #hero .position strong { color: var(--txt); font-weight: 500; }
+  #hero .btns { display: flex; gap: 14px; margin-top: 38px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    text-decoration: none; font-weight: 600; font-size: 14px;
+    padding: 15px 28px; border-radius: 999px;
+    transition: transform 0.22s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn.solid { background: #f5f5f5; color: #0a0a0a; }
+  .btn.line { color: var(--txt); border: 1px solid var(--hairline); }
+  .btn .arr { transition: transform 0.22s ease; }
+  .btn:hover .arr, .btn:active .arr { transform: translateX(4px); }
+
+  /* scroll cue — neon tube treatment, clickable */
+  #cue {
+    position: absolute; bottom: 30px; left: clamp(18px, 5vw, 64px);
+    display: flex; align-items: center; gap: 14px;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--txt-dim); padding: 8px 0;
+  }
+  #cue .tube {
+    width: 1px; height: 48px; position: relative; overflow: hidden;
+    background: var(--hairline);
+  }
+  #cue .tube::after {
+    content: ""; position: absolute; left: -1px; top: -40%;
+    width: 3px; height: 40%;
+    background: #fff;
+    box-shadow: var(--glow-core), var(--glow-halo);
+    animation: cueDrop 2s cubic-bezier(0.4, 0, 0.4, 1) infinite;
+  }
+  @keyframes cueDrop { 0% { top: -40%; } 100% { top: 115%; } }
+
+  /* hero entrance targets (set by JS) */
+  .h-in { opacity: 0; transform: translateY(22px); }
+
+  /* ---------- capability marquee ---------- */
+  #marquee {
+    padding: 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    overflow: hidden; user-select: none;
+  }
+  #marquee .track {
+    display: flex; width: max-content;
+    animation: slide 26s linear infinite;
+    will-change: transform;
+  }
+  #marquee .set {
+    display: flex; align-items: center; gap: 34px; padding: 20px 17px;
+    font-family: var(--display); font-weight: 300; font-stretch: 95%;
+    font-size: clamp(16px, 2vw, 22px); letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--txt-dim); white-space: nowrap;
+  }
+  #marquee .set i {
+    font-style: normal; color: var(--txt-faint); font-size: 0.6em;
+  }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ---------- reduced motion: opacity-only world ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    #marquee .track, #cue .tube::after, #hero h1 .pulse { animation: none !important; }
+    .h-in { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="ambient"></canvas>
+
+<nav id="nav">
+  <a class="wordmark" href="#hero" data-scroll>RITWIK<span>&amp;CO</span></a>
+  <div class="nav-links">
+    <a href="#work" data-scroll>WORK</a>
+    <a href="#services" data-scroll>SERVICES</a>
+    <a href="#pricing" data-scroll>PRICING</a>
+    <a href="#contact" data-scroll class="cta">Start a project</a>
+  </div>
+</nav>
+
+<main>
+
+  <section id="hero">
+    <div class="wrap">
+      <div class="label h-in">Solo developer · Animation-first builds</div>
+      <h1 aria-label="Ritwik and Co">
+        <span class="row"><span>RITWIK<em class="amp">&amp;</em>CO</span></span>
+        <span class="row"><span class="pulse">BUILDS LIGHT.</span></span>
+      </h1>
+      <p class="position h-in">I build websites that <strong>feel expensive</strong> — scroll-driven, animation-rich, buttery on the phone in your pocket. This page is the portfolio: <strong>everything moving here is what you're buying.</strong></p>
+      <div class="btns h-in">
+        <a href="#work" data-scroll class="btn solid lit">See the work <span class="arr">→</span><span class="glow"></span></a>
+        <a href="#contact" data-scroll class="btn line lit">Start a project<span class="glow"></span></a>
+      </div>
+    </div>
+    <button id="cue" aria-label="Scroll to work">
+      <span class="tube"></span> Scroll
+    </button>
+  </section>
+
+  <div id="marquee" aria-hidden="true">
+    <div class="track" id="mtrack">
+      <div class="set">
+        GSAP Scroll Choreography <i>◆</i> Scroll-Video Sections <i>◆</i> 3D Hero Builds <i>◆</i>
+        Buttery Smooth Scroll <i>◆</i> Kinetic Typography <i>◆</i> Mobile-First Performance <i>◆</i>
+      </div>
+      <div class="set">
+        GSAP Scroll Choreography <i>◆</i> Scroll-Video Sections <i>◆</i> 3D Hero Builds <i>◆</i>
+        Buttery Smooth Scroll <i>◆</i> Kinetic Typography <i>◆</i> Mobile-First Performance <i>◆</i>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTIONS: work / services / pricing / process / contact appended in later stages -->
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ============================================================
+   Smooth scroll — Lenis driven BY the GSAP ticker (single rAF).
+   Never give Lenis its own requestAnimationFrame loop:
+   two frame loops make pinned/scrubbed elements jitter.
+   Touch stays native (Lenis default) — Android momentum wins.
+   ============================================================ */
+let lenis = null;
+if (typeof Lenis !== "undefined" && !reduceMotion) {
+  lenis = new Lenis({ duration: 1.05, smoothWheel: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+function scrollTo(target) {
+  if (lenis) lenis.scrollTo(target, { duration: 1.3 });
+  else target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+}
+document.querySelectorAll("[data-scroll]").forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const t = document.querySelector(a.getAttribute("href"));
+    if (!t) return;
+    e.preventDefault();
+    scrollTo(t);
+  });
+});
+
+/* nav backdrop after leaving the hero top */
+ScrollTrigger.create({
+  start: 40,
+  onEnter: () => document.getElementById("nav").classList.add("scrolled"),
+  onLeaveBack: () => document.getElementById("nav").classList.remove("scrolled"),
+});
+
+/* ============================================================
+   Ambient light field — cheap 2D canvas, ~26 soft white orbs
+   drifting slowly. Parallax: the field shifts at 40% of hero
+   scroll (hero only). Skipped entirely under reduced motion.
+   ============================================================ */
+(function ambient() {
+  const cv = document.getElementById("ambient");
+  const ctx = cv.getContext("2d");
+  let W, H, orbs = [];
+  const N = window.innerWidth < 768 ? 14 : 26;
+
+  function size() {
+    W = cv.width = innerWidth;
+    H = cv.height = innerHeight;
+  }
+  size();
+  window.addEventListener("resize", size);
+
+  for (let i = 0; i < N; i++) {
+    orbs.push({
+      x: Math.random(), y: Math.random(),
+      r: 40 + Math.random() * 120,
+      a: 0.015 + Math.random() * 0.035,
+      vx: (Math.random() - 0.5) * 0.00012,
+      vy: (Math.random() - 0.5) * 0.00009,
+    });
+  }
+
+  let scrollShift = 0;
+  ScrollTrigger.create({
+    trigger: "#hero", start: "top top", end: "bottom top", scrub: true,
+    onUpdate: (self) => { scrollShift = self.progress; },
+  });
+
+  if (reduceMotion) {
+    /* single static frame */
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach((o) => drawOrb(o, 0));
+    return;
+  }
+
+  function drawOrb(o, t) {
+    const x = (o.x + o.vx * t) % 1 * W;
+    const y = (((o.y + o.vy * t) % 1) + 1) % 1 * H - scrollShift * H * 0.4;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, o.r);
+    g.addColorStop(0, `rgba(255,255,255,${o.a})`);
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(x - o.r, y - o.r, o.r * 2, o.r * 2);
+  }
+
+  gsap.ticker.add((time) => {
+    ctx.clearRect(0, 0, W, H);
+    const t = time * 1000;
+    for (const o of orbs) drawOrb(o, t);
+  });
+})();
+
+/* ============================================================
+   Hero entrance — load sequence, not scroll.
+   headline rows → label/position/CTAs, power3.out, tight stagger.
+   ============================================================ */
+window.addEventListener("load", () => {
+  if (reduceMotion) {
+    gsap.set("#hero h1 .row > span", { y: 0 });
+    gsap.to(".h-in", { opacity: 1, duration: 0.5 });
+    return;
+  }
+  gsap.timeline()
+    .to("#hero h1 .row > span", { y: 0, duration: 1.05, ease: "power3.out", stagger: 0.12 }, 0.15)
+    .to(".h-in", { opacity: 1, y: 0, duration: 0.75, ease: "power3.out", stagger: 0.07 }, "-=0.55");
+});
+
+/* scroll cue fades after ~one viewport of scrolling */
+gsap.to("#cue", {
+  opacity: 0, ease: "none",
+  scrollTrigger: { trigger: "#hero", start: "12% top", end: "60% top", scrub: true },
+});
+document.getElementById("cue").addEventListener("click", () => {
+  const next = document.getElementById("work") || document.getElementById("marquee");
+  scrollTo(next);
+});
+
+/* ============================================================
+   Marquee — CSS loop + scroll-velocity skew (transform only).
+   ============================================================ */
+if (!reduceMotion) {
+  const track = document.getElementById("mtrack");
+  const skew = gsap.quickTo(track, "skewX", { duration: 0.4, ease: "power2.out" });
+  ScrollTrigger.create({
+    onUpdate: (self) => skew(gsap.utils.clamp(-6, 6, self.getVelocity() / -280)),
+  });
+}
+
+/* mobile tap-glow: brief .tapped pulse on touch (no hover on Android) */
+document.addEventListener("touchstart", (e) => {
+  const lit = e.target.closest(".lit");
+  if (!lit) return;
+  lit.classList.add("tapped");
+  setTimeout(() => lit.classList.remove("tapped"), 450);
+}, { passive: true });
+</script>
+</body>
+</html>
