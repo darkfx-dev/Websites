@@ -323,6 +323,9 @@
   @media (max-width: 640px) {
     .work-grid { grid-template-columns: 1fr; }
     .work.wide { grid-column: span 1; }
+    /* phone nav: wordmark + CTA only */
+    .nav-links a:not(.cta) { display: none; }
+    .nav-links .cta { padding: 9px 16px; font-size: 12.5px; }
   }
 
   .r-in { opacity: 0; transform: translateY(36px); }
@@ -708,6 +711,9 @@ if (typeof Lenis !== "undefined" && !reduceMotion) {
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
+  /* adopt browser-restored scroll position (refresh mid-page),
+     otherwise Lenis reasserts 0 and yanks the reader to the top */
+  if (window.scrollY > 0) lenis.scrollTo(window.scrollY, { immediate: true });
 }
 function scrollTo(target) {
   if (lenis) lenis.scrollTo(target, { duration: 1.3 });
