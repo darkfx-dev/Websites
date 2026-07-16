@@ -46,15 +46,15 @@
   ::selection { background: #f5f5f5; color: #0a0a0a; }
 
   canvas#hero3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-  /* readability veil: darkens behind the hero copy (upper-left) while
-     letting the wave field stay bright toward the right. Fixed + made of
-     the bg color, so over lower sections (canvas faded out) it reads as
-     plain black and costs nothing visually. */
+  /* readability veil: a fixed vignette over the persistent 3D world.
+     Darkens the top (nav), the bottom, and the edges, with a mild overall
+     multiply, so white copy stays legible over the animated backdrop in
+     every section while the wave/dust still read clearly through the middle. */
   .hero-veil {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(135% 120% at 22% 42%, rgba(10,10,10,0.86) 0%, rgba(10,10,10,0.42) 34%, rgba(10,10,10,0) 66%),
-      linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0) 26%, rgba(10,10,10,0) 78%, rgba(10,10,10,0.7) 100%);
+      radial-gradient(125% 85% at 50% 48%, rgba(10,10,10,0) 0%, rgba(10,10,10,0.28) 62%, rgba(10,10,10,0.72) 100%),
+      linear-gradient(180deg, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.14) 16%, rgba(10,10,10,0.14) 84%, rgba(10,10,10,0.78) 100%);
   }
 
   /* ---------- reusable glow layer ----------
@@ -339,7 +339,6 @@
   }
 
   .r-in { opacity: 0; transform: translateY(36px); }
-  @media (prefers-reduced-motion: reduce) { .r-in { transform: none; } }
 
   /* ---------- pricing ----------
      Structure adapted from a 21st.dev three-tier pattern
@@ -454,11 +453,41 @@
   }
   @media (max-width: 520px) { .flow { grid-template-columns: 1fr; } }
 
-  /* ---------- reduced motion: opacity-only world ---------- */
-  @media (prefers-reduced-motion: reduce) {
-    #marquee .track, #cue .tube::after, #hero h1 .pulse { animation: none !important; }
-    .h-in { transform: none; }
+  /* ---------- section motion ---------- */
+  /* Work: cursor-follow spotlight (adapted from a 21st.dev spotlight-card
+     pattern, restyled to monochrome) + a magnetic lift on hover. */
+  .work { transition: border-color 0.25s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1); }
+  .work .spot {
+    position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+    opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(245,245,245,0.13), transparent 62%);
   }
+  @media (hover: hover) {
+    .work:hover { transform: translateY(-6px); }
+    .work:hover .spot { opacity: 1; }
+  }
+
+  /* Process: a light beam fills across the timeline as it scrolls into view. */
+  .flow { position: relative; }
+  .flow-beam { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--hairline); }
+  .flow-beam i {
+    position: absolute; inset: 0; transform: scaleX(0); transform-origin: left;
+    background: linear-gradient(90deg, rgba(245,245,245,0.25), #fff);
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+  .ph .spark { opacity: 0.22; }
+
+  /* Pricing: a slow light shimmer rides the border of the recommended tier. */
+  .tier.hot { position: relative; }
+  .tier.hot::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+    background: linear-gradient(115deg, transparent 34%, rgba(255,255,255,0.72) 50%, transparent 66%);
+    background-size: 250% 250%;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: shine 4.8s linear infinite; pointer-events: none;
+  }
+  @keyframes shine { 0% { background-position: 210% 0; } 100% { background-position: -110% 0; } }
 </style>
 </head>
 <body>
@@ -652,6 +681,7 @@
       <h2 class="r-in">Brief me on Monday,<br>launch by the weekend.</h2>
       <p class="sub r-in">An AI-assisted build process means the slow parts of web development are gone. What remains is judgment, taste and testing on a real phone.</p>
       <div class="flow" style="margin-top:54px">
+        <div class="flow-beam" aria-hidden="true"><i></i></div>
         <div class="ph r-in">
           <span class="spark"></span>
           <div class="when">Day 0</div>
@@ -709,7 +739,10 @@
 <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* motion is always on at the client's explicit request — we do not gate on
+   prefers-reduced-motion. (Accessibility note: motion-sensitive visitors get
+   the full animation set; flagged in the handoff.) */
+const reduceMotion = false;
 
 /* ============================================================
    Smooth scroll, Lenis driven BY the GSAP ticker (single rAF).
@@ -759,9 +792,10 @@ ScrollTrigger.create({
      (scrub), so it follows the scrollbar exactly.
    - Additive white glow only (monochrome neon), depth fog fades
      far points into black, subtle mouse parallax for real depth.
+   - One continuous world behind the WHOLE page (wave floor +
+     ambient dust volume), so no section reads as flat black.
    - Renders on the shared GSAP ticker (same rAF as Lenis) and
-     pauses once the hero leaves the viewport. Reduced motion
-     gets a single still frame.
+     pauses only when the browser tab is hidden.
    ============================================================ */
 (function heroField() {
   const canvas = document.getElementById("hero3d");
@@ -808,6 +842,7 @@ ScrollTrigger.create({
       uTime: { value: 0 },
       uScroll: { value: 0 },
       uAmp: { value: 5.0 },
+      uBright: { value: 0.85 },
       uPixelRatio: { value: DPR },
     },
     vertexShader: `
@@ -864,13 +899,14 @@ ScrollTrigger.create({
     `,
     fragmentShader: `
       precision mediump float;
+      uniform float uBright;
       varying float vFog;
       varying float vBright;
       void main(){
         float d = length(gl_PointCoord - vec2(0.5));
         if (d > 0.5) discard;
         float core = 1.0 - smoothstep(0.0, 0.5, d);
-        float a = core * vFog * (vBright > 0.5 ? 0.95 : 0.5);
+        float a = core * vFog * (vBright > 0.5 ? 0.95 : 0.46) * uBright;
         gl_FragColor = vec4(vec3(1.0), a);
       }
     `,
@@ -879,26 +915,75 @@ ScrollTrigger.create({
   const points = new THREE.Points(geo, mat);
   scene.add(points);
 
-  /* ---- camera keyframes: [y, z, lookY] at scroll 0 and 1 ---- */
-  const camA = { y: 7.5, z: 48, lookY: -2.0 };
-  const camB = { y: 17.0, z: 33, lookY: -7.0 };
+  /* ---- ambient dust: a faint 3D volume so no section reads as flat black.
+     Rises and wraps on the GPU (zero CPU), with a gentle lateral sway. ---- */
+  const dustCount = isMobile ? 1100 : 2600;
+  const dpos = new Float32Array(dustCount * 3);
+  const dsize = new Float32Array(dustCount);
+  for (let i = 0; i < dustCount; i++) {
+    dpos[i * 3]     = (Math.random() - 0.5) * 130;
+    dpos[i * 3 + 1] = Math.random() * 52 - 10;
+    dpos[i * 3 + 2] = (Math.random() - 0.5) * 90 - 5;
+    dsize[i] = 0.6 + Math.random() * 1.8;
+  }
+  const dgeo = new THREE.BufferGeometry();
+  dgeo.setAttribute("position", new THREE.BufferAttribute(dpos, 3));
+  dgeo.setAttribute("aSize", new THREE.BufferAttribute(dsize, 1));
+  const dustMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTime: { value: 0 }, uPixelRatio: { value: DPR } },
+    vertexShader: `
+      uniform float uTime, uPixelRatio;
+      attribute float aSize;
+      varying float vFade;
+      void main(){
+        vec3 pos = position;
+        pos.y = mod(position.y + uTime * 1.3, 52.0) - 12.0;    // slow rise + wrap
+        pos.x += sin(uTime * 0.18 + position.z * 0.25) * 1.4;   // lateral sway
+        vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+        float dist = -mv.z;
+        vFade = smoothstep(170.0, 22.0, dist);
+        gl_PointSize = aSize * uPixelRatio * (55.0 / max(dist, 1.0));
+        gl_Position = projectionMatrix * mv;
+      }
+    `,
+    fragmentShader: `
+      precision mediump float;
+      varying float vFade;
+      void main(){
+        float d = length(gl_PointCoord - vec2(0.5));
+        if (d > 0.5) discard;
+        float core = 1.0 - smoothstep(0.0, 0.5, d);
+        gl_FragColor = vec4(vec3(1.0), core * vFade * 0.26);
+      }
+    `,
+  });
+  const dust = new THREE.Points(dgeo, dustMat);
+  scene.add(dust);
+
+  /* ---- continuous world: the camera drifts gently across the WHOLE page,
+     so the wave + dust stay behind every section (never flat black) ---- */
   const lookAt = new THREE.Vector3();
   const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
-  let sp = 0;          // scroll progress through the hero (0..1)
-  let live = true;     // render only while the hero is on screen
+  let gp = 0;          // scroll progress across the whole document (0..1)
+  let visible = true;  // pause render only when the tab is hidden
+  const lerp = (a, b, t) => a + (b - a) * t;
 
   function placeCamera() {
-    const y = camA.y + (camB.y - camA.y) * sp;
-    const z = camA.z + (camB.z - camA.z) * sp;
-    const ly = camA.lookY + (camB.lookY - camA.lookY) * sp;
+    const y  = lerp(7.5, 3.6, gp);    // sink a touch as you descend the page
+    const z  = lerp(48, 39, gp);      // ease inward
+    const ly = lerp(-2.0, -4.2, gp);  // tilt down
     camera.position.set(mouse.sx * 4.0, y - mouse.sy * 2.2, z);
     lookAt.set(mouse.sx * 2.0, ly, -22);
     camera.lookAt(lookAt);
   }
 
   function renderFrame(timeMs) {
-    mat.uniforms.uTime.value = timeMs * 0.001;
-    mat.uniforms.uScroll.value = sp;
+    const t = timeMs * 0.001;
+    mat.uniforms.uTime.value = t;
+    mat.uniforms.uScroll.value = gp;
+    mat.uniforms.uBright.value = lerp(0.8, 1.25, gp);  // world brightens toward Contact
+    dustMat.uniforms.uTime.value = t;
     mouse.sx += (mouse.x - mouse.sx) * 0.045;
     mouse.sy += (mouse.y - mouse.sy) * 0.045;
     points.rotation.y = Math.sin(timeMs * 0.00003) * 0.05;
@@ -912,33 +997,20 @@ ScrollTrigger.create({
     renderer.setSize(innerWidth, innerHeight);
   });
 
-  if (reduceMotion) {
-    placeCamera();
-    renderer.render(scene, camera);   // one still frame, no loop
-    return;
-  }
-
   document.addEventListener("mousemove", (e) => {
     mouse.x = (e.clientX / innerWidth - 0.5) * 2;
     mouse.y = (e.clientY / innerHeight - 0.5) * 2;
   });
 
-  /* scroll drives camera (linear scrub → tracks the scrollbar 1:1) */
+  /* one master scrub across the whole document (linear → tracks scroll 1:1) */
   ScrollTrigger.create({
-    trigger: "#hero", start: "top top", end: "bottom top", scrub: true,
-    onUpdate: (self) => { sp = self.progress; },
-  });
-  /* fade the field out as the hero leaves, and pause its render loop */
-  gsap.to("#hero3d", {
-    opacity: 0, ease: "none",
-    scrollTrigger: { trigger: "#hero", start: "45% top", end: "bottom top", scrub: true },
-  });
-  ScrollTrigger.create({
-    trigger: "#hero", start: "top top", end: "bottom top",
-    onToggle: (self) => { live = self.isActive; },
+    trigger: document.body, start: "top top", end: "bottom bottom", scrub: true,
+    onUpdate: (self) => { gp = self.progress; },
   });
 
-  gsap.ticker.add((time) => { if (live) renderFrame(time * 1000); });
+  /* render continuously on the shared GSAP ticker; pause only when tab hidden */
+  document.addEventListener("visibilitychange", () => { visible = !document.hidden; });
+  gsap.ticker.add((time) => { if (visible) renderFrame(time * 1000); });
 })();
 
 /* ============================================================
@@ -990,6 +1062,39 @@ if (reduceMotion) {
     }),
   });
 }
+
+/* ============================================================
+   Work cards: cursor-follow spotlight (adapted from a 21st.dev
+   spotlight-card pattern) + a magnetic lift handled in CSS.
+   ============================================================ */
+(function spotlightCards() {
+  document.querySelectorAll(".work").forEach((card) => {
+    const spot = document.createElement("span");
+    spot.className = "spot";
+    card.appendChild(spot);
+    card.addEventListener("pointermove", (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", ((e.clientX - r.left) / r.width) * 100 + "%");
+      card.style.setProperty("--my", ((e.clientY - r.top) / r.height) * 100 + "%");
+    });
+  });
+})();
+
+/* ============================================================
+   Process: a light beam fills across the timeline and the four
+   sparks ignite in sequence — scrubbed, so it tracks the scroll.
+   ============================================================ */
+(function processBeam() {
+  const flow = document.querySelector("#process .flow");
+  if (!flow) return;
+  const fill = flow.querySelector(".flow-beam i");
+  const sparks = flow.querySelectorAll(".spark");
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: "#process", start: "top 80%", end: "center 58%", scrub: 0.6 },
+  });
+  tl.to(fill, { scaleX: 1, ease: "none" }, 0);
+  sparks.forEach((s, i) => tl.to(s, { opacity: 1, ease: "none" }, (i / sparks.length) * 0.85));
+})();
 
 /* ============================================================
    Scroll-scrubbed build demo.
