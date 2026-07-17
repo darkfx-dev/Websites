@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Z Gym &amp; Fitness — Rustampura, Surat | 4.9★ Rated Gym</title>
+<meta name="description" content="F Z Gym & Fitness, Rustampura, Surat. Rated 4.9★ by 500+ members on Google. Strength, cardio and real coaching. Book a free trial on WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23FF4416'/><text x='50' y='72' font-size='58' font-weight='bold' text-anchor='middle' fill='%230d0d0d' font-family='Arial Black,Arial'>FZ</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================
+     F Z GYM & FITNESS — Rustampura, Surat
+     Preview / pitch build.
+     Voice: gym-poster loud, disciplined, local.
+     Palette: charcoal base · heat (#FF4416) for effort/CTAs ·
+     volt (#C6FF3D) reserved for results & the recommended plan.
+     One accent dominates per section — never both decoratively.
+     ========================================================== */
+  :root {
+    --coal: #0d0d0d;
+    --coal-2: #161616;
+    --coal-3: #1e1e1e;
+    --heat: #ff4416;
+    --heat-deep: #d63510;
+    --volt: #c6ff3d;
+    --txt: #f2f2f2;
+    --txt-dim: rgba(242, 242, 242, 0.72);
+    --txt-faint: rgba(242, 242, 242, 0.5);
+    --line: rgba(242, 242, 242, 0.14);
+    --display: "Anton", "Arial Narrow", sans-serif;
+    --body: "Barlow", -apple-system, sans-serif;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+  body {
+    background: var(--coal);
+    color: var(--txt);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection { background: var(--heat); color: #fff; }
+
+  h1, h2, h3 { text-wrap: balance; }
+  img { max-width: 100%; display: block; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 clamp(18px, 4.5vw, 48px); }
+
+  /* display type: Anton condensed caps — the poster voice */
+  .disp {
+    font-family: var(--display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.96;
+  }
+  h2.disp { font-size: clamp(2.4rem, 6.5vw, 4.5rem); }
+  .lead {
+    color: var(--txt-dim);
+    font-size: clamp(15px, 1.3vw, 17.5px);
+    max-width: 56ch;
+    margin-top: 18px;
+  }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--body); font-weight: 700; font-size: 15px;
+    text-decoration: none; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 16px 28px; border-radius: 6px;
+    transition: transform 150ms var(--ease-out), background 150ms ease, border-color 150ms ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn.heat { background: var(--heat); color: #0d0d0d; }
+  .btn.ghost { color: var(--txt); border: 1.5px solid var(--line); }
+  @media (hover: hover) {
+    .btn.heat:hover { background: #ff5a30; }
+    .btn.ghost:hover { border-color: rgba(242,242,242,0.45); }
+  }
+  .btn svg { flex: none; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px clamp(18px, 4.5vw, 48px);
+    transition: background 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled {
+    background: rgba(13, 13, 13, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom-color: var(--line);
+  }
+  .mark {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--txt); cursor: pointer;
+  }
+  .mark .box {
+    font-family: var(--display); font-size: 19px; line-height: 1;
+    background: var(--heat); color: #0d0d0d;
+    padding: 7px 8px 5px; border-radius: 4px;
+  }
+  .mark .nm { font-family: var(--display); font-size: 16px; letter-spacing: 0.06em; }
+  .mark .nm small {
+    display: block; font-family: var(--body); font-weight: 600; font-size: 9.5px;
+    letter-spacing: 0.28em; color: var(--txt-faint); margin-top: 2px;
+  }
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-links a:not(.btn) {
+    color: var(--txt-dim); text-decoration: none;
+    font-weight: 600; font-size: 14px; letter-spacing: 0.03em;
+    transition: color 150ms ease;
+  }
+  .nav-links a:not(.btn):hover { color: var(--txt); }
+  .nav-links .btn { padding: 11px 20px; font-size: 13px; }
+
+  /* ---------- hero ---------- */
+  #hero {
+    position: relative; min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 140px 0 64px;
+    overflow: hidden;
+    /* fallback scene if the photo can't load: heat glow + dot texture */
+    background:
+      radial-gradient(90% 60% at 78% 18%, rgba(255, 68, 22, 0.16), transparent 65%),
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(242,242,242,0.06) 1px, transparent 1.5px),
+      var(--coal);
+  }
+  /* PLACEHOLDER PHOTO — stock stand-in. Swap src for a real photo of
+     F Z Gym's own floor before sending the final version to the client. */
+  #hero .bg {
+    position: absolute; inset: 0; z-index: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(35%) contrast(1.08);
+    opacity: 0.5;
+  }
+  #hero .shade {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(13,13,13,0.72) 0%, rgba(13,13,13,0.25) 40%, rgba(13,13,13,0.88) 88%),
+      linear-gradient(90deg, rgba(13,13,13,0.6) 0%, transparent 55%);
+  }
+  #hero .wrap { position: relative; z-index: 2; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(198, 255, 61, 0.4);
+    background: rgba(13, 13, 13, 0.6);
+    border-radius: 100px; padding: 9px 18px 9px 14px;
+    font-weight: 600; font-size: 13.5px; letter-spacing: 0.02em;
+    color: var(--txt);
+  }
+  .badge .star { color: var(--volt); font-size: 15px; }
+  .badge b { color: var(--volt); font-weight: 700; }
+
+  #hero h1 {
+    /* sized so the longest row (RUSTAMPURA) fits even in the wider
+       fallback font before Anton loads — never clip the brand line */
+    font-size: clamp(2.7rem, 10.5vw, 6rem);
+    margin: 26px 0 10px;
+  }
+  #hero h1 .row { display: block; overflow: hidden; }
+  #hero h1 .row > span { display: inline-block; transform: translateY(112%); }
+  #hero h1 .hot { color: var(--heat); }
+  #hero .place {
+    font-weight: 600; font-size: clamp(14px, 1.4vw, 17px);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--txt-dim);
+  }
+  #hero .place span { color: var(--heat); }
+  #hero .sub {
+    color: var(--txt-dim); max-width: 46ch;
+    font-size: clamp(15px, 1.35vw, 17.5px);
+    margin-top: 16px;
+  }
+  #hero .btns { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  .h-in { opacity: 0; transform: translateY(20px); }
+
+  /* ---------- marquee divider ---------- */
+  #stripe {
+    background: var(--heat); color: #0d0d0d;
+    transform: rotate(-1.2deg) scale(1.02);
+    margin: -12px 0;
+    overflow: hidden; user-select: none;
+    position: relative; z-index: 3;
+  }
+  #stripe .track {
+    display: flex; width: max-content;
+    animation: slide 22s linear infinite;
+  }
+  #stripe .set {
+    display: flex; align-items: center; gap: 28px;
+    padding: 13px 14px;
+    font-family: var(--display); font-size: clamp(16px, 2vw, 21px);
+    letter-spacing: 0.05em; white-space: nowrap; text-transform: uppercase;
+  }
+  #stripe .set i { font-style: normal; font-size: 0.7em; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ---------- shared section spacing ---------- */
+  section { position: relative; }
+  .pad { padding: clamp(84px, 12vh, 140px) 0; }
+
+  /* ---------- why ---------- */
+  #why .cols {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 5vw, 80px); align-items: start;
+  }
+  #why .sticky { position: sticky; top: 110px; }
+  #why .rows { display: flex; flex-direction: column; }
+  .vrow {
+    border-top: 2px solid var(--line);
+    padding: 26px 0 30px;
+  }
+  .vrow:last-child { border-bottom: 2px solid var(--line); }
+  .vrow h3 { font-family: var(--display); font-size: 22px; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 8px; }
+  .vrow h3 i { font-style: normal; color: var(--heat); margin-right: 10px; }
+  .vrow p { color: var(--txt-dim); font-size: 15px; max-width: 48ch; }
+
+  /* ---------- stats band (volt section — results live here) ---------- */
+  #record {
+    background: var(--coal-2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  #record .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 4vw, 64px);
+  }
+  .stat .num {
+    font-family: var(--display);
+    font-size: clamp(3.4rem, 8vw, 6rem);
+    line-height: 1; color: var(--volt);
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .stat .num .suf { font-size: 0.45em; }
+  .stat .cap {
+    margin-top: 10px; font-weight: 600; font-size: 14px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-dim);
+  }
+  #record .foot {
+    margin-top: 40px; color: var(--txt-faint); font-size: 13.5px; font-weight: 500;
+  }
+  #record .foot a { color: var(--txt-dim); }
+
+  /* ---------- facilities ---------- */
+  #floor .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px; margin-top: 48px;
+  }
+  .shot {
+    position: relative; border-radius: 10px; overflow: hidden;
+    aspect-ratio: 4 / 3;
+    /* fallback panel if a placeholder photo fails to load anywhere:
+       diagonal heat stripes keep the grid looking intentional */
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,68,22,0.14) 0 2px, transparent 2px 14px),
+      var(--coal-3);
+  }
+  .shot.wide { grid-column: span 2; aspect-ratio: 21 / 9; }
+  .shot img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; filter: grayscale(25%) contrast(1.05);
+    transition: transform 400ms var(--ease-out);
+  }
+  @media (hover: hover) { .shot:hover img { transform: scale(1.035); } }
+  .shot::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(13,13,13,0.82) 100%);
+  }
+  .shot .tag {
+    position: absolute; left: 18px; bottom: 14px; z-index: 2;
+    font-family: var(--display); font-size: clamp(18px, 2.2vw, 26px);
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .shot .tag i {
+    font-style: normal; color: var(--heat); margin-right: 8px;
+  }
+  #floor .note { margin-top: 16px; color: var(--txt-faint); font-size: 13px; font-weight: 500; }
+
+  /* ---------- pricing ----------
+     Card structure adapted from a 21st.dev three-tier pricing pattern
+     (highlighted middle tier + floating badge + feature rows),
+     rebuilt fully in the F Z palette. */
+  #plans { background: var(--coal-2); border-top: 1px solid var(--line); }
+  .tiers {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 56px; align-items: stretch;
+  }
+  .tier {
+    position: relative;
+    background: var(--coal);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 32px 26px 26px;
+    display: flex; flex-direction: column;
+  }
+  .tier .t-name {
+    font-family: var(--display); font-size: 17px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--txt-dim); margin-bottom: 14px;
+  }
+  .tier .t-price {
+    font-family: var(--display); font-size: clamp(2.4rem, 3.4vw, 3.2rem);
+    line-height: 1;
+  }
+  .tier .t-price small {
+    font-family: var(--body); font-weight: 600; font-size: 13px;
+    color: var(--txt-faint); letter-spacing: 0.04em; margin-left: 6px;
+  }
+  .tier .t-permo { margin-top: 8px; font-weight: 600; font-size: 13.5px; color: var(--txt-faint); }
+  .tier ul { list-style: none; margin: 24px 0 28px; display: flex; flex-direction: column; gap: 12px; }
+  .tier li {
+    display: flex; gap: 11px; align-items: baseline;
+    font-size: 14.5px; color: var(--txt-dim); font-weight: 500;
+  }
+  .tier li::before {
+    content: "+"; font-family: var(--display); color: var(--heat);
+    font-size: 15px; flex: none;
+  }
+  .tier .btn { margin-top: auto; justify-content: center; }
+  /* the one place volt owns a component: the recommended plan */
+  .tier.top { border-color: var(--volt); box-shadow: 0 0 0 1px rgba(198,255,61,0.25), 0 24px 60px -30px rgba(0,0,0,0.8); }
+  .tier.top li::before { color: var(--volt); }
+  .tier.top .t-name { color: var(--volt); }
+  .t-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--volt); color: #0d0d0d;
+    font-weight: 700; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 100px; white-space: nowrap;
+  }
+  .btn.volt { background: var(--volt); color: #0d0d0d; }
+  @media (hover: hover) { .btn.volt:hover { background: #d3ff66; } }
+  #plans .note { margin-top: 20px; color: var(--txt-faint); font-size: 13px; font-weight: 500; }
+
+  /* ---------- trainers ---------- */
+  #crew .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 48px;
+  }
+  .coach {
+    border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 28px 24px;
+    transition: border-color 200ms ease, transform 300ms var(--ease-out);
+  }
+  @media (hover: hover) { .coach:hover { border-color: rgba(255,68,22,0.55); transform: translateY(-4px); } }
+  .coach .ini {
+    width: 62px; height: 62px; border-radius: 8px;
+    background: var(--coal-3); color: var(--heat);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .coach h3 { font-family: var(--display); font-size: 21px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .coach .role { color: var(--heat); font-weight: 700; font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase; margin: 6px 0 12px; }
+  .coach p { color: var(--txt-dim); font-size: 14px; }
+
+  /* ---------- testimonials ---------- */
+  #word { background: var(--coal-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  #word .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 48px;
+  }
+  .quote {
+    background: var(--coal); border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .quote .stars { color: var(--volt); font-size: 15px; letter-spacing: 3px; }
+  .quote p { font-size: 15.5px; font-weight: 500; line-height: 1.65; }
+  .quote .who { margin-top: auto; color: var(--txt-faint); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; }
+
+  /* ---------- contact ---------- */
+  #visit .cols {
+    display: grid; grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(32px, 5vw, 72px); align-items: start; margin-top: 48px;
+  }
+  .info-row { border-top: 1.5px solid var(--line); padding: 20px 0; }
+  .info-row .k {
+    font-weight: 700; font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--heat); margin-bottom: 6px;
+  }
+  .info-row .v { font-size: 16.5px; font-weight: 500; line-height: 1.55; }
+  .info-row .v a { color: var(--txt); text-decoration: none; }
+  .info-row .v a:hover { color: var(--heat); }
+  .hours { display: flex; flex-direction: column; gap: 6px; font-size: 15.5px; font-weight: 500; }
+  .hours span { color: var(--txt-faint); }
+  #visit .btns { display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+  .mapbox {
+    position: relative; border-radius: 12px; overflow: hidden;
+    border: 1.5px solid var(--line);
+    min-height: 380px; height: 100%;
+    background:
+      radial-gradient(70% 55% at 60% 40%, rgba(255,68,22,0.14), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(242,242,242,0.045) 0 1px, transparent 1px 44px),
+      repeating-linear-gradient(90deg, rgba(242,242,242,0.045) 0 1px, transparent 1px 44px),
+      var(--coal-3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mapbox .pinwrap { text-align: center; padding: 24px; }
+  .mapbox .pin {
+    width: 52px; height: 52px; margin: 0 auto 16px;
+    background: var(--heat); border-radius: 50% 50% 50% 4px;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mapbox .pin i {
+    width: 16px; height: 16px; background: #0d0d0d; border-radius: 50%;
+    transform: rotate(45deg);
+  }
+  .mapbox .adr { font-weight: 600; font-size: 15px; max-width: 30ch; margin: 0 auto 18px; }
+  .mapbox .open {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--coal); background: var(--txt);
+    text-decoration: none; font-weight: 700; font-size: 13.5px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 12px 22px; border-radius: 6px;
+    transition: transform 150ms var(--ease-out);
+  }
+  .mapbox .open:active { transform: scale(0.97); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 30px 0 110px; /* extra bottom room so the WA float never covers content */
+  }
+  footer .row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; flex-wrap: wrap;
+    color: var(--txt-faint); font-size: 13px; font-weight: 500;
+  }
+  footer a { color: var(--txt-dim); text-decoration: none; }
+
+  /* ---------- floating WhatsApp ----------
+     Uses WhatsApp's own green on purpose: instant recognition for a
+     local Surat audience beats palette purity on this one element. */
+  #wa-float {
+    position: fixed; right: 18px; bottom: 18px; z-index: 70;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: #25d366;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    transition: transform 150ms var(--ease-out);
+  }
+  #wa-float:active { transform: scale(0.94); }
+  @media (hover: hover) { #wa-float:hover { transform: translateY(-3px); } }
+  #wa-float svg { width: 30px; height: 30px; }
+
+  .rise { opacity: 0; transform: translateY(28px); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 940px) {
+    #why .cols { grid-template-columns: 1fr; }
+    #why .sticky { position: static; }
+    .tiers { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; }
+    .tier.top { order: -1; }
+    #crew .grid, #word .grid { grid-template-columns: 1fr; max-width: 520px; }
+    #visit .cols { grid-template-columns: 1fr; }
+    .mapbox { min-height: 300px; }
+  }
+  @media (max-width: 640px) {
+    .nav-links a:not(.btn) { display: none; }
+    #floor .grid { grid-template-columns: 1fr; }
+    .shot, .shot.wide { grid-column: span 1; aspect-ratio: 16 / 10; }
+    #record .grid { grid-template-columns: 1fr; gap: 34px; }
+    .vrow { grid-template-columns: 56px 1fr; }
+  }
+
+  /* ---------- reduced motion: opacity-only world ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .h-in, .rise { opacity: 1; transform: none; }
+    #hero h1 .row > span { transform: none; }
+    #stripe .track { animation: none; }
+    .shot img, .coach, .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="mark" href="#hero" data-scroll>
+    <span class="box">FZ</span>
+    <span class="nm">F Z GYM<small>&amp; FITNESS · SURAT</small></span>
+  </a>
+  <div class="nav-links">
+    <a href="#why" data-scroll>Why FZ</a>
+    <a href="#floor" data-scroll>Facilities</a>
+    <a href="#plans" data-scroll>Membership</a>
+    <a href="#visit" data-scroll>Visit</a>
+    <a class="btn heat" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20book%20a%20free%20trial%20workout."
+       target="_blank" rel="noopener">Join Now</a>
+  </div>
+</nav>
+
+<main>
+
+  <section id="hero">
+    <!-- PLACEHOLDER PHOTO: stock gym image as stand-in. Replace with a real
+         photo of F Z Gym's floor before the final handover. If it ever fails
+         to load, the styled charcoal/heat backdrop takes over (no broken UI). -->
+    <img class="bg" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=75"
+         alt="Weight training area with a full dumbbell rack under low light"
+         fetchpriority="high" onerror="this.remove()">
+    <div class="shade"></div>
+    <div class="wrap">
+      <div class="badge h-in" id="trust">
+        <span class="star">★</span>
+        <span><b>4.9</b> on Google &nbsp;·&nbsp; rated by <b>500+</b> members</span>
+      </div>
+      <h1 class="disp" aria-label="The gym Rustampura trusts">
+        <span class="row"><span>THE GYM</span></span>
+        <span class="row"><span class="hot">RUSTAMPURA</span></span>
+        <span class="row"><span>TRUSTS.</span></span>
+      </h1>
+      <p class="place h-in">F Z Gym &amp; Fitness <span>·</span> Rustampura, Surat</p>
+      <p class="sub h-in">Serious equipment, trainers who actually coach, and a floor that's
+        earned its rating one member at a time. Your first workout is on us.</p>
+      <div class="btns h-in">
+        <a class="btn heat" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20book%20a%20free%20trial%20workout."
+           target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.1 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 7 2.9 9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.9 9.88m8.42-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.32-1.66a11.9 11.9 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"/></svg>
+          Book a Free Trial
+        </a>
+        <a class="btn ghost" href="#plans" data-scroll>See Membership Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="stripe" aria-hidden="true">
+    <div class="track">
+      <div class="set">No shortcuts <i>◆</i> Just reps <i>◆</i> Strength <i>◆</i> Cardio <i>◆</i> Coaching <i>◆</i> Rustampura <i>◆</i></div>
+      <div class="set">No shortcuts <i>◆</i> Just reps <i>◆</i> Strength <i>◆</i> Cardio <i>◆</i> Coaching <i>◆</i> Rustampura <i>◆</i></div>
+    </div>
+  </div>
+
+  <section id="why" class="pad">
+    <div class="wrap cols">
+      <div class="sticky">
+        <h2 class="disp rise">Built for people<br>who <span style="color:var(--heat)">show up.</span></h2>
+        <p class="lead rise">A 4.9 rating with 500+ reviews doesn't come from machines alone.
+          It comes from how a gym is run, every single day.</p>
+      </div>
+      <!-- PLACEHOLDER-EDITABLE: honest, generic-but-true gym value props.
+           Tighten these with the owner's real differentiators after the
+           first conversation (equipment brands, trainer count, timings). -->
+      <div class="rows">
+        <div class="vrow rise">
+          <h3><i>//</i>Equipment that's ready</h3>
+          <p>Full strength and cardio floor, maintained and loaded. No waiting on broken machines, no missing plates.</p>
+        </div>
+        <div class="vrow rise">
+          <h3><i>//</i>Trainers on the floor</h3>
+          <p>Form checks, real programs and a steady push. Coaching you actually get, not just a staff member at the desk.</p>
+        </div>
+        <div class="vrow rise">
+          <h3><i>//</i>Clean, every session</h3>
+          <p>Wiped equipment, working fans, a floor you want to train on. The basics, done properly, all day.</p>
+        </div>
+        <div class="vrow rise">
+          <h3><i>//</i>A crew that keeps you coming</h3>
+          <p>Regulars who spot each other and notice when you skip. The atmosphere is why members stay for years.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="record" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">The record speaks.</h2>
+      <div class="grid" style="margin-top:52px">
+        <!-- Real, verifiable numbers from the gym's Google listing.
+             PLACEHOLDER: add members-trained / years-running once the
+             owner confirms real figures. -->
+        <div class="stat rise">
+          <div class="num"><span class="cnt" data-target="4.9" data-dec="1">0.0</span><span class="suf">★</span></div>
+          <div class="cap">Google rating</div>
+        </div>
+        <div class="stat rise">
+          <div class="num"><span class="cnt" data-target="500">0</span><span class="suf">+</span></div>
+          <div class="cap">Member reviews</div>
+        </div>
+        <div class="stat rise">
+          <div class="num"><span class="suf" style="font-size:0.45em">₹</span><span class="cnt" data-target="0">0</span></div>
+          <div class="cap">Your first workout</div>
+        </div>
+      </div>
+      <p class="foot rise">Numbers from F Z Gym &amp; Fitness on
+        <a href="https://www.google.com/maps/search/?api=1&query=F+Z+Gym+%26+Fitness+Rustampura+Surat" target="_blank" rel="noopener">Google Maps</a>. Go check.</p>
+    </div>
+  </section>
+
+  <section id="floor" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">The floor.</h2>
+      <p class="lead rise">Strength, cardio and space to move: everything a real training week needs.</p>
+      <!-- PLACEHOLDER PHOTOS: stock stand-ins so the client can see the layout.
+           Swap all four for real photos of F Z Gym before final delivery.
+           If any image fails to load, a styled panel shows instead. -->
+      <div class="grid">
+        <div class="shot wide rise">
+          <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=70"
+               alt="Member training in a dark gym, chalk in the air" loading="lazy" decoding="async" onerror="this.remove()">
+          <span class="tag"><i>//</i>Strength zone</span>
+        </div>
+        <div class="shot rise">
+          <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=70"
+               alt="Free-weight dumbbell rack" loading="lazy" decoding="async" onerror="this.remove()">
+          <span class="tag"><i>//</i>Free weights</span>
+        </div>
+        <div class="shot rise">
+          <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1000&q=70"
+               alt="Barbell loaded for a working set" loading="lazy" decoding="async" onerror="this.remove()">
+          <span class="tag"><i>//</i>Cardio &amp; conditioning</span>
+        </div>
+      </div>
+      <p class="note">Photos are placeholders. The real site will feature F Z Gym's own floor.</p>
+    </div>
+  </section>
+
+  <section id="plans" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">Pick your commitment.</h2>
+      <p class="lead rise">Every plan gets the full floor. Longer plans simply cost
+        less per month. Message us on WhatsApp and start today.</p>
+      <!-- ============ PLACEHOLDER PRICING ============
+           Typical mid-range Surat gym rates. CONFIRM REAL PRICING WITH
+           CLIENT BEFORE SENDING as anything other than a preview.
+           Structure adapted from a 21st.dev 3-tier pricing component,
+           restyled fully into the F Z palette. -->
+      <div class="tiers">
+        <div class="tier rise">
+          <div class="t-name">Monthly</div>
+          <div class="t-price disp">₹1,300<small>/ month</small></div>
+          <div class="t-permo">Flexible, no lock-in</div>
+          <ul>
+            <li>Full gym access, all timings</li>
+            <li>Strength + cardio equipment</li>
+            <li>Locker access</li>
+            <li>Trainer support on the floor</li>
+          </ul>
+          <a class="btn ghost" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20know%20about%20the%20Monthly%20plan."
+             target="_blank" rel="noopener">Enquire on WhatsApp</a>
+        </div>
+        <div class="tier top rise">
+          <span class="t-badge">Most popular</span>
+          <div class="t-name">Quarterly</div>
+          <div class="t-price disp">₹3,400<small>/ 3 months</small></div>
+          <div class="t-permo">≈ ₹1,133 / month · save 13%</div>
+          <ul>
+            <li>Everything in Monthly</li>
+            <li>1 personal training session</li>
+            <li>Basic diet guidance</li>
+            <li>Progress check-in each month</li>
+          </ul>
+          <a class="btn volt" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20join%20the%20Quarterly%20plan."
+             target="_blank" rel="noopener">Enquire on WhatsApp</a>
+        </div>
+        <div class="tier rise">
+          <div class="t-name">Annual</div>
+          <div class="t-price disp">₹9,999<small>/ year</small></div>
+          <div class="t-permo">≈ ₹833 / month · best value</div>
+          <ul>
+            <li>Everything in Quarterly</li>
+            <li>4 personal training sessions</li>
+            <li>Diet consultation</li>
+            <li>Priority for new equipment trials</li>
+          </ul>
+          <a class="btn ghost" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20know%20about%20the%20Annual%20plan."
+             target="_blank" rel="noopener">Enquire on WhatsApp</a>
+        </div>
+      </div>
+      <p class="note">Preview pricing shown for layout. Final rates set by F Z Gym.</p>
+    </div>
+  </section>
+
+  <section id="crew" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">The people pushing you.</h2>
+      <!-- PLACEHOLDER TRAINER PROFILES: swap initials, names, roles and
+           bios for F Z Gym's real trainers (with photos if available). -->
+      <div class="grid">
+        <div class="coach rise">
+          <div class="ini">HT</div>
+          <h3>Head Trainer</h3>
+          <div class="role">Strength &amp; Conditioning</div>
+          <p>Programs, form correction and the push you need on heavy days. [Swap for real trainer profile.]</p>
+        </div>
+        <div class="coach rise">
+          <div class="ini">FT</div>
+          <h3>Floor Trainer</h3>
+          <div class="role">General Fitness</div>
+          <p>Always on the floor: spotting, correcting, keeping every session safe. [Swap for real trainer profile.]</p>
+        </div>
+        <div class="coach rise">
+          <div class="ini">PT</div>
+          <h3>Personal Trainer</h3>
+          <div class="role">Transformation Coaching</div>
+          <p>One-on-one plans for weight loss, muscle gain and event prep. [Swap for real trainer profile.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="word" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">Why members rate it 4.9.</h2>
+      <!-- PLACEHOLDER TESTIMONIALS: generic-style blurbs written to be
+           REPLACED with real quotes from the gym's Google reviews (with
+           permission). Do NOT ship these as real member quotes. -->
+      <div class="grid">
+        <div class="quote rise">
+          <div class="stars">★★★★★</div>
+          <p>"Best equipment in the area and the trainers actually pay attention to your form. Worth every rupee."</p>
+          <div class="who">Placeholder · swap with a real Google review</div>
+        </div>
+        <div class="quote rise">
+          <div class="stars">★★★★★</div>
+          <p>"Clean, never overcrowded, and the atmosphere keeps you consistent. I've been a member for over a year."</p>
+          <div class="who">Placeholder · swap with a real Google review</div>
+        </div>
+        <div class="quote rise">
+          <div class="stars">★★★★★</div>
+          <p>"Joined for a month to try it, ended up taking the annual plan. The trainers make the difference."</p>
+          <div class="who">Placeholder · swap with a real Google review</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit" class="pad">
+    <div class="wrap">
+      <h2 class="disp rise">Walk in. <span style="color:var(--heat)">Train today.</span></h2>
+      <div class="cols">
+        <div>
+          <div class="info-row rise">
+            <div class="k">Address</div>
+            <div class="v">1st Floor, Motto Mohallo, Gonawala House,<br>Rustampura, Surat, Gujarat 395002</div>
+          </div>
+          <div class="info-row rise">
+            <div class="k">Phone / WhatsApp</div>
+            <div class="v"><a href="tel:+919879986395">+91 98799 86395</a></div>
+          </div>
+          <div class="info-row rise">
+            <div class="k">Timings</div>
+            <!-- PLACEHOLDER HOURS: confirm real timings with the owner. -->
+            <div class="v hours">
+              <div>Mon – Sat &nbsp;·&nbsp; 6:00 AM – 10:00 PM</div>
+              <div>Sunday &nbsp;·&nbsp; <span>message us on WhatsApp</span></div>
+            </div>
+          </div>
+          <div class="btns rise">
+            <a class="btn heat" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20book%20a%20free%20trial%20workout."
+               target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.1 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 7 2.9 9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.9 9.88m8.42-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.32-1.66a11.9 11.9 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"/></svg>
+              Message on WhatsApp
+            </a>
+            <a class="btn ghost" href="tel:+919879986395">Call the gym</a>
+          </div>
+        </div>
+        <!-- Map panel links out to the gym's real Google Maps listing.
+             Can be swapped for an embedded map iframe in the final build. -->
+        <div class="mapbox rise">
+          <div class="pinwrap">
+            <div class="pin"><i></i></div>
+            <p class="adr">Motto Mohallo, Gonawala House, Rustampura, Surat</p>
+            <a class="open" href="https://www.google.com/maps/search/?api=1&query=F+Z+Gym+%26+Fitness+Rustampura+Surat"
+               target="_blank" rel="noopener">Open in Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap row">
+      <span>© 2026 F Z Gym &amp; Fitness · Rustampura, Surat</span>
+      <a href="https://www.google.com/maps/search/?api=1&query=F+Z+Gym+%26+Fitness+Rustampura+Surat" target="_blank" rel="noopener">4.9★ · 500+ reviews on Google</a>
+    </div>
+  </footer>
+
+</main>
+
+<a id="wa-float" aria-label="Chat with F Z Gym on WhatsApp"
+   href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20book%20a%20free%20trial%20workout."
+   target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="#0d0d0d" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.1 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 7 2.9 9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.9 9.88m8.42-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.32-1.66a11.9 11.9 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"/></svg>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- smooth scroll: Lenis on the GSAP ticker (one rAF loop) ---------- */
+let lenis = null;
+if (typeof Lenis !== "undefined" && !reduceMotion) {
+  lenis = new Lenis({ duration: 1.0, smoothWheel: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((t) => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  /* adopt a restored scroll position instead of snapping to top */
+  if (window.scrollY > 0) lenis.scrollTo(window.scrollY, { immediate: true });
+}
+function smoothTo(target) {
+  if (lenis) lenis.scrollTo(target, { duration: 1.15 });
+  else target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+}
+document.querySelectorAll("[data-scroll]").forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const t = document.querySelector(a.getAttribute("href"));
+    if (!t) return;
+    e.preventDefault();
+    smoothTo(t);
+  });
+});
+
+/* nav backdrop once the hero is left behind */
+ScrollTrigger.create({
+  start: 50,
+  onEnter: () => document.getElementById("nav").classList.add("scrolled"),
+  onLeaveBack: () => document.getElementById("nav").classList.remove("scrolled"),
+});
+
+/* ---------- moment 1: hero entrance (load, not scroll) ---------- */
+window.addEventListener("load", () => {
+  if (reduceMotion) return; /* CSS already shows everything */
+  gsap.timeline()
+    .to("#hero h1 .row > span", { y: 0, duration: 0.85, ease: "power3.out", stagger: 0.1 }, 0.1)
+    .to(".h-in", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.45");
+});
+
+/* ---------- moment 2: section reveals (once, quick, decelerating) ---------- */
+if (reduceMotion) {
+  gsap.set(".rise", { opacity: 1, y: 0 });
+} else {
+  ScrollTrigger.batch(".rise", {
+    start: "top 88%",
+    once: true,
+    onEnter: (els) => gsap.to(els, {
+      opacity: 1, y: 0, duration: 0.65, ease: "power3.out", stagger: 0.07,
+    }),
+  });
+  /* anything already above the fold on load */
+  ScrollTrigger.refresh();
+}
+
+/* ---------- moment 3: trust counters (the 4.9 / 500+ proof) ---------- */
+document.querySelectorAll(".cnt").forEach((el) => {
+  const target = parseFloat(el.dataset.target);
+  const dec = parseInt(el.dataset.dec || "0", 10);
+  if (reduceMotion || target === 0) {
+    el.textContent = dec ? target.toFixed(dec) : String(target);
+    return;
+  }
+  const obj = { v: 0 };
+  ScrollTrigger.create({
+    trigger: el, start: "top 90%", once: true,
+    onEnter: () => gsap.to(obj, {
+      v: target, duration: 1.2, ease: "power2.out",
+      onUpdate: () => { el.textContent = dec ? obj.v.toFixed(dec) : String(Math.round(obj.v)); },
+    }),
+  });
+});
+
+/* ---------- moment 4: marquee gets a nudge from scroll velocity ---------- */
+if (!reduceMotion) {
+  const track = document.querySelector("#stripe .track");
+  const skew = gsap.quickTo(track, "skewX", { duration: 0.35, ease: "power2.out" });
+  ScrollTrigger.create({
+    onUpdate: (self) => skew(gsap.utils.clamp(-5, 5, self.getVelocity() / -320)),
+  });
+}
+</script>
+</body>
+</html>
