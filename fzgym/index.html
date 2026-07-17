@@ -173,6 +173,8 @@
   }
   #hero h1 .row { display: block; overflow: hidden; }
   #hero h1 .row > span { display: inline-block; transform: translateY(112%); }
+  /* per-character spans injected by JS for the entrance stagger */
+  #hero h1 .ch { display: inline-block; }
   #hero h1 .hot { color: var(--heat); }
   #hero .place {
     font-weight: 600; font-size: clamp(14px, 1.4vw, 17px);
@@ -948,12 +950,23 @@ if (!reduceMotion) {
   });
 }
 
-/* ---------- moment 1: hero entrance (load, not scroll) ---------- */
+/* ---------- moment 1: hero entrance (load, not scroll) ----------
+   Character-level stagger: each row's letters ride up in sequence.
+   Quick and confident: the whole headline lands in ~0.6s. */
+if (!reduceMotion) {
+  document.querySelectorAll("#hero h1 .row > span").forEach((r) => {
+    r.innerHTML = [...r.textContent]
+      .map((c) => (c === " " ? " " : '<span class="ch">' + c + "</span>"))
+      .join("");
+    gsap.set(r, { y: 0 }); /* the chars carry the hidden state now */
+    gsap.set(r.querySelectorAll(".ch"), { yPercent: 115 });
+  });
+}
 window.addEventListener("load", () => {
   if (reduceMotion) return; /* CSS already shows everything */
   gsap.timeline()
-    .to("#hero h1 .row > span", { y: 0, duration: 0.85, ease: "power3.out", stagger: 0.1 }, 0.1)
-    .to(".h-in", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.45");
+    .to("#hero h1 .ch", { yPercent: 0, duration: 0.5, ease: "power3.out", stagger: 0.016 }, 0.1)
+    .to(".h-in", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.55");
 });
 
 /* ---------- moment 2: section reveals (once, quick, decelerating) ---------- */
@@ -987,6 +1000,20 @@ if (reduceMotion) {
   });
   /* anything already above the fold on load */
   ScrollTrigger.refresh();
+}
+
+/* ---------- why markers: the // draws itself in after its row lands ---------- */
+if (!reduceMotion) {
+  document.querySelectorAll(".vrow h3 i").forEach((m) => {
+    gsap.set(m, { clipPath: "inset(0 100% 0 0)", display: "inline-block" });
+    ScrollTrigger.create({
+      trigger: m.closest(".vrow"), start: "top 88%", once: true,
+      onEnter: () => gsap.to(m, {
+        clipPath: "inset(0 0% 0 0)", duration: 0.4, ease: "power3.out", delay: 0.3,
+        onComplete: () => gsap.set(m, { clearProps: "all" }),
+      }),
+    });
+  });
 }
 
 /* ---------- moment 3: trust counters (the 4.9 / 500+ proof) ---------- */
