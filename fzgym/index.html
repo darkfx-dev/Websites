@@ -140,8 +140,9 @@
   /* PLACEHOLDER PHOTO — stock stand-in. Swap src for a real photo of
      F Z Gym's own floor before sending the final version to the client. */
   #hero .bg {
-    position: absolute; inset: 0; z-index: 0;
-    width: 100%; height: 100%; object-fit: cover;
+    /* oversized + offset upward so the parallax drift never exposes an edge */
+    position: absolute; left: 0; top: -14%; z-index: 0;
+    width: 100%; height: 114%; object-fit: cover;
     filter: grayscale(35%) contrast(1.08);
     opacity: 0.5;
   }
@@ -482,6 +483,34 @@
   }
 
   .rise { opacity: 0; transform: translateY(28px); }
+  /* once revealed, state lives in the class so hover/selected transforms
+     aren't blocked by leftover inline styles from the reveal tween */
+  .rise.shown { opacity: 1; transform: none; }
+
+  /* ---------- scroll progress bar ----------
+     Position feedback, so it stays on under reduced motion too. */
+  #progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 80;
+    background: var(--heat);
+    box-shadow: 0 0 10px rgba(255, 68, 22, 0.7), 0 0 22px rgba(255, 68, 22, 0.35);
+    transform: scaleX(0); transform-origin: 0 50%;
+    transition: background-color 400ms ease, box-shadow 400ms ease;
+    pointer-events: none;
+  }
+  #progress.volt {
+    background: var(--volt);
+    box-shadow: 0 0 10px rgba(198, 255, 61, 0.7), 0 0 22px rgba(198, 255, 61, 0.35);
+  }
+
+  /* ---------- section boundary washes ----------
+     The previous section's accent bleeds briefly over the divider as you
+     cross it — a mood shift, scrubbed in and back out by scroll. */
+  .wash {
+    position: absolute; left: 0; right: 0; top: 0; height: 220px;
+    pointer-events: none; opacity: 0;
+  }
+  .wash.heat { background: radial-gradient(60% 100% at 50% 0%, rgba(255, 68, 22, 0.09), transparent 75%); }
+  .wash.volt { background: radial-gradient(60% 100% at 50% 0%, rgba(198, 255, 61, 0.07), transparent 75%); }
 
   /* ---------- responsive ---------- */
   @media (max-width: 940px) {
@@ -528,6 +557,8 @@
        target="_blank" rel="noopener">Join Now</a>
   </div>
 </nav>
+
+<div id="progress" aria-hidden="true"></div>
 
 <main>
 
@@ -601,7 +632,7 @@
     </div>
   </section>
 
-  <section id="record" class="pad">
+  <section id="record" class="pad" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">The record speaks.</h2>
       <div class="grid" style="margin-top:52px">
@@ -626,7 +657,7 @@
     </div>
   </section>
 
-  <section id="floor" class="pad">
+  <section id="floor" class="pad" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">The floor.</h2>
       <p class="lead rise">Strength, cardio and space to move: everything a real training week needs.</p>
@@ -634,17 +665,17 @@
            Swap all four for real photos of F Z Gym before final delivery.
            If any image fails to load, a styled panel shows instead. -->
       <div class="grid">
-        <div class="shot wide rise">
+        <div class="shot wide">
           <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=70"
                alt="Member training in a dark gym, chalk in the air" loading="lazy" decoding="async" onerror="this.remove()">
           <span class="tag"><i>//</i>Strength zone</span>
         </div>
-        <div class="shot rise">
+        <div class="shot">
           <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=70"
                alt="Free-weight dumbbell rack" loading="lazy" decoding="async" onerror="this.remove()">
           <span class="tag"><i>//</i>Free weights</span>
         </div>
-        <div class="shot rise">
+        <div class="shot">
           <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1000&q=70"
                alt="Barbell loaded for a working set" loading="lazy" decoding="async" onerror="this.remove()">
           <span class="tag"><i>//</i>Cardio &amp; conditioning</span>
@@ -654,7 +685,7 @@
     </div>
   </section>
 
-  <section id="plans" class="pad">
+  <section id="plans" class="pad" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">Pick your commitment.</h2>
       <p class="lead rise">Every plan gets the full floor. Longer plans simply cost
@@ -710,7 +741,7 @@
     </div>
   </section>
 
-  <section id="crew" class="pad">
+  <section id="crew" class="pad" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">The people pushing you.</h2>
       <!-- PLACEHOLDER TRAINER PROFILES: swap initials, names, roles and
@@ -738,7 +769,7 @@
     </div>
   </section>
 
-  <section id="word" class="pad">
+  <section id="word" class="pad" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">Why members rate it 4.9.</h2>
       <!-- PLACEHOLDER TESTIMONIALS: generic-style blurbs written to be
@@ -764,7 +795,7 @@
     </div>
   </section>
 
-  <section id="visit" class="pad">
+  <section id="visit" class="pad" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">Walk in. <span style="color:var(--heat)">Train today.</span></h2>
       <div class="cols">
@@ -879,6 +910,44 @@ ScrollTrigger.create({
   onLeaveBack: () => document.getElementById("nav").classList.remove("scrolled"),
 });
 
+/* ---------- scroll progress bar ----------
+   Direct position feedback (like a scrollbar), so it stays live under
+   reduced motion too. Bar adopts volt while a volt section is in view. */
+const progress = document.getElementById("progress");
+ScrollTrigger.create({
+  start: 0, end: "max",
+  onUpdate: (self) => { progress.style.transform = "scaleX(" + self.progress + ")"; },
+});
+["#record", "#plans", "#word"].forEach((id) => {
+  ScrollTrigger.create({
+    trigger: id, start: "top 55%", end: "bottom 55%",
+    onToggle: (self) => progress.classList.toggle("volt", self.isActive),
+  });
+});
+
+/* ---------- section boundary washes (scrubbed in, then back out) ---------- */
+if (!reduceMotion) {
+  document.querySelectorAll("[data-wash]").forEach((sec) => {
+    const w = document.createElement("div");
+    w.className = "wash " + sec.dataset.wash;
+    w.setAttribute("aria-hidden", "true");
+    sec.prepend(w);
+    gsap.timeline({
+      scrollTrigger: { trigger: sec, start: "top 92%", end: "top 30%", scrub: 0.6 },
+    })
+      .to(w, { opacity: 1, ease: "none" })
+      .to(w, { opacity: 0, ease: "none" });
+  });
+}
+
+/* ---------- hero-only parallax: the photo trails the content ---------- */
+if (!reduceMotion) {
+  gsap.to("#hero .bg", {
+    yPercent: 12, ease: "none",
+    scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: true },
+  });
+}
+
 /* ---------- moment 1: hero entrance (load, not scroll) ---------- */
 window.addEventListener("load", () => {
   if (reduceMotion) return; /* CSS already shows everything */
@@ -896,6 +965,24 @@ if (reduceMotion) {
     once: true,
     onEnter: (els) => gsap.to(els, {
       opacity: 1, y: 0, duration: 0.65, ease: "power3.out", stagger: 0.07,
+      onComplete: () => {
+        /* hand the final state to CSS so hover/selected transforms
+           aren't fighting leftover inline transforms */
+        els.forEach((el) => el.classList.add("shown"));
+        gsap.set(els, { clearProps: "opacity,transform" });
+      },
+    }),
+  });
+  /* the floor grid earns its own reveal: clip-wipe upward, one card
+     after the next (60ms apart), instead of the generic rise */
+  gsap.set(".shot", { opacity: 0, y: 26, clipPath: "inset(0 0 26% 0)" });
+  ScrollTrigger.batch(".shot", {
+    start: "top 86%",
+    once: true,
+    onEnter: (els) => gsap.to(els, {
+      opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)",
+      duration: 0.7, ease: "power3.out", stagger: 0.06,
+      onComplete: () => gsap.set(els, { clearProps: "all" }),
     }),
   });
   /* anything already above the fold on load */
