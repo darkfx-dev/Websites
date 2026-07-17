@@ -366,6 +366,83 @@
   @media (hover: hover) { .btn.volt:hover { background: #d3ff66; } }
   #plans .note { margin-top: 20px; color: var(--txt-faint); font-size: 13px; font-weight: 500; }
 
+  /* ---------- plan selection ----------
+     Tap a card to choose it. One family of effects, scaled by tier:
+     border+checkmark (all) → glow ring + shimmer (Quarterly) →
+     dual rings + brighter shimmer + sparks + badge (Annual).
+     Every animated glow is an opacity/transform tween of a pre-styled
+     layer — box-shadow values themselves never animate. */
+  .tier {
+    cursor: pointer;
+    transition: border-color 200ms ease, opacity 250ms ease,
+                transform 250ms var(--ease-out), box-shadow 250ms ease;
+  }
+  .tier:focus-visible { outline: 2px solid var(--heat); outline-offset: 3px; }
+  .tiers.has-sel .tier:not(.sel) { opacity: 0.8; }
+  .tier.sel { border-color: var(--heat); transform: translateY(-3px); }
+  .tier.top.sel { border-color: var(--volt); transform: translateY(-4px); }
+  .tier[data-level="3"].sel {
+    border-color: var(--heat);
+    box-shadow: 0 0 0 1px rgba(198, 255, 61, 0.28), 0 18px 50px -22px rgba(255, 68, 22, 0.45);
+    transform: translateY(-6px);
+  }
+
+  .t-check {
+    position: absolute; top: 14px; right: 14px; z-index: 3;
+    font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #0d0d0d; background: var(--heat);
+    padding: 5px 11px; border-radius: 100px;
+    opacity: 0; transform: scale(0.6);
+    transition: transform 180ms var(--ease-out), opacity 140ms ease;
+    pointer-events: none;
+  }
+  .tier.top .t-check { background: var(--volt); }
+  /* higher tiers get a bouncier checkmark (back.out-style overshoot) */
+  .tier[data-level="2"] .t-check, .tier[data-level="3"] .t-check {
+    transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 140ms ease;
+  }
+  .tier.sel .t-check { opacity: 1; transform: scale(1); }
+
+  .tier .ring {
+    position: absolute; inset: -2px; border-radius: 16px;
+    opacity: 0; pointer-events: none;
+  }
+  .tier .ring.heat { box-shadow: 0 0 0 1.5px rgba(255, 68, 22, 0.8), 0 0 24px rgba(255, 68, 22, 0.5), 0 0 52px rgba(255, 68, 22, 0.25); }
+  .tier .ring.volt { box-shadow: 0 0 0 1.5px rgba(198, 255, 61, 0.8), 0 0 24px rgba(198, 255, 61, 0.45), 0 0 52px rgba(198, 255, 61, 0.22); }
+
+  .tier .sheen {
+    position: absolute; inset: 0; border-radius: 14px;
+    overflow: hidden; pointer-events: none;
+  }
+  .tier .sheen i {
+    position: absolute; top: -25%; bottom: -25%; left: -10%; width: 42%;
+    background: linear-gradient(100deg, transparent 8%, rgba(242, 242, 242, 0.13) 50%, transparent 92%);
+    transform: translateX(-140%) skewX(-16deg);
+  }
+  .tier[data-level="3"] .sheen i {
+    width: 55%;
+    background: linear-gradient(100deg, transparent 8%, rgba(242, 242, 242, 0.2) 50%, transparent 92%);
+  }
+
+  .tier .sparks { position: absolute; inset: 0; pointer-events: none; }
+  .tier .sparks i {
+    position: absolute; top: 50%; left: 50%; width: 5px; height: 5px;
+    border-radius: 50%; opacity: 0;
+  }
+  .tier .sparks i:nth-child(odd) { background: var(--heat); box-shadow: 0 0 8px rgba(255, 68, 22, 0.8); }
+  .tier .sparks i:nth-child(even) { background: var(--volt); box-shadow: 0 0 8px rgba(198, 255, 61, 0.8); }
+
+  .t-crown {
+    position: absolute; top: -14px; left: 50%; z-index: 3;
+    transform: translateX(-50%) translateY(-6px);
+    background: var(--heat); color: #0d0d0d;
+    font-weight: 700; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 100px; white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms, opacity 200ms ease 120ms;
+  }
+  .tier.sel .t-crown { transform: translateX(-50%) translateY(0); opacity: 1; }
+
   /* ---------- trainers ---------- */
   #crew .grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
@@ -623,6 +700,10 @@
     .fab.wa::after { animation: none; }
     #progress { transition: none; }
     .nav-links a:not(.btn)::after { transition: none; }
+    /* plan selection: plain highlight + checkmark, no celebration */
+    .tier, .t-check, .t-crown { transition: none; }
+    .tier .ring, .tier .sheen, .tier .sparks { display: none; }
+    .tier.sel, .tier.top.sel, .tier[data-level="3"].sel { transform: none; }
   }
 </style>
 </head>
@@ -782,7 +863,10 @@
            Structure adapted from a 21st.dev 3-tier pricing component,
            restyled fully into the F Z palette. -->
       <div class="tiers">
-        <div class="tier rise">
+        <div class="tier rise" data-plan="Monthly" data-level="1" tabindex="0" role="button"
+             aria-pressed="false" aria-label="Select the Monthly plan">
+          <span class="t-check" aria-hidden="true">Selected ✓</span>
+          <span class="ring heat" aria-hidden="true"></span>
           <div class="t-name">Monthly</div>
           <div class="t-price disp">₹1,300<small>/ month</small></div>
           <div class="t-permo">Flexible, no lock-in</div>
@@ -795,8 +879,12 @@
           <a class="btn ghost" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20know%20about%20the%20Monthly%20plan."
              target="_blank" rel="noopener">Enquire on WhatsApp</a>
         </div>
-        <div class="tier top rise">
+        <div class="tier top rise" data-plan="Quarterly" data-level="2" tabindex="0" role="button"
+             aria-pressed="false" aria-label="Select the Quarterly plan">
           <span class="t-badge">Most popular</span>
+          <span class="t-check" aria-hidden="true">Selected ✓</span>
+          <span class="ring volt" aria-hidden="true"></span>
+          <span class="sheen" aria-hidden="true"><i></i></span>
           <div class="t-name">Quarterly</div>
           <div class="t-price disp">₹3,400<small>/ 3 months</small></div>
           <div class="t-permo">≈ ₹1,133 / month · save 13%</div>
@@ -809,7 +897,14 @@
           <a class="btn volt" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20join%20the%20Quarterly%20plan."
              target="_blank" rel="noopener">Enquire on WhatsApp</a>
         </div>
-        <div class="tier rise">
+        <div class="tier rise" data-plan="Annual" data-level="3" tabindex="0" role="button"
+             aria-pressed="false" aria-label="Select the Annual plan">
+          <span class="t-crown" aria-hidden="true">★ Best value</span>
+          <span class="t-check" aria-hidden="true">Selected ✓</span>
+          <span class="ring heat" aria-hidden="true"></span>
+          <span class="ring volt" aria-hidden="true"></span>
+          <span class="sheen" aria-hidden="true"><i></i></span>
+          <span class="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
           <div class="t-name">Annual</div>
           <div class="t-price disp">₹9,999<small>/ year</small></div>
           <div class="t-permo">≈ ₹833 / month · best value</div>
@@ -1115,6 +1210,88 @@ document.querySelectorAll(".cnt").forEach((el) => {
       v: target, duration: 1.2, ease: "power2.out",
       onUpdate: () => { el.textContent = dec ? obj.v.toFixed(dec) : String(Math.round(obj.v)); },
     }),
+  });
+});
+
+/* ---------- plan selection: one effect family, scaled by tier ----------
+   L1 Monthly: border ring pulse + checkmark. L2 Quarterly: + glow ring,
+   shimmer sweep, lift, bouncy check. L3 Annual: dual-color rings,
+   brighter shimmer, sparks, crown badge, CTA copy shift.
+   Checkmark/crown/lift/dim live in CSS classes; GSAP drives only the
+   transient layers, so rapid re-selection just kills and resets them. */
+const tiersWrap = document.querySelector(".tiers");
+const tiers = gsap.utils.toArray(".tier");
+const waFab = document.querySelector(".fab.wa");
+const waBase = "Hi! I'm interested in learning more about F Z Gym & Fitness membership plans, pricing, and any premium options available. Could you share more details?";
+const annualBtn = document.querySelector('.tier[data-level="3"] .btn');
+const annualBtnHTML = annualBtn.innerHTML;
+let selTl = null;
+
+function resetPlanFx() {
+  if (selTl) { selTl.kill(); selTl = null; }
+  tiers.forEach((t) => {
+    const layers = t.querySelectorAll(".ring, .sheen i, .sparks i");
+    gsap.killTweensOf(layers);
+    gsap.set(t.querySelectorAll(".ring"), { opacity: 0, scale: 1 });
+    gsap.set(t.querySelectorAll(".sheen i"), { xPercent: -140 });
+    gsap.set(t.querySelectorAll(".sparks i"), { x: 0, y: 0, opacity: 0, scale: 1 });
+  });
+}
+
+function selectPlan(tier) {
+  if (tier.classList.contains("sel")) return;
+  resetPlanFx();
+  tiers.forEach((t) => { t.classList.remove("sel"); t.setAttribute("aria-pressed", "false"); });
+  tier.classList.add("sel");
+  tier.setAttribute("aria-pressed", "true");
+  tiersWrap.classList.add("has-sel");
+
+  /* conversion path follows the choice */
+  const plan = tier.dataset.plan;
+  waFab.href = "https://wa.me/919879986395?text=" +
+    encodeURIComponent(waBase + " I'm interested in the " + plan + " plan.");
+  annualBtn.innerHTML = tier.dataset.level === "3" ? "Best value. Let's go!" : annualBtnHTML;
+
+  if (reduceMotion) return; /* CSS gives the plain highlight + check */
+
+  const level = +tier.dataset.level;
+  const rings = tier.querySelectorAll(".ring");
+  const sheen = tier.querySelector(".sheen i");
+  selTl = gsap.timeline();
+  if (level === 1) {
+    selTl.fromTo(rings[0], { opacity: 0.7, scale: 0.985 },
+      { opacity: 0, scale: 1.04, duration: 0.4, ease: "power2.out" });
+  } else if (level === 2) {
+    selTl
+      .fromTo(rings[0], { opacity: 0.85, scale: 0.97 },
+        { opacity: 0, scale: 1.1, duration: 0.55, ease: "power2.out" }, 0)
+      .fromTo(sheen, { xPercent: -140 },
+        { xPercent: 320, duration: 0.45, ease: "power2.inOut" }, 0.05);
+  } else {
+    selTl
+      .fromTo(rings[0], { opacity: 0.9, scale: 0.97 },
+        { opacity: 0, scale: 1.12, duration: 0.6, ease: "power2.out" }, 0)
+      .fromTo(rings[1], { opacity: 0.8, scale: 0.99 },
+        { opacity: 0, scale: 1.2, duration: 0.65, ease: "power2.out" }, 0.08)
+      .fromTo(sheen, { xPercent: -140 },
+        { xPercent: 320, duration: 0.5, ease: "power2.inOut" }, 0.05);
+    tier.querySelectorAll(".sparks i").forEach((s, i, all) => {
+      const a = (i / all.length) * Math.PI * 2 + 0.35;
+      const r = 76 + (i % 3) * 16;
+      selTl.fromTo(s, { x: 0, y: 0, opacity: 1, scale: 1 },
+        { x: Math.cos(a) * r, y: Math.sin(a) * r, opacity: 0, scale: 0.35, duration: 0.6, ease: "power2.out" },
+        0.1 + (i % 4) * 0.02);
+    });
+  }
+}
+
+tiers.forEach((t) => {
+  t.addEventListener("click", (e) => {
+    if (e.target.closest("a")) return; /* the enquire link stays a link */
+    selectPlan(t);
+  });
+  t.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectPlan(t); }
   });
 });
 
