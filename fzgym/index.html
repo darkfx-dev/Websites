@@ -1150,7 +1150,8 @@ window.addEventListener("load", () => {
 
 /* ---------- moment 2: section reveals (once, quick, decelerating) ---------- */
 if (reduceMotion) {
-  gsap.set(".rise", { opacity: 1, y: 0 });
+  /* class, not inline styles, so the plan-dim opacity rule still wins */
+  document.querySelectorAll(".rise").forEach((el) => el.classList.add("shown"));
 } else {
   ScrollTrigger.batch(".rise", {
     start: "top 88%",
@@ -1233,7 +1234,7 @@ function resetPlanFx() {
     const layers = t.querySelectorAll(".ring, .sheen i, .sparks i");
     gsap.killTweensOf(layers);
     gsap.set(t.querySelectorAll(".ring"), { opacity: 0, scale: 1 });
-    gsap.set(t.querySelectorAll(".sheen i"), { xPercent: -140 });
+    gsap.set(t.querySelectorAll(".sheen i"), { xPercent: -140, opacity: 1 });
     gsap.set(t.querySelectorAll(".sparks i"), { x: 0, y: 0, opacity: 0, scale: 1 });
   });
 }
@@ -1266,7 +1267,8 @@ function selectPlan(tier) {
       .fromTo(rings[0], { opacity: 0.85, scale: 0.97 },
         { opacity: 0, scale: 1.1, duration: 0.55, ease: "power2.out" }, 0)
       .fromTo(sheen, { xPercent: -140 },
-        { xPercent: 320, duration: 0.45, ease: "power2.inOut" }, 0.05);
+        { xPercent: 320, duration: 0.45, ease: "power2.inOut" }, 0.05)
+      .set(sheen, { opacity: 0 }); /* park hidden — travel distance varies with card width */
   } else {
     selTl
       .fromTo(rings[0], { opacity: 0.9, scale: 0.97 },
@@ -1274,7 +1276,8 @@ function selectPlan(tier) {
       .fromTo(rings[1], { opacity: 0.8, scale: 0.99 },
         { opacity: 0, scale: 1.2, duration: 0.65, ease: "power2.out" }, 0.08)
       .fromTo(sheen, { xPercent: -140 },
-        { xPercent: 320, duration: 0.5, ease: "power2.inOut" }, 0.05);
+        { xPercent: 320, duration: 0.5, ease: "power2.inOut" }, 0.05)
+      .set(sheen, { opacity: 0 }, 0.58); /* park hidden — travel distance varies with card width */
     tier.querySelectorAll(".sparks i").forEach((s, i, all) => {
       const a = (i / all.length) * Math.PI * 2 + 0.35;
       const r = 76 + (i % 3) * 16;
