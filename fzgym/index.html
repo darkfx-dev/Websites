@@ -243,11 +243,7 @@
   .vrow p { color: var(--txt-dim); font-size: 15px; max-width: 48ch; }
 
   /* ---------- stats band (volt section — results live here) ---------- */
-  #record {
-    background: var(--coal-2);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
+  #record { background: var(--coal-2); }
   #record .grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: clamp(20px, 4vw, 64px);
@@ -320,7 +316,7 @@
      Card structure adapted from a 21st.dev three-tier pricing pattern
      (highlighted middle tier + floating badge + feature rows),
      rebuilt fully in the F Z palette. */
-  #plans { background: var(--coal-2); border-top: 1px solid var(--line); }
+  #plans { background: var(--coal-2); }
   .tiers {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 16px; margin-top: 56px; align-items: stretch;
@@ -406,7 +402,7 @@
   .coach p { color: var(--txt-dim); font-size: 14px; }
 
   /* ---------- testimonials ---------- */
-  #word { background: var(--coal-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  #word { background: var(--coal-2); }
   #word .grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 16px; margin-top: 48px;
@@ -490,6 +486,7 @@
     display: flex; flex-direction: column; align-items: center; gap: 14px;
   }
   .fab {
+    position: relative;
     width: 50px; height: 50px; border-radius: 50%;
     background: #191919;
     border: 1.5px solid rgba(242, 242, 242, 0.16);
@@ -515,6 +512,18 @@
     box-shadow: 0 0 12px rgba(37, 211, 102, 0.55), 0 0 26px rgba(37, 211, 102, 0.3);
   }
   .fab.wa svg { width: 30px; height: 30px; }
+  /* idle pulse: one soft flare every ~9s, opacity of a pre-styled layer */
+  .fab.wa::after {
+    content: ""; position: absolute; inset: -2px; border-radius: 50%;
+    box-shadow: 0 0 22px rgba(37, 211, 102, 0.85), 0 0 48px rgba(37, 211, 102, 0.5);
+    opacity: 0; pointer-events: none;
+    animation: wapulse 9s ease-in-out 4s infinite;
+  }
+  @keyframes wapulse {
+    0%, 100% { opacity: 0; }
+    3.5% { opacity: 1; }
+    8% { opacity: 0; }
+  }
   @media (hover: hover) {
     .fab:hover { transform: scale(1.08); }
     .fab.map:hover { box-shadow: 0 0 13px rgba(66, 133, 244, 0.7), 0 0 26px rgba(234, 67, 53, 0.45); }
@@ -552,6 +561,36 @@
   .wash.heat { background: radial-gradient(60% 100% at 50% 0%, rgba(255, 68, 22, 0.09), transparent 75%); }
   .wash.volt { background: radial-gradient(60% 100% at 50% 0%, rgba(198, 255, 61, 0.07), transparent 75%); }
 
+  /* ---------- glowing section dividers ----------
+     Each line carries the accent of the section above it (matching the
+     wash), so scrolling reads as energy handed across the boundary.
+     Static glow: nothing here animates, so box-shadow is fine. */
+  .gline-heat::before, .gline-volt::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+    z-index: 2;
+  }
+  .gline-heat::before {
+    background: linear-gradient(90deg, transparent 3%, rgba(255, 68, 22, 0.6) 50%, transparent 97%);
+    box-shadow: 0 0 14px rgba(255, 68, 22, 0.4);
+  }
+  .gline-volt::before {
+    background: linear-gradient(90deg, transparent 3%, rgba(198, 255, 61, 0.5) 50%, transparent 97%);
+    box-shadow: 0 0 14px rgba(198, 255, 61, 0.35);
+  }
+
+  /* ---------- hero headline ambient glow (slow breath, opacity only) ---------- */
+  .h-glow {
+    position: absolute; left: -8%; bottom: 6%; z-index: 1;
+    width: 62%; height: 52%;
+    background: radial-gradient(50% 50% at 32% 68%, rgba(255, 68, 22, 0.2), transparent 70%);
+    opacity: 0.45; pointer-events: none;
+    animation: hglow 4.5s ease-in-out infinite;
+  }
+  @keyframes hglow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.75; }
+  }
+
   /* ---------- responsive ---------- */
   @media (max-width: 940px) {
     #why .cols { grid-template-columns: 1fr; }
@@ -575,9 +614,15 @@
     .h-in, .rise { opacity: 1; transform: none; }
     #hero h1 .row > span { transform: none; }
     #stripe .track { animation: none; }
-    .shot img, .coach, .btn { transition: none; }
+    .shot img, .shot, .coach, .btn { transition: none; }
+    .shot:hover, .shot:active, .coach:hover, .coach:active { transform: none; }
     .fab { transition: opacity 150ms ease; }
     .fab:hover, .fab:active { transform: none; opacity: 0.85; }
+    /* neon layer settles: glows go static, pulses stop */
+    .h-glow { animation: none; opacity: 0.35; }
+    .fab.wa::after { animation: none; }
+    #progress { transition: none; }
+    .nav-links a:not(.btn)::after { transition: none; }
   }
 </style>
 </head>
@@ -610,6 +655,7 @@
          alt="Weight training area with a full dumbbell rack under low light"
          fetchpriority="high" onerror="this.remove()">
     <div class="shade"></div>
+    <div class="h-glow" aria-hidden="true"></div>
     <div class="wrap">
       <div class="badge h-in" id="trust">
         <span class="star">★</span>
@@ -672,7 +718,7 @@
     </div>
   </section>
 
-  <section id="record" class="pad" data-wash="heat">
+  <section id="record" class="pad gline-heat" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">The record speaks.</h2>
       <div class="grid" style="margin-top:52px">
@@ -697,7 +743,7 @@
     </div>
   </section>
 
-  <section id="floor" class="pad" data-wash="volt">
+  <section id="floor" class="pad gline-volt" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">The floor.</h2>
       <p class="lead rise">Strength, cardio and space to move: everything a real training week needs.</p>
@@ -725,7 +771,7 @@
     </div>
   </section>
 
-  <section id="plans" class="pad" data-wash="heat">
+  <section id="plans" class="pad gline-heat" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">Pick your commitment.</h2>
       <p class="lead rise">Every plan gets the full floor. Longer plans simply cost
@@ -781,7 +827,7 @@
     </div>
   </section>
 
-  <section id="crew" class="pad" data-wash="volt">
+  <section id="crew" class="pad gline-volt" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">The people pushing you.</h2>
       <!-- PLACEHOLDER TRAINER PROFILES: swap initials, names, roles and
@@ -809,7 +855,7 @@
     </div>
   </section>
 
-  <section id="word" class="pad" data-wash="heat">
+  <section id="word" class="pad gline-heat" data-wash="heat">
     <div class="wrap">
       <h2 class="disp rise">Why members rate it 4.9.</h2>
       <!-- PLACEHOLDER TESTIMONIALS: generic-style blurbs written to be
@@ -835,7 +881,7 @@
     </div>
   </section>
 
-  <section id="visit" class="pad" data-wash="volt">
+  <section id="visit" class="pad gline-volt" data-wash="volt">
     <div class="wrap">
       <h2 class="disp rise">Walk in. <span style="color:var(--heat)">Train today.</span></h2>
       <div class="cols">
