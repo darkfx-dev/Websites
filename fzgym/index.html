@@ -136,6 +136,15 @@
     .nav-links a:not(.btn):hover::after { transform: scaleX(1); transform-origin: 0 50%; }
   }
   .nav-links .btn { padding: 11px 20px; font-size: 13px; }
+  /* hamburger: only exists under 640px, where the links move into a panel */
+  .menu-btn {
+    display: none; width: 44px; height: 44px;
+    align-items: center; justify-content: center;
+    background: none; border: 1.5px solid var(--line); border-radius: 8px;
+    color: var(--txt); cursor: pointer; padding: 0;
+    transition: border-color 150ms ease;
+  }
+  .menu-btn:active { border-color: rgba(242, 242, 242, 0.45); }
 
   /* ---------- hero ---------- */
   #hero {
@@ -184,7 +193,10 @@
     margin: 26px 0 10px;
   }
   #hero h1 .row { display: block; overflow: hidden; }
-  #hero h1 .row > span { display: inline-block; transform: translateY(112%); }
+  /* hidden initial states are gated on html.js, which the script adds only
+     after confirming GSAP loaded — if a CDN fails, the page ships visible */
+  #hero h1 .row > span { display: inline-block; }
+  .js #hero h1 .row > span { transform: translateY(112%); }
   /* per-character spans injected by JS for the entrance stagger */
   #hero h1 .ch { display: inline-block; }
   #hero h1 .hot { color: var(--heat); }
@@ -199,7 +211,7 @@
     margin-top: 16px;
   }
   #hero .btns { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
-  .h-in { opacity: 0; transform: translateY(20px); }
+  .js .h-in { opacity: 0; transform: translateY(20px); }
 
   /* ---------- marquee divider ---------- */
   #stripe {
@@ -378,7 +390,8 @@
                 transform 250ms var(--ease-out), box-shadow 250ms ease;
   }
   .tier:focus-visible { outline: 2px solid var(--heat); outline-offset: 3px; }
-  .tiers.has-sel .tier:not(.sel) { opacity: 0.8; }
+  /* non-selected cards recede for real — 0.8 was imperceptible on charcoal */
+  .tiers.has-sel .tier:not(.sel) { opacity: 0.55; }
   .tier.sel { border-color: var(--heat); transform: translateY(-3px); }
   .tier.top.sel { border-color: var(--volt); transform: translateY(-4px); }
   .tier[data-level="3"].sel {
@@ -544,7 +557,10 @@
 
   footer {
     border-top: 1px solid var(--line);
-    padding: 30px 0 220px; /* clearance for the floating action stack */
+    /* clearance for the floating action stack: full stack height on
+       mobile (see 640px block); less dead space on wide screens where
+       the content never sits under the FABs */
+    padding: 30px 0 160px;
   }
   footer .row {
     display: flex; justify-content: space-between; align-items: center;
@@ -601,6 +617,16 @@
     3.5% { opacity: 1; }
     8% { opacity: 0; }
   }
+  /* while pricing is in view on small screens, the two secondary FABs
+     step aside so they never sit on top of the enquire buttons */
+  @media (max-width: 640px) {
+    .fab.map, .fab.insta {
+      transition: transform 200ms var(--ease-out), box-shadow 180ms ease, opacity 180ms ease;
+    }
+    .fabs.dock .fab.map, .fabs.dock .fab.insta {
+      opacity: 0; pointer-events: none; transform: translateY(10px);
+    }
+  }
   @media (hover: hover) {
     .fab:hover { transform: scale(1.08); }
     .fab.map:hover { box-shadow: 0 0 13px rgba(66, 133, 244, 0.7), 0 0 26px rgba(234, 67, 53, 0.45); }
@@ -608,10 +634,16 @@
     .fab.wa:hover { box-shadow: 0 0 16px rgba(37, 211, 102, 0.8), 0 0 34px rgba(37, 211, 102, 0.45); }
   }
 
-  .rise { opacity: 0; transform: translateY(28px); }
+  /* visually hidden, still read by screen readers (selection announcements) */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  .js .rise { opacity: 0; transform: translateY(28px); }
   /* once revealed, state lives in the class so hover/selected transforms
      aren't blocked by leftover inline styles from the reveal tween */
-  .rise.shown { opacity: 1; transform: none; }
+  .js .rise.shown { opacity: 1; transform: none; }
 
   /* ---------- scroll progress bar ----------
      Position feedback, so it stays on under reduced motion too. */
@@ -679,7 +711,27 @@
     .mapbox { min-height: 300px; }
   }
   @media (max-width: 640px) {
-    .nav-links a:not(.btn) { display: none; }
+    .menu-btn { display: inline-flex; }
+    nav.open {
+      background: rgba(13, 13, 13, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom-color: var(--line);
+    }
+    .nav-links {
+      position: absolute; top: 100%; left: 14px; right: 14px;
+      flex-direction: column; align-items: stretch; gap: 2px;
+      background: rgba(13, 13, 13, 0.96);
+      border: 1px solid var(--line); border-radius: 12px;
+      padding: 10px;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 200ms var(--ease-out);
+    }
+    nav.open .nav-links { opacity: 1; transform: none; pointer-events: auto; }
+    .nav-links a:not(.btn) { display: block; padding: 13px 12px; font-size: 15px; }
+    .nav-links a:not(.btn)::after { display: none; }
+    .nav-links .btn { margin-top: 8px; justify-content: center; }
+    footer { padding-bottom: 220px; }
     #floor .grid { grid-template-columns: 1fr; }
     .shot, .shot.wide { grid-column: span 1; aspect-ratio: 16 / 10; }
     #record .grid { grid-template-columns: 1fr; gap: 34px; }
@@ -688,8 +740,8 @@
 
   /* ---------- reduced motion: opacity-only world ---------- */
   @media (prefers-reduced-motion: reduce) {
-    .h-in, .rise { opacity: 1; transform: none; }
-    #hero h1 .row > span { transform: none; }
+    .js .h-in, .js .rise { opacity: 1; transform: none; }
+    .js #hero h1 .row > span { transform: none; }
     #stripe .track { animation: none; }
     .shot img, .shot, .coach, .btn { transition: none; }
     .shot:hover, .shot:active, .coach:hover, .coach:active { transform: none; }
@@ -698,6 +750,8 @@
     /* neon layer settles: glows go static, pulses stop */
     .h-glow { animation: none; opacity: 0.35; }
     .fab.wa::after { animation: none; }
+    .fabs.dock .fab.map, .fabs.dock .fab.insta { transform: none; }
+    .nav-links { transition: none; }
     #progress { transition: none; }
     .nav-links a:not(.btn)::after { transition: none; }
     /* plan selection: plain highlight + checkmark, no celebration */
@@ -714,14 +768,20 @@
     <span class="box">FZ</span>
     <span class="nm">F Z GYM<small>&amp; FITNESS · SURAT</small></span>
   </a>
-  <div class="nav-links">
+  <div class="nav-links" id="navlinks">
     <a href="#why" data-scroll>Why FZ</a>
     <a href="#floor" data-scroll>Facilities</a>
     <a href="#plans" data-scroll>Membership</a>
     <a href="#visit" data-scroll>Visit</a>
     <a class="btn heat" href="https://wa.me/919879986395?text=Hi%20F%20Z%20Gym!%20I%20want%20to%20book%20a%20free%20trial%20workout."
-       target="_blank" rel="noopener">Join Now</a>
+       target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.1 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 7 2.9 9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.9 9.88m8.42-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.32-1.66a11.9 11.9 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"/></svg>
+      Join Now
+    </a>
   </div>
+  <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="navlinks">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
 </nav>
 
 <div id="progress" aria-hidden="true"></div>
@@ -807,11 +867,11 @@
              PLACEHOLDER: add members-trained / years-running once the
              owner confirms real figures. -->
         <div class="stat rise">
-          <div class="num"><span class="cnt" data-target="4.9" data-dec="1">0.0</span><span class="suf">★</span></div>
+          <div class="num"><span class="cnt" data-target="4.9" data-dec="1">4.9</span><span class="suf">★</span></div>
           <div class="cap">Google rating</div>
         </div>
         <div class="stat rise">
-          <div class="num"><span class="cnt" data-target="500">0</span><span class="suf">+</span></div>
+          <div class="num"><span class="cnt" data-target="500">500</span><span class="suf">+</span></div>
           <div class="cap">Member reviews</div>
         </div>
         <div class="stat rise">
@@ -864,7 +924,7 @@
            restyled fully into the F Z palette. -->
       <div class="tiers">
         <div class="tier rise" data-plan="Monthly" data-level="1" tabindex="0" role="button"
-             aria-pressed="false" aria-label="Select the Monthly plan">
+             aria-pressed="false" aria-label="Select the Monthly plan, ₹1,300 per month">
           <span class="t-check" aria-hidden="true">Selected ✓</span>
           <span class="ring heat" aria-hidden="true"></span>
           <div class="t-name">Monthly</div>
@@ -880,7 +940,7 @@
              target="_blank" rel="noopener">Enquire on WhatsApp</a>
         </div>
         <div class="tier top rise" data-plan="Quarterly" data-level="2" tabindex="0" role="button"
-             aria-pressed="false" aria-label="Select the Quarterly plan">
+             aria-pressed="false" aria-label="Select the Quarterly plan, ₹3,400 for 3 months">
           <span class="t-badge">Most popular</span>
           <span class="t-check" aria-hidden="true">Selected ✓</span>
           <span class="ring volt" aria-hidden="true"></span>
@@ -898,7 +958,7 @@
              target="_blank" rel="noopener">Enquire on WhatsApp</a>
         </div>
         <div class="tier rise" data-plan="Annual" data-level="3" tabindex="0" role="button"
-             aria-pressed="false" aria-label="Select the Annual plan">
+             aria-pressed="false" aria-label="Select the Annual plan, ₹9,999 per year">
           <span class="t-crown" aria-hidden="true">★ Best value</span>
           <span class="t-check" aria-hidden="true">Selected ✓</span>
           <span class="ring heat" aria-hidden="true"></span>
@@ -958,17 +1018,17 @@
            permission). Do NOT ship these as real member quotes. -->
       <div class="grid">
         <div class="quote rise">
-          <div class="stars">★★★★★</div>
+          <div class="stars" role="img" aria-label="Rated 5 stars">★★★★★</div>
           <p>"Best equipment in the area and the trainers actually pay attention to your form. Worth every rupee."</p>
           <div class="who">Placeholder · swap with a real Google review</div>
         </div>
         <div class="quote rise">
-          <div class="stars">★★★★★</div>
+          <div class="stars" role="img" aria-label="Rated 5 stars">★★★★★</div>
           <p>"Clean, never overcrowded, and the atmosphere keeps you consistent. I've been a member for over a year."</p>
           <div class="who">Placeholder · swap with a real Google review</div>
         </div>
         <div class="quote rise">
-          <div class="stars">★★★★★</div>
+          <div class="stars" role="img" aria-label="Rated 5 stars">★★★★★</div>
           <p>"Joined for a month to try it, ended up taking the annual plan. The trainers make the difference."</p>
           <div class="who">Placeholder · swap with a real Google review</div>
         </div>
@@ -1029,6 +1089,8 @@
 
 </main>
 
+<span id="sr-status" class="sr-only" aria-live="polite"></span>
+
 <div class="fabs">
   <a class="fab map" aria-label="View F Z Gym on Google Maps"
      href="https://maps.app.goo.gl/NEcC65QHUfYHuXRY8?g_st=ac"
@@ -1058,6 +1120,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
+/* If the animation libraries never arrive (CDN outage, flaky mobile
+   network), bail out before adding the .js class. Without that class no
+   CSS rule hides any content, so the page ships fully visible, static. */
+if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+  console.warn("F Z Gym: animation libraries unavailable; serving the static page.");
+} else {
+  main();
+}
+
+function main() {
+document.documentElement.classList.add("js");
 gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1205,6 +1278,9 @@ document.querySelectorAll(".cnt").forEach((el) => {
     return;
   }
   const obj = { v: 0 };
+  /* HTML ships the final value (so a script failure still shows 4.9/500);
+     JS zeroes it only once it's certain the count-up will run */
+  el.textContent = dec ? "0.0" : "0";
   ScrollTrigger.create({
     trigger: el, start: "top 90%", once: true,
     onEnter: () => gsap.to(obj, {
@@ -1223,10 +1299,20 @@ document.querySelectorAll(".cnt").forEach((el) => {
 const tiersWrap = document.querySelector(".tiers");
 const tiers = gsap.utils.toArray(".tier");
 const waFab = document.querySelector(".fab.wa");
+const waFabDefault = waFab.getAttribute("href");
 const waBase = "Hi! I'm interested in learning more about F Z Gym & Fitness membership plans, pricing, and any premium options available. Could you share more details?";
 const annualBtn = document.querySelector('.tier[data-level="3"] .btn');
 const annualBtnHTML = annualBtn.innerHTML;
+/* reuse the nav button's WhatsApp glyph so the swapped label keeps its destination */
+const waGlyph = document.querySelector(".nav-links .btn svg").outerHTML;
+const srStatus = document.getElementById("sr-status");
 let selTl = null;
+
+/* secondary FABs step aside while pricing is on screen (mobile CSS only) */
+ScrollTrigger.create({
+  trigger: "#plans", start: "top 75%", end: "bottom 40%",
+  onToggle: (self) => document.querySelector(".fabs").classList.toggle("dock", self.isActive),
+});
 
 function resetPlanFx() {
   if (selTl) { selTl.kill(); selTl = null; }
@@ -1239,8 +1325,18 @@ function resetPlanFx() {
   });
 }
 
+function clearSelection() {
+  resetPlanFx();
+  tiers.forEach((t) => { t.classList.remove("sel"); t.setAttribute("aria-pressed", "false"); });
+  tiersWrap.classList.remove("has-sel");
+  waFab.href = waFabDefault;
+  annualBtn.innerHTML = annualBtnHTML;
+  srStatus.textContent = "Plan selection cleared.";
+}
+
 function selectPlan(tier) {
-  if (tier.classList.contains("sel")) return;
+  /* tapping the selected card again deselects it */
+  if (tier.classList.contains("sel")) { clearSelection(); return; }
   resetPlanFx();
   tiers.forEach((t) => { t.classList.remove("sel"); t.setAttribute("aria-pressed", "false"); });
   tier.classList.add("sel");
@@ -1251,7 +1347,10 @@ function selectPlan(tier) {
   const plan = tier.dataset.plan;
   waFab.href = "https://wa.me/919879986395?text=" +
     encodeURIComponent(waBase + " I'm interested in the " + plan + " plan.");
-  annualBtn.innerHTML = tier.dataset.level === "3" ? "Best value. Let's go!" : annualBtnHTML;
+  annualBtn.innerHTML = tier.dataset.level === "3"
+    ? waGlyph + "Best value. Let's go!"
+    : annualBtnHTML;
+  srStatus.textContent = plan + " plan selected. The WhatsApp message now mentions it.";
 
   if (reduceMotion) return; /* CSS gives the plain highlight + check */
 
@@ -1328,6 +1427,23 @@ if (!reduceMotion) {
     onUpdate: (self) => skew(gsap.utils.clamp(-5, 5, self.getVelocity() / -320)),
   });
 }
+} /* end main() */
+
+/* ---------- mobile menu: standalone, no library dependency ---------- */
+(function () {
+  const nav = document.getElementById("nav");
+  const btn = document.querySelector(".menu-btn");
+  btn.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  document.querySelectorAll(".nav-links a").forEach((a) => {
+    a.addEventListener("click", () => {
+      nav.classList.remove("open");
+      btn.setAttribute("aria-expanded", "false");
+    });
+  });
+})();
 </script>
 </body>
 </html>
