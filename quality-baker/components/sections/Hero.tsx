@@ -1,6 +1,6 @@
 import { GlowButton } from "@/components/GlowButton";
-import { PastryArt } from "@/components/PastryArt";
-import { site } from "@/lib/site";
+import { HeroCake } from "@/components/HeroCake";
+import { defaultWhatsappHref, site } from "@/lib/site";
 
 const headlineWords = ["Baked", "slowly.", "Decorated", "like", "it", "matters."];
 
@@ -14,35 +14,34 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-espresso text-cream"
+      className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-noir text-cream"
     >
-      {/* Oven-warmth backdrop: two static radial washes, opacity-breathing */}
+      {/* Melted-chocolate backdrop: cocoa pooling into noir, breathing slowly.
+          Used once — this wash is the hero's alone. */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div
           className="glow-breathe absolute -bottom-1/3 left-1/2 h-[85vh] w-[140vw] -translate-x-1/2 rounded-[100%]"
           style={{
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgb(212 160 84 / 0.32), rgb(139 78 59 / 0.12) 55%, transparent 75%)",
+              "radial-gradient(50% 50% at 50% 50%, rgb(184 115 51 / 0.3), rgb(107 66 38 / 0.14) 55%, transparent 75%)",
           }}
         />
         <div
           className="absolute right-[-20%] top-[-30%] h-[60vh] w-[60vw] rounded-[100%] opacity-50"
           style={{
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgb(139 78 59 / 0.25), transparent 70%)",
+              "radial-gradient(50% 50% at 50% 50%, rgb(107 66 38 / 0.28), transparent 70%)",
           }}
         />
       </div>
 
-      {/* Faint line-art cake filling the right side on wide screens.
-          Opacity lives on the SVG, not the animated wrapper — the hero-fade
-          keyframe fills forward to opacity:1 and would override it. */}
+      {/* Signature moment: the cake draws itself in line-art, then the
+          icing fades in (pure CSS, see .cake-draw in globals.css). */}
       <div
         aria-hidden
-        className="hero-fade pointer-events-none absolute right-[-4%] top-1/2 hidden w-[44vw] max-w-[620px] -translate-y-1/2 lg:block"
-        style={{ "--d": "0.6s" } as React.CSSProperties}
+        className="pointer-events-none absolute right-[-2%] top-1/2 hidden w-[42vw] max-w-[600px] -translate-y-1/2 lg:block"
       >
-        <PastryArt variant="tiered" className="w-full opacity-[0.38]" />
+        <HeroCake className="w-full opacity-80" />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-32 sm:px-8">
@@ -78,9 +77,9 @@ export function Hero() {
           className="hero-fade mt-10 flex flex-wrap items-center gap-4"
           style={{ "--d": "1s" } as React.CSSProperties}
         >
-          <GlowButton href="#menu">See our cakes</GlowButton>
-          <GlowButton href={site.whatsappHref} variant="ghost">
-            Order on WhatsApp
+          <GlowButton href="#order">Order a cake</GlowButton>
+          <GlowButton href={defaultWhatsappHref} variant="ghost" target="_blank" rel="noopener">
+            WhatsApp us
           </GlowButton>
         </div>
 

@@ -1,6 +1,6 @@
 # The Quality Baker — website
 
-Premium single-page site for The Quality Baker (Bhestan, Surat).
+Premium single-page site for The Quality Baker (Bhestan, Surat) — "Cacao Noir" design system with a WhatsApp-based ordering flow (expand a product, customise, send; multiple items batch into one message via the floating pill).
 Next.js App Router · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP ScrollTrigger · Lenis.
 
 ## Run it
@@ -14,7 +14,7 @@ npm run build      # production build
 ## Edit the menu & prices (the 5-minute job)
 
 Everything on the menu — categories, items, notes, eggless tags, and **prices** —
-lives in one file: [`data/menu.ts`](data/menu.ts). Edit the array, save, done.
+lives in one file: [`data/menu.ts`](data/menu.ts) — products with sizes, flavours, and eggless tags. Edit the array, save, done.
 All prices in there are illustrative placeholders until the shop confirms real ones.
 
 Business facts (phone, address, hours, rating) live in [`lib/site.ts`](lib/site.ts).

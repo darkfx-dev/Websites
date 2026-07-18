@@ -13,7 +13,7 @@ export function Location() {
       <div className="mx-auto grid max-w-6xl gap-14 px-5 py-24 sm:px-8 md:grid-cols-[1.1fr_1fr] md:items-center md:py-32">
         <Reveal>
           <div>
-            <p className="font-display text-lg italic text-terracotta">
+            <p className="font-display text-lg italic text-cocoa">
               Come say hello
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.2rem,6vw,4rem)] font-medium leading-[1.06] tracking-[-0.015em]">
@@ -36,7 +36,7 @@ export function Location() {
                 <dd>
                   <a
                     href={site.phoneHref}
-                    className="text-terracotta underline decoration-caramel/50 underline-offset-4 transition-colors duration-150 hover:text-caramel"
+                    className="text-cocoa underline decoration-caramel/50 underline-offset-4 transition-colors duration-150 hover:text-caramel"
                   >
                     {site.phoneDisplay}
                   </a>
@@ -64,7 +64,7 @@ export function Location() {
             target="_blank"
             rel="noopener"
             aria-label="Open The Quality Baker in Google Maps"
-            className="frame block overflow-hidden rounded-2xl border border-terracotta/20 bg-espresso"
+            className="frame block overflow-hidden rounded-2xl border border-cocoa/20 bg-noir"
           >
             {/* Stylised neighbourhood sketch, not a live map */}
             <svg
@@ -74,24 +74,24 @@ export function Location() {
               fill="none"
               strokeLinecap="round"
             >
-              <g stroke="rgb(212 160 84 / 0.28)" strokeWidth="10">
+              <g stroke="rgb(184 115 51 / 0.28)" strokeWidth="10">
                 <path d="M-10 80h420" />
                 <path d="M-10 190h420" />
                 <path d="M120 -10v320" />
                 <path d="M290 -10v320" />
               </g>
-              <g stroke="rgb(212 160 84 / 0.16)" strokeWidth="4">
+              <g stroke="rgb(184 115 51 / 0.16)" strokeWidth="4">
                 <path d="M-10 135h420" />
                 <path d="M205 -10v320" />
                 <path d="M-10 245h420" />
               </g>
-              <circle cx="205" cy="135" r="34" fill="rgb(212 160 84 / 0.12)" />
+              <circle cx="205" cy="135" r="34" fill="rgb(184 115 51 / 0.12)" />
               <g transform="translate(205 121)">
                 <path
                   d="M0 42C-14 24-22 12-22 0a22 22 0 1 1 44 0c0 12-8 24-22 42z"
-                  fill="#d4a054"
+                  fill="#b87333"
                 />
-                <circle cx="0" cy="0" r="9" fill="#0f0d0b" />
+                <circle cx="0" cy="0" r="9" fill="#1a120b" />
               </g>
             </svg>
             <p className="border-t border-caramel/15 px-6 py-4 text-sm text-cream/75">

@@ -97,7 +97,7 @@ export function Craft() {
     >
       <div className="mx-auto w-full max-w-4xl px-5 py-24 sm:px-8 md:py-32">
         <Reveal>
-          <p className="font-display text-lg italic text-terracotta">
+          <p className="font-display text-lg italic text-cocoa">
             What 95 reviews keep telling us
           </p>
         </Reveal>

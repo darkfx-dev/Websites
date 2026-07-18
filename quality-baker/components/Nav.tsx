@@ -19,10 +19,10 @@ export function Nav() {
         </a>
         <div className="flex items-center gap-6">
           <a
-            href="#menu"
+            href="#order"
             className="hidden text-sm font-medium text-cream/80 transition-colors duration-150 hover:text-caramel sm:block"
           >
-            Menu
+            Order
           </a>
           <a
             href="#visit"
@@ -34,7 +34,7 @@ export function Nav() {
             href={site.phoneHref}
             className="glow-btn inline-flex min-h-11 items-center rounded-full border border-caramel/50 px-5 py-2 text-sm font-semibold text-caramel"
           >
-            <span aria-hidden className="glare" />
+            <span aria-hidden className="icing-swipe" />
             Call the shop
           </a>
         </div>

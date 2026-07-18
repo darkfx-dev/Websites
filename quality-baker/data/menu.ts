@@ -1,95 +1,129 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  MENU & PRICES — EDIT HERE
+ *  PRODUCT CATALOG & PRICES — EDIT HERE
  *
- *  This one file drives the entire "Menu" section of the site.
- *  To change a price, a name, or add/remove an item, edit the arrays below
- *  and save — nothing else needs to change anywhere in the code.
+ *  This one file drives the entire ordering section. To change a price, a
+ *  name, a flavour list, or add/remove a product, edit the array below and
+ *  save — nothing else in the code needs to change.
  *
- *  ⚠ All prices below are ILLUSTRATIVE placeholders. Swap in the shop's real
- *  price list before going live (should take under 5 minutes).
+ *  ⚠ All prices are ILLUSTRATIVE placeholders until the shop confirms its
+ *  real price list (swapping them in takes under 5 minutes).
+ *
+ *  `art` picks the tile illustration (see components/PastryArt.tsx) — when
+ *  real photos arrive, add an `image` path per product and swap the tile art
+ *  for a next/image in components/sections/OrderSection.tsx.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export type MenuItem = {
+import type { PastryVariant } from "@/components/PastryArt";
+
+export type Product = {
+  id: string;
   name: string;
-  /** Shown right-aligned after the dotted leader, e.g. "from ₹450" */
-  price: string;
-  /** Optional one-line description under the item name */
-  note?: string;
-  /** Renders a small "eggless" tag next to the name */
+  category:
+    | "Birthday Cakes"
+    | "Custom Design Cakes"
+    | "Pastries & Desserts"
+    | "Cupcakes"
+    | "Eggless Options";
+  description: string;
+  /** Numeric base price in ₹ (used for the count-up reveal + order message) */
+  price: number;
+  /** e.g. "from" for starting prices; omit for fixed prices */
+  priceQualifier?: "from" | "each";
+  art: PastryVariant;
+  customizable: boolean;
+  /** Options shown in the expanded card when customizable */
+  sizes?: string[];
+  flavors?: string[];
   eggless?: boolean;
+  /** Featured products render as a wide tile in the catalog */
+  featured?: boolean;
 };
 
-export type MenuCategory = {
-  title: string;
-  items: MenuItem[];
-};
-
-export const menu: MenuCategory[] = [
+export const products: Product[] = [
   {
-    title: "Birthday Cakes",
-    items: [
-      {
-        name: "Classic Vanilla / Chocolate",
-        price: "from ₹450",
-        note: "Half kg, fresh cream, message piped free",
-        eggless: true,
-      },
-      {
-        name: "Butterscotch Crunch",
-        price: "from ₹500",
-        note: "Caramelised praline, our most-ordered flavour",
-        eggless: true,
-      },
-      {
-        name: "Fresh Fruit Gateau",
-        price: "from ₹600",
-        note: "Seasonal fruit, light chantilly cream",
-      },
-    ],
+    id: "classic-birthday",
+    name: "Classic Birthday Cake",
+    category: "Birthday Cakes",
+    description:
+      "Fresh cream, soft sponge, and your message piped on top — free. The cake most of Bhestan grew up on.",
+    price: 450,
+    priceQualifier: "from",
+    art: "candles",
+    customizable: true,
+    sizes: ["Half kg", "1 kg", "2 kg"],
+    flavors: ["Vanilla", "Chocolate", "Butterscotch", "Pineapple"],
+    eggless: true,
   },
   {
-    title: "Custom Design Cakes",
-    items: [
-      {
-        name: "Theme & Photo Cakes",
-        price: "from ₹900",
-        note: "Cartoons, portraits, hobbies — bring us any idea",
-        eggless: true,
-      },
-      {
-        name: "Tiered Celebration Cakes",
-        price: "from ₹1,800",
-        note: "Weddings, anniversaries, engagements. 48-hr notice",
-      },
-      {
-        name: "Fondant Sculpted Cakes",
-        price: "quoted per design",
-        note: "Sketch approved with you before we bake",
-      },
-    ],
+    id: "custom-design",
+    name: "Custom Design Cake",
+    category: "Custom Design Cakes",
+    description:
+      "Cartoons, portraits, hobbies, the joke only your family gets. Tell us the idea — we sketch it with you before the oven comes on. Reviewers call the results “fab”, and we intend to keep it that way.",
+    price: 900,
+    priceQualifier: "from",
+    art: "tiered",
+    customizable: true,
+    sizes: ["1 kg", "2 kg", "Tiered (quoted)"],
+    flavors: ["Vanilla", "Chocolate", "Butterscotch", "Red Velvet"],
+    eggless: true,
+    featured: true,
   },
   {
-    title: "Pastries & Small Bakes",
-    items: [
-      {
-        name: "Pastry Slices",
-        price: "₹90 each",
-        note: "Chocolate truffle, pineapple, butterscotch",
-        eggless: true,
-      },
-      {
-        name: "Cupcakes",
-        price: "₹80 each",
-        note: "Boxes of 6 with mixed toppings",
-        eggless: true,
-      },
-      {
-        name: "Brownies & Blondies",
-        price: "₹110 each",
-        note: "Dense, fudgy, best slightly warmed",
-      },
-    ],
+    id: "fresh-fruit",
+    name: "Fresh Fruit Gateau",
+    category: "Birthday Cakes",
+    description:
+      "Seasonal fruit and light chantilly cream. Lighter than it looks, gone faster than you'd think.",
+    price: 600,
+    priceQualifier: "from",
+    art: "layer",
+    customizable: true,
+    sizes: ["Half kg", "1 kg"],
+    flavors: ["Mixed fruit", "Mango (seasonal)", "Strawberry"],
+  },
+  {
+    id: "pastry-slices",
+    name: "Pastry Slices",
+    category: "Pastries & Desserts",
+    description:
+      "Chocolate truffle, pineapple, butterscotch. Baked for the day, never for the week.",
+    price: 90,
+    priceQualifier: "each",
+    art: "slice",
+    customizable: false,
+    eggless: true,
+  },
+  {
+    id: "cupcake-box",
+    name: "Cupcake Box of 6",
+    category: "Cupcakes",
+    description:
+      "Six cupcakes, mixed toppings, one box that rarely survives the ride home.",
+    price: 480,
+    art: "cupcake",
+    customizable: true,
+    flavors: ["Mixed box", "All chocolate", "All vanilla"],
+    eggless: true,
+  },
+  {
+    id: "brownie",
+    name: "Brownies & Blondies",
+    category: "Pastries & Desserts",
+    description: "Dense and fudgy. Best slightly warmed, honestly best anyway.",
+    price: 110,
+    priceQualifier: "each",
+    art: "croissant",
+    customizable: false,
   },
 ];
+
+export const categories = [
+  "Birthday Cakes",
+  "Custom Design Cakes",
+  "Pastries & Desserts",
+  "Cupcakes",
+  "Eggless Options",
+] as const;

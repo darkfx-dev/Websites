@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Fraunces } from "next/font/google";
+import { Caveat, Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
 import MotionRoot from "@/components/MotionRoot";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -16,6 +16,13 @@ const figtree = Figtree({
   subsets: ["latin"],
 });
 
+/* Script accent: used for exactly three small signature moments, never body copy */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+});
+
 export const metadata: Metadata = {
   title: "The Quality Baker — Custom Cakes & Pastries in Bhestan, Surat",
   description:
@@ -30,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f0d0b",
+  themeColor: "#1a120b",
 };
 
 const jsonLd = {
@@ -62,7 +69,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${figtree.variable}`}>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${figtree.variable} ${caveat.variable}`}
+    >
       <body>
         <script
           type="application/ld+json"

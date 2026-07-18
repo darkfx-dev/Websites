@@ -1,5 +1,5 @@
 /**
- * Hand-drawn pastry illustrations — caramel line work on espresso.
+ * Hand-drawn pastry illustrations — caramel line work on noir.
  *
  * ⚠ These are deliberate PLACEHOLDERS for photographs of the shop's real
  * cakes. The outbound network policy of this build environment blocks stock
@@ -8,15 +8,23 @@
  * <PastryArt> in Gallery.tsx with a next/image of the real cake.
  */
 
+export type PastryVariant =
+  | "layer"
+  | "tiered"
+  | "cupcake"
+  | "croissant"
+  | "candles"
+  | "slice";
+
 type PastryArtProps = {
-  variant: "layer" | "tiered" | "cupcake" | "croissant" | "candles" | "slice";
+  variant: PastryVariant;
   className?: string;
   style?: React.CSSProperties;
 };
 
-const stroke = "#d4a054";
-const soft = "rgb(212 160 84 / 0.35)";
-const fill = "rgb(139 78 59 / 0.18)";
+const stroke = "#b87333";
+const soft = "rgb(184 115 51 / 0.35)";
+const fill = "rgb(107 66 38 / 0.18)";
 
 export function PastryArt({ variant, className, style }: PastryArtProps) {
   return (

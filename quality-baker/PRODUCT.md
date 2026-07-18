@@ -21,8 +21,9 @@ Warm, personal, handcrafted, quietly premium. A patisserie at golden hour: espre
 - Gym/tech "neon" energy — the requested glow is warm caramel light, not neon pink.
 - Corporate bakery clichés ("indulge your senses", "symphony of flavors").
 
-## Design system: "Ember & Cream"
-- espresso `#0F0D0B` · cream `#FAF6F0` · caramel `#D4A054` · terracotta `#8B4E3B` · ink `#2A2420`
+## Design system: "Cacao Noir"
+- noir `#1A120B` · cream `#FDF8F0` · cocoa `#6B4226` · caramel `#B87333` · honey `#E8A860` · ink `#2B211B`
+- Script accent (Caveat) reserved for three small signature moments.
 - Display: Fraunces (variable, optical sizing). Body: Figtree.
 - Motion: GSAP + ScrollTrigger for scroll-scrubbed sequences, Framer Motion for discrete component transitions, Lenis for smooth scroll. Strong ease-out curves, UI durations ≤ 300ms.
 

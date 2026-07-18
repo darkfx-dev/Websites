@@ -28,8 +28,10 @@ export default function SmoothScroll() {
 
       gsap.registerPlugin(ScrollTrigger);
 
+      // Moderate lerp; one rAF loop driven by GSAP's ticker below — Lenis's
+      // own autoRaf stays off so the two never double-fire.
       const lenis = new Lenis({
-        duration: 1.1,
+        lerp: 0.1,
         anchors: true,
       });
 

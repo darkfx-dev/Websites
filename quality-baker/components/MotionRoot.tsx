@@ -1,19 +1,26 @@
 "use client";
 
-import { LazyMotion, domAnimation } from "framer-motion";
+import { LazyMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import { MotionTierProvider } from "@/lib/motion";
+import { CartProvider } from "@/lib/cart";
 
 /**
- * Client-side motion shell: tier detection + Framer Motion's lazy feature
- * bundle (domAnimation keeps the initial JS payload small).
+ * Client-side motion shell: tier detection + order basket + Framer Motion's
+ * lazy feature bundle. domMax (loaded async, off the critical path) is
+ * required for the product-card layout animations in the ordering flow.
  */
+const loadFeatures = () =>
+  import("framer-motion").then((mod) => mod.domMax);
+
 export default function MotionRoot({ children }: { children: ReactNode }) {
   return (
     <MotionTierProvider>
-      <LazyMotion features={domAnimation} strict>
-        {children}
-      </LazyMotion>
+      <CartProvider>
+        <LazyMotion features={loadFeatures} strict>
+          {children}
+        </LazyMotion>
+      </CartProvider>
     </MotionTierProvider>
   );
 }

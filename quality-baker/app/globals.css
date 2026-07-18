@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Ember & Cream palette */
-  --color-espresso: #0f0d0b;
-  --color-cream: #faf6f0;
-  --color-caramel: #d4a054;
-  --color-terracotta: #8b4e3b;
-  --color-ink: #2a2420;
+  /* Cacao Noir palette */
+  --color-noir: #1a120b;
+  --color-cream: #fdf8f0;
+  --color-cocoa: #6b4226;
+  --color-caramel: #b87333;
+  --color-honey: #e8a860;
+  --color-ink: #2b211b;
 
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-body: var(--font-figtree), system-ui, sans-serif;
+  --font-script: var(--font-caveat), cursive;
 
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
@@ -48,12 +50,12 @@ p {
 
 ::selection {
   background: var(--color-caramel);
-  color: var(--color-espresso);
+  color: var(--color-noir);
 }
 
 /* ————— Hero entrance —————
-   Pure CSS so it runs before hydration, off the main thread, and
-   degrades via prefers-reduced-motion without any JS involvement. */
+   Pure CSS: runs before hydration, off the main thread, and collapses to a
+   plain fade under prefers-reduced-motion. */
 @keyframes hero-word {
   from {
     opacity: 0;
@@ -91,7 +93,33 @@ p {
   animation-delay: var(--d, 0s);
 }
 
-/* Slow breathing of the oven-glow backdrop. Compositor-only (opacity). */
+/* ————— Signature: the cake that draws itself —————
+   Every stroked path carries pathLength="1"; dashoffset animates 1 → 0.
+   Fills fade in after the line work completes. Stroke-dashoffset is
+   compositor-cheap and needs no JS. */
+.cake-draw .stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: cake-line 1.4s var(--ease-in-out-strong) forwards;
+  animation-delay: var(--d, 0s);
+}
+.cake-draw .icing {
+  opacity: 0;
+  animation: cake-fill 0.9s ease forwards;
+  animation-delay: var(--d, 1.5s);
+}
+@keyframes cake-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes cake-fill {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slow breathing of the melted-chocolate hero wash. Opacity only. */
 @keyframes glow-breathe {
   0%,
   100% {
@@ -105,85 +133,134 @@ p {
   animation: glow-breathe 7s ease-in-out infinite;
 }
 
-/* ————— Caramel glow buttons —————
-   The glow is a pre-baked blurred layer; only its opacity animates.
-   Never animate box-shadow values directly. */
+/* ————— CTA: icing swipe + caramel glow —————
+   The glow is a pre-baked blurred layer (opacity-only). The icing swipe is a
+   gradient layer translated in from the left — transform-only, GPU-cheap. */
 .glow-btn {
   position: relative;
   isolation: isolate;
-  transition: transform 160ms var(--ease-out-strong);
+  overflow: hidden;
+  transition: transform 160ms var(--ease-out-strong),
+    color 200ms var(--ease-out-strong);
 }
 .glow-btn::before {
   content: "";
   position: absolute;
   inset: -10px;
-  z-index: -1;
+  z-index: -2;
   border-radius: inherit;
   background: radial-gradient(
     60% 100% at 50% 50%,
-    rgb(212 160 84 / 0.55),
+    rgb(184 115 51 / 0.6),
     transparent 70%
   );
   filter: blur(14px);
   opacity: 0;
   transition: opacity 220ms ease;
 }
+.glow-btn .icing-swipe {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(100deg, var(--color-caramel), var(--color-honey));
+  transform: translateX(-101%);
+  transition: transform 320ms var(--ease-out-strong);
+}
 .glow-btn:active {
   transform: scale(0.97);
-}
-@media (hover: hover) and (pointer: fine) {
-  .glow-btn:hover::before {
-    opacity: 1;
-  }
-}
-.glow-btn:focus-visible::before {
-  opacity: 1;
 }
 .glow-btn:focus-visible {
   outline: 2px solid var(--color-caramel);
   outline-offset: 3px;
 }
-
-/* Glare sweep across the button surface on hover (transform-only). */
-.glow-btn .glare {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
-}
-.glow-btn .glare::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -60%;
-  width: 40%;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    rgb(250 246 240 / 0.35),
-    transparent
-  );
-  transform: translateX(0);
+.glow-btn:focus-visible::before {
+  opacity: 1;
 }
 @media (hover: hover) and (pointer: fine) {
-  .glow-btn:hover .glare::after {
-    transition: transform 600ms var(--ease-out-strong);
-    transform: translateX(400%);
+  .glow-btn:hover {
+    color: var(--color-noir);
+  }
+  .glow-btn:hover::before {
+    opacity: 1;
+  }
+  .glow-btn:hover .icing-swipe {
+    transform: translateX(0);
   }
 }
 
-/* Menu price leader dots — classic patisserie menu typography */
+/* ————— Floating action buttons ————— */
+@keyframes fab-pulse {
+  0%,
+  70%,
+  100% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.5;
+  }
+  40% {
+    opacity: 0;
+  }
+}
+.fab {
+  position: relative;
+  isolation: isolate;
+  transition: transform 160ms var(--ease-out-strong);
+}
+.fab:active {
+  transform: scale(0.94);
+}
+.fab .pulse {
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgb(184 115 51 / 0.7),
+    transparent 70%
+  );
+  filter: blur(6px);
+  opacity: 0;
+  animation: fab-pulse 6s ease-in-out 3s infinite;
+}
+.fab .tip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  translate: 0 -50%;
+  white-space: nowrap;
+  background: var(--color-noir);
+  color: var(--color-cream);
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+.fab.tip-left .tip {
+  right: auto;
+  left: calc(100% + 10px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fab:hover .tip,
+  .fab:focus-visible .tip {
+    opacity: 1;
+  }
+}
+
+/* Menu price leader dots — patisserie menu typography */
 .leader {
   flex: 1;
   margin: 0 0.6em;
-  border-bottom: 2px dotted rgb(212 160 84 / 0.4);
+  border-bottom: 2px dotted rgb(184 115 51 / 0.4);
   transform: translateY(-0.28em);
   min-width: 2ch;
 }
 
-/* Gallery frame hover: subtle lift + warm rim. Opacity-only glow layer. */
+/* Gallery / product tile hover: lift + warm rim, opacity-only glow layer. */
 .frame {
   position: relative;
   isolation: isolate;
@@ -194,7 +271,7 @@ p {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 12px 40px -12px rgb(212 160 84 / 0.45);
+  box-shadow: 0 12px 40px -12px rgb(184 115 51 / 0.5);
   opacity: 0;
   transition: opacity 240ms ease;
   pointer-events: none;
@@ -208,7 +285,7 @@ p {
   }
 }
 
-/* ————— Reduced motion: gentler, never broken ————— */
+/* ————— Reduced motion: calmer, never broken ————— */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -219,15 +296,27 @@ p {
     transform: none;
     filter: none;
   }
-  .glow-breathe {
+  .cake-draw .stroke {
     animation: none;
+    stroke-dashoffset: 0;
+  }
+  .cake-draw .icing {
+    animation: cake-fill 0.4s ease forwards;
+    animation-delay: 0s;
+  }
+  .glow-breathe,
+  .fab .pulse {
+    animation: none;
+  }
+  .glow-breathe {
     opacity: 1;
   }
   .glow-btn,
-  .frame {
+  .frame,
+  .fab {
     transition: none;
   }
-  .glow-btn .glare::after {
+  .glow-btn .icing-swipe {
     display: none;
   }
 }
