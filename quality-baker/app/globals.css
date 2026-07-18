@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+@theme {
+  /* Ember & Cream palette */
+  --color-espresso: #0f0d0b;
+  --color-cream: #faf6f0;
+  --color-caramel: #d4a054;
+  --color-terracotta: #8b4e3b;
+  --color-ink: #2a2420;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-figtree), system-ui, sans-serif;
+
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Lenis owns scrolling when active; native smooth would fight it */
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--color-caramel);
+  color: var(--color-espresso);
+}
+
+/* ————— Hero entrance —————
+   Pure CSS so it runs before hydration, off the main thread, and
+   degrades via prefers-reduced-motion without any JS involvement. */
+@keyframes hero-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: hero-word 0.9s var(--ease-out-strong) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.hero-fade {
+  opacity: 0;
+  animation: hero-fade 0.8s var(--ease-out-strong) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+/* Slow breathing of the oven-glow backdrop. Compositor-only (opacity). */
+@keyframes glow-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.glow-breathe {
+  animation: glow-breathe 7s ease-in-out infinite;
+}
+
+/* ————— Caramel glow buttons —————
+   The glow is a pre-baked blurred layer; only its opacity animates.
+   Never animate box-shadow values directly. */
+.glow-btn {
+  position: relative;
+  isolation: isolate;
+  transition: transform 160ms var(--ease-out-strong);
+}
+.glow-btn::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    60% 100% at 50% 50%,
+    rgb(212 160 84 / 0.55),
+    transparent 70%
+  );
+  filter: blur(14px);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.glow-btn:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .glow-btn:hover::before {
+    opacity: 1;
+  }
+}
+.glow-btn:focus-visible::before {
+  opacity: 1;
+}
+.glow-btn:focus-visible {
+  outline: 2px solid var(--color-caramel);
+  outline-offset: 3px;
+}
+
+/* Glare sweep across the button surface on hover (transform-only). */
+.glow-btn .glare {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.glow-btn .glare::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgb(250 246 240 / 0.35),
+    transparent
+  );
+  transform: translateX(0);
+}
+@media (hover: hover) and (pointer: fine) {
+  .glow-btn:hover .glare::after {
+    transition: transform 600ms var(--ease-out-strong);
+    transform: translateX(400%);
+  }
+}
+
+/* Menu price leader dots — classic patisserie menu typography */
+.leader {
+  flex: 1;
+  margin: 0 0.6em;
+  border-bottom: 2px dotted rgb(212 160 84 / 0.4);
+  transform: translateY(-0.28em);
+  min-width: 2ch;
+}
+
+/* Gallery frame hover: subtle lift + warm rim. Opacity-only glow layer. */
+.frame {
+  position: relative;
+  isolation: isolate;
+  transition: transform 240ms var(--ease-out-strong);
+}
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 12px 40px -12px rgb(212 160 84 / 0.45);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .frame:hover {
+    transform: translateY(-4px);
+  }
+  .frame:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ————— Reduced motion: gentler, never broken ————— */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-word,
+  .hero-fade {
+    animation: hero-fade 0.4s ease forwards;
+    transform: none;
+    filter: none;
+  }
+  .glow-breathe {
+    animation: none;
+    opacity: 1;
+  }
+  .glow-btn,
+  .frame {
+    transition: none;
+  }
+  .glow-btn .glare::after {
+    display: none;
+  }
+}
