@@ -1,0 +1,89 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["-y", "shadcn@latest", "mcp"]
+    }
+  },
+  "skills": [
+    "frontend-design",
+    "apple-design",
+    "emil-design-eng",
+    "css-animations",
+    "gsap",
+    "waapi",
+    "make-interfaces-feel-better",
+    "review-animations",
+    "find-animation-opportunities",
+    "improve-animations",
+    "animation-vocabulary",
+    "three",
+    "lottie",
+    "animejs",
+    "web-design-guidelines",
+    "web-perf",
+    "vercel-react-best-practices",
+    "conductor-rewrite-performance",
+    "copywriting",
+    "copy-editing",
+    "content-strategy",
+    "competitor-alternatives",
+    "ogilvy",
+    "page-cro",
+    "stop-slop",
+    "schema-markup",
+    "seo-audit",
+    "programmatic-seo",
+    "analytics-tracking",
+    "hyperframes",
+    "hyperframes-cli",
+    "hyperframes-media",
+    "hyperframes-registry",
+    "docx",
+    "pdf",
+    "pptx",
+    "xlsx",
+    "dataviz",
+    "skill-creator",
+    "code-review",
+    "simplify",
+    "adversarial-review"
+  ],
+  "referenceRepos": [
+    "darkroomengineering/lenis",
+    "adrianhajdin/award-winning-website",
+    "pmndrs/react-three-fiber",
+    "pmndrs/drei",
+    "greensock/GSAP",
+    "swup/swup",
+    "juliangarnier/anime",
+    "oframe/ogl",
+    "martinlaxenaire/gpu-curtains"
+  ],
+  "projectSettings": {
+    "name": "Web Toolkit",
+    "description": "Comprehensive web development environment with 40+ skills, 4 MCP servers, and 12 reference repositories",
+    "type": "web-development",
+    "framework": "universal",
+    "tags": ["design", "animation", "web", "performance", "seo", "marketing"]
+  },
+  "hints": {
+    "setupScript": "./setup-web-toolkit.sh",
+    "skillsLocation": "~/.claude/skills/",
+    "referencesLocation": "~/reference-repos/",
+    "perProjectDeps": "See ~/reference-repos/README-remember.md",
+    "documentation": "See CLAUDE.md for full project documentation"
+  }
+}
