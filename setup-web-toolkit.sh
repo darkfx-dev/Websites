@@ -14,17 +14,24 @@ else
   echo "  - frontend-design already present, skipping"
 fi
 
-if [ ! -d ~/.claude/skills/emilkowalski ]; then
+if [ ! -d ~/.claude/skills/emilkowalski-marker ]; then
   git clone --depth 1 https://github.com/emilkowalski/skills.git /tmp/emil-skills
   cp -r /tmp/emil-skills/* ~/.claude/skills/ 2>/dev/null || true
+  touch ~/.claude/skills/emilkowalski-marker
   rm -rf /tmp/emil-skills
-  echo "  ✓ emilkowalski/skills copied in"
+  echo "  ✓ emilkowalski/skills copied in (review-animations, improve-animations, find-animation-opportunities, animation-vocabulary, apple-design, etc.)"
 fi
 
 if [ ! -f ~/.claude/skills/web-design-guidelines/SKILL.md ]; then
   mkdir -p ~/.claude/skills/web-design-guidelines
   curl -fsSL https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/web-design-guidelines/SKILL.md \
     -o ~/.claude/skills/web-design-guidelines/SKILL.md 2>/dev/null && echo "  ✓ web-design-guidelines installed" || echo "  ! web-design-guidelines fetch failed"
+fi
+
+if [ ! -f ~/.claude/skills/web-perf/SKILL.md ]; then
+  mkdir -p ~/.claude/skills/web-perf
+  curl -fsSL https://raw.githubusercontent.com/cloudflare/web-perf/main/SKILL.md \
+    -o ~/.claude/skills/web-perf/SKILL.md 2>/dev/null && echo "  ✓ web-perf installed" || echo "  ! web-perf fetch failed"
 fi
 
 for repo in "coreyhaines31/marketingskills" "makash/great-web-copy" "boraoztunc/skills"; do
@@ -39,12 +46,11 @@ echo ""
 echo "Skill folders now in ~/.claude/skills/:"
 ls ~/.claude/skills/
 echo ""
-echo "== Adding MCP servers =="
+echo "== Adding MCP servers (all free, no API keys needed) =="
 
 claude mcp add playwright -- npx -y @playwright/mcp@latest && echo "  ✓ playwright added" || echo "  ! playwright add failed"
 claude mcp add context7 -- npx -y @upstash/context7-mcp@latest && echo "  ✓ context7 added" || echo "  ! context7 add failed"
 claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest && echo "  ✓ chrome-devtools added" || echo "  ! chrome-devtools add failed"
-claude mcp add shadcn -- npx -y shadcn@latest mcp && echo "  ✓ shadcn added" || echo "  ! shadcn add failed"
 
 echo ""
 echo "Registered MCP servers:"
@@ -53,7 +59,17 @@ echo ""
 echo "== Cloning reference repos =="
 mkdir -p ~/reference-repos && cd ~/reference-repos
 
-for repo in "darkroomengineering/lenis" "adrianhajdin/award-winning-website" "pmndrs/react-three-fiber" "pmndrs/drei" "greensock/GSAP" "swup/swup"; do
+for repo in \
+  "darkroomengineering/lenis" \
+  "adrianhajdin/award-winning-website" \
+  "pmndrs/react-three-fiber" \
+  "pmndrs/drei" \
+  "greensock/GSAP" \
+  "swup/swup" \
+  "juliangarnier/anime" \
+  "oframe/ogl" \
+  "martinlaxenaire/gpu-curtains"
+do
   name=$(basename "$repo")
   if [ ! -d "$name" ]; then
     git clone --depth 1 "https://github.com/${repo}.git" && echo "  ✓ cloned $repo" || echo "  ! failed to clone $repo"
@@ -64,8 +80,12 @@ done
 
 echo ""
 echo "=============================================="
-echo "Setup complete."
+echo "Setup complete. Everything installed is free — no API keys, no subscriptions."
 echo "Skills:   ~/.claude/skills/"
 echo "MCP:      run 'claude mcp list' to check"
 echo "Repos:    ~/reference-repos/"
+echo ""
+echo "NOTE: Codrops demo repos aren't one repo — they're many small ones."
+echo "Browse https://github.com/codrops and clone specific demos as you need them."
+echo "Utopia (utopia.fyi) and gggrain (fffuel.co) are free web tools, not repos — nothing to clone."
 echo "=============================================="
