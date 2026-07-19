@@ -89,3 +89,24 @@ echo "NOTE: Codrops demo repos aren't one repo — they're many small ones."
 echo "Browse https://github.com/codrops and clone specific demos as you need them."
 echo "Utopia (utopia.fyi) and gggrain (fffuel.co) are free web tools, not repos — nothing to clone."
 echo "=============================================="
+
+echo ""
+echo "== Adding shadcn MCP (situational, free) =="
+claude mcp add shadcn -- npx -y shadcn@latest mcp && echo "  ✓ shadcn added" || echo "  ! shadcn add failed"
+
+echo ""
+echo "== Writing a reminder note for per-project installs =="
+cat > ~/reference-repos/README-remember.md << 'NOTE'
+# Things that install PER-PROJECT, not globally
+
+- Motion (Framer Motion) — only needed inside a React project.
+  Run this INSIDE that project's folder when you need it:
+  npm i motion
+
+- GSAP — same idea, install inside each project:
+  npm i gsap
+
+- Lenis — same idea:
+  npm i lenis
+NOTE
+echo "  ✓ note saved to ~/reference-repos/README-remember.md"
