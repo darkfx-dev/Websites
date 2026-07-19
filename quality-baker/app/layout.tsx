@@ -1,32 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Figtree, Fraunces } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import MotionRoot from "@/components/MotionRoot";
 import SmoothScroll from "@/components/SmoothScroll";
 import { site } from "@/lib/site";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
-  axes: ["opsz", "SOFT", "WONK"],
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
-});
-
-/* Script accent: used for exactly three small signature moments, never body copy */
-const caveat = Caveat({
-  variable: "--font-caveat",
-  subsets: ["latin"],
-  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
   title: "The Quality Baker — Custom Cakes & Pastries in Bhestan, Surat",
   description:
-    "Custom design cakes, birthday cakes and fresh pastries in Bhestan, Surat. 4.9★ on Google. Open 10 AM – 11 PM, all 7 days. Call +91 94278 75256.",
+    "Custom design cakes, birthday cakes and fresh pastries in Bhestan, Surat. 4.9★ on Google. Open 10 AM – 11 PM, all 7 days. Order on WhatsApp: +91 94278 75256.",
+  // Set to the real domain at deploy time
+  metadataBase: new URL("https://thequalitybaker.example"),
+  alternates: { canonical: "/" },
   openGraph: {
     title: "The Quality Baker",
     description:
@@ -37,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a120b",
+  themeColor: "#0b0a09",
 };
 
 const jsonLd = {
@@ -69,11 +66,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${figtree.variable} ${caveat.variable}`}
-    >
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable}`}>
       <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

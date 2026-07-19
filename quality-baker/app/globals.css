@@ -1,17 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  /* Cacao Noir palette */
-  --color-noir: #1a120b;
-  --color-cream: #fdf8f0;
-  --color-cocoa: #6b4226;
-  --color-caramel: #b87333;
-  --color-honey: #e8a860;
-  --color-ink: #2b211b;
+  /* ————— "Modern artisan patisserie" palette —————
+     Obsidian/espresso darks · vanilla/cream lights · brown working range.
+     ~70% neutrals, ~20% browns, ~10% accent. */
+  --color-noir: #0b0a09; /* obsidian black — primary dark bg */
+  --color-soot: #151210; /* soft black — dark surface / nav */
+  --color-espresso: #2b1a12; /* rich secondary dark */
+  --color-cocoa: #4a2e21; /* headings on light, cards, dividers */
+  --color-roasted: #70452f; /* interactive accents, secondary buttons */
+  --color-caramel: #a66a3f; /* highlights, rules, hover accents */
+  --color-vanilla: #f3e4c8; /* signature warm brand colour */
+  --color-cream: #faf4e8; /* light section bg */
+  --color-porcelain: #fffdf8; /* brightest bg + text on dark */
+  --color-taupe: #9a887a; /* secondary text */
+  --color-ink: #211d1a; /* body copy on light */
+  --color-error: #b42318; /* validation only */
+  --color-wagreen: #25d366; /* WhatsApp recognition only */
+  --color-mapblue: #1a73e8; /* floating map button only */
+  --color-mapred: #ea4335; /* map pin only */
 
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-body: var(--font-figtree), system-ui, sans-serif;
-  --font-script: var(--font-caveat), cursive;
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
 
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
@@ -38,6 +48,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Extremely subtle paper grain. Tiny data-URI turbulence, opacity so low it
+   never touches readability. Fixed layer, no repaint on scroll. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 h1,
 h2,
 h3 {
@@ -50,12 +72,58 @@ p {
 
 ::selection {
   background: var(--color-caramel);
-  color: var(--color-noir);
+  color: var(--color-porcelain);
 }
 
-/* ————— Hero entrance —————
-   Pure CSS: runs before hydration, off the main thread, and collapses to a
-   plain fade under prefers-reduced-motion. */
+/* Skip link */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+  transform: translateY(-200%);
+  background: var(--color-noir);
+  color: var(--color-porcelain);
+  padding: 10px 18px;
+  border-radius: 9999px;
+  transition: transform 150ms ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ————— Header ————— */
+.site-header {
+  transition: background-color 260ms ease, backdrop-filter 260ms ease;
+}
+.site-header.scrolled {
+  background: rgb(21 18 16 / 0.88);
+  backdrop-filter: blur(8px);
+}
+
+/* Mobile sheet menu */
+.sheet {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+.sheet.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sheet .sheet-link {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 340ms var(--ease-out-strong),
+    transform 340ms var(--ease-out-strong);
+  transition-delay: var(--d, 0s);
+}
+.sheet.open .sheet-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ————— Hero entrance (pure CSS, pre-hydration, compositor-only) ————— */
 @keyframes hero-word {
   from {
     opacity: 0;
@@ -93,10 +161,7 @@ p {
   animation-delay: var(--d, 0s);
 }
 
-/* ————— Signature: the cake that draws itself —————
-   Every stroked path carries pathLength="1"; dashoffset animates 1 → 0.
-   Fills fade in after the line work completes. Stroke-dashoffset is
-   compositor-cheap and needs no JS. */
+/* ————— Signature: the cake that draws itself ————— */
 .cake-draw .stroke {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -119,7 +184,7 @@ p {
   }
 }
 
-/* Slow breathing of the melted-chocolate hero wash. Opacity only. */
+/* Slow breathing of the hero's warm wash. Opacity only. */
 @keyframes glow-breathe {
   0%,
   100% {
@@ -133,9 +198,7 @@ p {
   animation: glow-breathe 7s ease-in-out infinite;
 }
 
-/* ————— CTA: icing swipe + caramel glow —————
-   The glow is a pre-baked blurred layer (opacity-only). The icing swipe is a
-   gradient layer translated in from the left — transform-only, GPU-cheap. */
+/* ————— CTA: icing swipe + warm glow (pre-baked, opacity/transform only) ————— */
 .glow-btn {
   position: relative;
   isolation: isolate;
@@ -151,7 +214,7 @@ p {
   border-radius: inherit;
   background: radial-gradient(
     60% 100% at 50% 50%,
-    rgb(184 115 51 / 0.6),
+    rgb(166 106 63 / 0.55),
     transparent 70%
   );
   filter: blur(14px);
@@ -163,7 +226,7 @@ p {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(100deg, var(--color-caramel), var(--color-honey));
+  background: linear-gradient(100deg, var(--color-caramel), var(--color-vanilla));
   transform: translateX(-101%);
   transition: transform 320ms var(--ease-out-strong);
 }
@@ -189,17 +252,16 @@ p {
   }
 }
 
-/* ————— Floating action buttons ————— */
+/* ————— Floating actions ————— */
 @keyframes fab-pulse {
   0%,
-  70%,
   100% {
     opacity: 0;
   }
-  12% {
-    opacity: 0.5;
+  15% {
+    opacity: 0.55;
   }
-  40% {
+  45% {
     opacity: 0;
   }
 }
@@ -211,19 +273,39 @@ p {
 .fab:active {
   transform: scale(0.94);
 }
-.fab .pulse {
+.fab:focus-visible {
+  outline: 2px solid var(--color-porcelain);
+  outline-offset: 3px;
+}
+/* WhatsApp: single delayed attention pulse (2 cycles), never constant */
+.fab.wa .pulse {
   position: absolute;
   inset: -8px;
   z-index: -1;
   border-radius: 9999px;
   background: radial-gradient(
     50% 50% at 50% 50%,
-    rgb(184 115 51 / 0.7),
+    rgb(37 211 102 / 0.65),
     transparent 70%
   );
   filter: blur(6px);
   opacity: 0;
-  animation: fab-pulse 6s ease-in-out 3s infinite;
+  animation: fab-pulse 5s ease-in-out 8s 2;
+}
+/* Map button: porcelain "neon" halo, static, restrained */
+.fab.map::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgb(255 253 248 / 0.82),
+    transparent 72%
+  );
+  filter: blur(8px);
+  opacity: 0.55;
 }
 .fab .tip {
   position: absolute;
@@ -232,17 +314,13 @@ p {
   translate: 0 -50%;
   white-space: nowrap;
   background: var(--color-noir);
-  color: var(--color-cream);
+  color: var(--color-porcelain);
   font-size: 0.8rem;
   padding: 6px 12px;
   border-radius: 9999px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease;
-}
-.fab.tip-left .tip {
-  right: auto;
-  left: calc(100% + 10px);
 }
 @media (hover: hover) and (pointer: fine) {
   .fab:hover .tip,
@@ -251,16 +329,16 @@ p {
   }
 }
 
-/* Menu price leader dots — patisserie menu typography */
+/* Menu price leader dots */
 .leader {
   flex: 1;
   margin: 0 0.6em;
-  border-bottom: 2px dotted rgb(184 115 51 / 0.4);
+  border-bottom: 2px dotted rgb(166 106 63 / 0.4);
   transform: translateY(-0.28em);
   min-width: 2ch;
 }
 
-/* Gallery / product tile hover: lift + warm rim, opacity-only glow layer. */
+/* Editorial frame hover: lift + warm rim (opacity-only glow layer) */
 .frame {
   position: relative;
   isolation: isolate;
@@ -271,7 +349,7 @@ p {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 12px 40px -12px rgb(184 115 51 / 0.5);
+  box-shadow: 0 12px 40px -12px rgb(166 106 63 / 0.5);
   opacity: 0;
   transition: opacity 240ms ease;
   pointer-events: none;
@@ -283,6 +361,28 @@ p {
   .frame:hover::after {
     opacity: 1;
   }
+}
+
+/* ————— Cake studio ————— */
+.step-enter {
+  animation: hero-fade 0.32s var(--ease-out-strong);
+}
+.studio input[type="date"] {
+  color-scheme: dark;
+}
+
+/* Gallery lightbox */
+dialog.lightbox {
+  background: rgb(11 10 9 / 0.94);
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  padding: 0;
+}
+dialog.lightbox::backdrop {
+  background: rgb(11 10 9 / 0.6);
 }
 
 /* ————— Reduced motion: calmer, never broken ————— */
@@ -305,7 +405,7 @@ p {
     animation-delay: 0s;
   }
   .glow-breathe,
-  .fab .pulse {
+  .fab.wa .pulse {
     animation: none;
   }
   .glow-breathe {
@@ -313,10 +413,14 @@ p {
   }
   .glow-btn,
   .frame,
-  .fab {
+  .fab,
+  .sheet .sheet-link {
     transition: none;
   }
   .glow-btn .icing-swipe {
     display: none;
+  }
+  .step-enter {
+    animation: none;
   }
 }

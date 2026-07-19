@@ -16,7 +16,7 @@ export function HeroCake({ className }: { className?: string }) {
       aria-hidden="true"
       className={`cake-draw ${className ?? ""}`}
       fill="none"
-      stroke="#b87333"
+      stroke="#a66a3f"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -46,12 +46,12 @@ export function HeroCake({ className }: { className?: string }) {
       />
       {/* Candle + cherry */}
       <path className="stroke" pathLength={1} d="M100 76v-14" style={d(1.1)} />
-      <circle className="icing" cx="100" cy="56" r="5" fill="rgb(232 168 96 / 0.8)" stroke="none" style={d(1.4)} />
+      <circle className="icing" cx="100" cy="56" r="5" fill="rgb(243 228 200 / 0.9)" stroke="none" style={d(1.4)} />
       {/* Icing drips: cream fills that appear after the outline completes */}
-      <g className="icing" fill="none" stroke="#fdf8f0" strokeOpacity="0.85" style={d(1.5)}>
+      <g className="icing" fill="none" stroke="#faf4e8" strokeOpacity="0.85" style={d(1.5)}>
         <path d="M52 142c9 6 18 6 27 0s18-6 27 0 18 6 27 0 9-4 15-4" />
       </g>
-      <g className="icing" fill="none" stroke="#fdf8f0" strokeOpacity="0.7" style={d(1.7)}>
+      <g className="icing" fill="none" stroke="#faf4e8" strokeOpacity="0.7" style={d(1.7)}>
         <path d="M70 114c7 5 14 5 21 0s14-5 21 0 12 4 18 2" />
         <path d="M84 90c5 4 10 4 16 0s11-4 16 0" />
       </g>

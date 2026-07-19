@@ -74,24 +74,24 @@ export function Location() {
               fill="none"
               strokeLinecap="round"
             >
-              <g stroke="rgb(184 115 51 / 0.28)" strokeWidth="10">
+              <g stroke="rgb(166 106 63 / 0.28)" strokeWidth="10">
                 <path d="M-10 80h420" />
                 <path d="M-10 190h420" />
                 <path d="M120 -10v320" />
                 <path d="M290 -10v320" />
               </g>
-              <g stroke="rgb(184 115 51 / 0.16)" strokeWidth="4">
+              <g stroke="rgb(166 106 63 / 0.16)" strokeWidth="4">
                 <path d="M-10 135h420" />
                 <path d="M205 -10v320" />
                 <path d="M-10 245h420" />
               </g>
-              <circle cx="205" cy="135" r="34" fill="rgb(184 115 51 / 0.12)" />
+              <circle cx="205" cy="135" r="34" fill="rgb(166 106 63 / 0.12)" />
               <g transform="translate(205 121)">
                 <path
                   d="M0 42C-14 24-22 12-22 0a22 22 0 1 1 44 0c0 12-8 24-22 42z"
-                  fill="#b87333"
+                  fill="#a66a3f"
                 />
-                <circle cx="0" cy="0" r="9" fill="#1a120b" />
+                <circle cx="0" cy="0" r="9" fill="#0b0a09" />
               </g>
             </svg>
             <p className="border-t border-caramel/15 px-6 py-4 text-sm text-cream/75">

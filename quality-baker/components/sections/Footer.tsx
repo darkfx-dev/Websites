@@ -23,8 +23,8 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-5 pb-12 pt-24 sm:px-8 md:pt-32">
         <Reveal>
           <div className="text-center">
-            {/* Script accent #1 of 3 — small, deliberate, never body copy */}
-            <p className="font-script text-2xl text-caramel">
+            {/* Accent flourish — Cormorant italic, used sparingly */}
+            <p className="font-display text-2xl italic text-caramel">
               handmade with love, since day one
             </p>
             <h2 className="mx-auto mt-4 max-w-[18ch] font-display text-[clamp(2.4rem,7vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.015em]">
@@ -75,6 +75,7 @@ export function Footer() {
           </div>
           <p className="max-w-[42ch] text-center sm:text-right">
             {site.address} · {site.hours}, {site.hoursNote.toLowerCase()}
+            <br />© {new Date().getFullYear()} {site.name}
           </p>
         </div>
       </div>

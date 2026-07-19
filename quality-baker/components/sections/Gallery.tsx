@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PastryArt } from "@/components/PastryArt";
 import { Reveal } from "@/components/Reveal";
 import { useMotionTier } from "@/lib/motion";
@@ -34,6 +34,20 @@ const tiles: {
 export function Gallery() {
   const tier = useMotionTier();
   const sectionRef = useRef<HTMLElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+
+  const openLightbox = (i: number) => {
+    setLightbox(i);
+    dialogRef.current?.showModal();
+  };
+  const closeLightbox = () => {
+    dialogRef.current?.close();
+  };
+  const stepLightbox = (dir: number) =>
+    setLightbox((cur) =>
+      cur === null ? null : (cur + dir + tiles.length) % tiles.length
+    );
 
   useEffect(() => {
     if (tier !== "full") return;
@@ -80,7 +94,7 @@ export function Gallery() {
   }, [tier]);
 
   return (
-    <section aria-label="Gallery" ref={sectionRef} className="relative overflow-hidden bg-noir text-cream">
+    <section id="gallery" aria-label="Gallery" ref={sectionRef} className="relative overflow-hidden bg-noir text-cream">
       {/* Foreground sprinkle layer — fastest-moving, like crumbs on the case glass */}
       <div
         aria-hidden
@@ -88,7 +102,7 @@ export function Gallery() {
         className="pointer-events-none absolute inset-0 z-10 opacity-50"
       >
         <svg className="h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-          <g fill="#b87333">
+          <g fill="#a66a3f">
             <circle cx="8" cy="22" r="0.45" />
             <circle cx="93" cy="14" r="0.35" />
             <circle cx="22" cy="78" r="0.4" />
@@ -117,20 +131,74 @@ export function Gallery() {
           {tiles.map((tile, i) => (
             <li key={tile.variant} className={tile.span} data-speed={tile.speed}>
               <Reveal delay={0.04 * i} className="h-full">
-                <figure className="frame flex h-full flex-col overflow-hidden rounded-2xl border border-caramel/15 bg-ink/40">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(i)}
+                  aria-label={`View larger: ${tile.label}`}
+                  className="frame flex h-full w-full cursor-zoom-in flex-col overflow-hidden rounded-2xl border border-caramel/15 bg-espresso/50 text-left"
+                >
                   <PastryArt
                     variant={tile.variant}
                     className="min-h-0 w-full flex-1 object-contain"
                   />
-                  <figcaption className="border-t border-caramel/15 px-4 py-2.5 text-[0.8rem] text-cream/70">
+                  <span className="block w-full border-t border-caramel/15 px-4 py-2.5 text-[0.8rem] text-cream/70">
                     {tile.label}
-                  </figcaption>
-                </figure>
+                  </span>
+                </button>
               </Reveal>
             </li>
           ))}
         </ul>
       </div>
+
+      {/* Lightbox: native <dialog> gives Escape + focus return for free */}
+      <dialog
+        ref={dialogRef}
+        className="lightbox"
+        aria-label="Gallery image viewer"
+        onClick={(e) => {
+          if (e.target === dialogRef.current) closeLightbox();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") stepLightbox(1);
+          if (e.key === "ArrowLeft") stepLightbox(-1);
+        }}
+      >
+        {lightbox !== null && (
+          <div className="flex h-full flex-col items-center justify-center gap-4 p-6">
+            <PastryArt
+              variant={tiles[lightbox].variant}
+              className="max-h-[70vh] w-full max-w-xl"
+            />
+            <p className="text-center text-cream/85">{tiles[lightbox].label}</p>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => stepLightbox(-1)}
+                aria-label="Previous image"
+                className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-cream/30 text-cream hover:border-caramel"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={closeLightbox}
+                className="min-h-12 cursor-pointer rounded-full border border-cream/30 px-6 text-cream hover:border-caramel"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => stepLightbox(1)}
+                aria-label="Next image"
+                className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-cream/30 text-cream hover:border-caramel"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        )}
+      </dialog>
     </section>
   );
 }

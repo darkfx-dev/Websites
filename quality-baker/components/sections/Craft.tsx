@@ -92,7 +92,7 @@ export function Craft() {
   return (
     <section
       ref={sectionRef}
-      aria-label="Our craft"
+      id="story" aria-label="Our craft"
       className={`bg-cream text-ink ${pinned ? "flex min-h-svh items-center" : ""}`}
     >
       <div className="mx-auto w-full max-w-4xl px-5 py-24 sm:px-8 md:py-32">

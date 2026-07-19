@@ -1,6 +1,6 @@
 import { GlowButton } from "@/components/GlowButton";
 import { HeroCake } from "@/components/HeroCake";
-import { defaultWhatsappHref, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 const headlineWords = ["Baked", "slowly.", "Decorated", "like", "it", "matters."];
 
@@ -46,10 +46,10 @@ export function Hero() {
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-32 sm:px-8">
         <p
-          className="hero-fade mb-6 font-display text-lg italic text-caramel"
+          className="hero-fade mb-6 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-caramel"
           style={{ "--d": "0.15s" } as React.CSSProperties}
         >
-          Bhestan&rsquo;s little cake shop
+          Freshly baked in Bhestan, Surat
         </p>
 
         <h1 className="font-display text-[clamp(2.6rem,9vw,5.75rem)] font-medium leading-[1.04] tracking-[-0.02em]">
@@ -77,10 +77,18 @@ export function Hero() {
           className="hero-fade mt-10 flex flex-wrap items-center gap-4"
           style={{ "--d": "1s" } as React.CSSProperties}
         >
-          <GlowButton href="#order">Order a cake</GlowButton>
-          <GlowButton href={defaultWhatsappHref} variant="ghost" target="_blank" rel="noopener">
-            WhatsApp us
+          <GlowButton href="#menu">Explore the Menu</GlowButton>
+          <GlowButton href="#studio" variant="ghost">
+            Build Your Cake
           </GlowButton>
+          <a
+            href={site.mapsDirectionsHref}
+            target="_blank"
+            rel="noopener"
+            className="min-h-11 px-2 py-2 text-sm font-medium text-porcelain/60 underline decoration-caramel/50 underline-offset-4 transition-colors duration-150 hover:text-vanilla"
+          >
+            Get Directions
+          </a>
         </div>
 
         <p

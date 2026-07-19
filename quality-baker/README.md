@@ -1,6 +1,6 @@
 # The Quality Baker — website
 
-Premium single-page site for The Quality Baker (Bhestan, Surat) — "Cacao Noir" design system with a WhatsApp-based ordering flow (expand a product, customise, send; multiple items batch into one message via the floating pill).
+Premium single-page site for The Quality Baker (Bhestan, Surat) — "modern artisan patisserie" identity (obsidian/espresso/vanilla, Cormorant Garamond + Manrope) with two WhatsApp ordering paths: the menu's expand-to-order cards (multi-item batching via the floating pill) and the five-step Cake Studio with a live illustrative preview.
 Next.js App Router · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP ScrollTrigger · Lenis.
 
 ## Run it
@@ -19,6 +19,8 @@ All prices in there are illustrative placeholders until the shop confirms real o
 
 Business facts (phone, address, hours, rating) live in [`lib/site.ts`](lib/site.ts).
 Review quotes live in [`data/reviews.ts`](data/reviews.ts) — verbatim from Google; don't invent new ones.
+Cake-studio choices (occasions, flavours, fillings, shapes, weights, finishes, colours) live in [`data/cake-options.ts`](data/cake-options.ts) — fillings/finishes are marked EDITABLE until the shop confirms its real offering.
+The WhatsApp inquiry message format lives in [`lib/inquiry.ts`](lib/inquiry.ts); run its tests with `node --experimental-strip-types --test tests/inquiry.test.ts`.
 
 ## Gallery placeholders
 

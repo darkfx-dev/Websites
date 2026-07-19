@@ -59,7 +59,7 @@ export function DripDivider({ from }: { from: "noir" | "cream" }) {
     };
   }, [tier]);
 
-  const color = from === "noir" ? "#1a120b" : "#fdf8f0";
+  const color = from === "noir" ? "#0b0a09" : "#faf4e8";
   const bg = from === "noir" ? "bg-cream" : "bg-noir";
 
   return (

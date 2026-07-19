@@ -21,19 +21,33 @@ import { whatsappHref } from "@/lib/site";
  */
 export function OrderSection() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [category, setCategory] = useState<string>("Everything");
   const sectionRef = useRef<HTMLElement>(null);
 
+  const filters = [
+    "Everything",
+    ...Array.from(new Set(products.map((p) => p.category))),
+    "Eggless Options",
+  ];
+  const shown = products.filter((p) =>
+    category === "Everything"
+      ? true
+      : category === "Eggless Options"
+        ? p.eggless
+        : p.category === category
+  );
+
   return (
-    <section id="order" ref={sectionRef} className="bg-noir text-cream">
+    <section id="menu" ref={sectionRef} className="bg-noir text-cream">
       <CursorSwirl areaRef={sectionRef} />
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 md:py-32">
         <Reveal>
           <div className="max-w-2xl">
             <p className="font-display text-lg italic text-caramel">
-              Tap a cake to start an order
+              Tap anything to start an order
             </p>
-            <h2 className="mt-3 font-display text-[clamp(2.2rem,6vw,4rem)] font-medium leading-[1.06] tracking-[-0.015em]">
-              Order from the counter
+            <h2 className="mt-3 font-display text-[clamp(2.4rem,6vw,5rem)] font-medium leading-[1.06] tracking-[-0.015em] text-porcelain">
+              The menu
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-cream/70">
               Pick, customise, and send — your order arrives as a WhatsApp
@@ -43,18 +57,52 @@ export function OrderSection() {
           </div>
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <ProductTile
-              key={product.id}
-              product={product}
-              open={openId === product.id}
-              onToggle={() =>
-                setOpenId((cur) => (cur === product.id ? null : product.id))
-              }
-            />
-          ))}
-        </div>
+        <Reveal delay={0.05}>
+          <div
+            role="group"
+            aria-label="Filter the menu"
+            className="mt-10 flex flex-wrap gap-2"
+          >
+            {filters.map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => {
+                  setCategory(f);
+                  setOpenId(null);
+                }}
+                aria-pressed={category === f}
+                className={`min-h-11 cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ${
+                  category === f
+                    ? "border-caramel bg-caramel text-noir"
+                    : "border-cream/25 text-cream/75 hover:border-caramel/60"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </Reveal>
+
+        {shown.length === 0 ? (
+          <p className="mt-14 text-cream/70">
+            Nothing in this category yet — ask us on WhatsApp, we probably
+            bake it anyway.
+          </p>
+        ) : (
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.map((product) => (
+              <ProductTile
+                key={product.id}
+                product={product}
+                open={openId === product.id}
+                onToggle={() =>
+                  setOpenId((cur) => (cur === product.id ? null : product.id))
+                }
+              />
+            ))}
+          </div>
+        )}
 
         <Reveal delay={0.08}>
           <p className="mt-12 max-w-[52ch] text-cream/60">

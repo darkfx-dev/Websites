@@ -68,7 +68,7 @@ export function CursorSwirl({
       <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
         <path
           d="M13 4c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 3.5-7 7-7 6 2.5 6 6-2.5 5-5 5-4-1.7-4-4 1.5-3 3-3"
-          stroke="#b87333"
+          stroke="#a66a3f"
           strokeWidth="1.6"
           strokeLinecap="round"
           opacity="0.8"

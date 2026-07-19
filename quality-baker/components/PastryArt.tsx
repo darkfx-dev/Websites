@@ -22,9 +22,9 @@ type PastryArtProps = {
   style?: React.CSSProperties;
 };
 
-const stroke = "#b87333";
-const soft = "rgb(184 115 51 / 0.35)";
-const fill = "rgb(107 66 38 / 0.18)";
+const stroke = "#a66a3f";
+const soft = "rgb(166 106 63 / 0.35)";
+const fill = "rgb(74 46 33 / 0.18)";
 
 export function PastryArt({ variant, className, style }: PastryArtProps) {
   return (
