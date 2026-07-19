@@ -74,7 +74,16 @@ export function Footer() {
             )}
           </div>
           <p className="max-w-[42ch] text-center sm:text-right">
-            {site.address} · {site.hours}, {site.hoursNote.toLowerCase()}
+            <a
+              href={site.mapsHref}
+              target="_blank"
+              rel="noopener"
+              aria-label="Open Modi Bakers in Google Maps"
+              className="underline decoration-cream/30 underline-offset-4 transition-colors duration-150 hover:text-caramel"
+            >
+              {site.locationLabel}
+            </a>{" "}
+            · {site.hours}, {site.hoursNote.toLowerCase()}
             <br />© {new Date().getFullYear()} {site.name}
           </p>
         </div>

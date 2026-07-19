@@ -12,7 +12,7 @@ const faqs = [
   },
   {
     q: "Do you deliver?",
-    a: "Collection is from the shop in Bhestan. Ask about delivery for your area on WhatsApp and we'll tell you honestly what we can do.",
+    a: "Collection is from the shop. Ask about delivery for your area on WhatsApp and we'll tell you honestly what we can do.",
   },
   {
     q: "Can you make my cake eggless?",

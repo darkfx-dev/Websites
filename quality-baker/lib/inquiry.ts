@@ -24,7 +24,7 @@ export type CakeInquiry = {
   notes?: string;
 };
 
-const WHATSAPP_NUMBER = "919427875256";
+const WHATSAPP_NUMBER = "919426392062";
 
 function line(label: string, value: string | undefined): string | null {
   const v = value?.trim();
@@ -33,7 +33,7 @@ function line(label: string, value: string | undefined): string | null {
 
 export function buildInquiryMessage(
   inquiry: CakeInquiry,
-  bakeryName = "The Quality Baker"
+  bakeryName = "Modi Bakers"
 ): string {
   const finishColour = [inquiry.finish, inquiry.colour]
     .map((v) => v?.trim())
@@ -41,7 +41,7 @@ export function buildInquiryMessage(
     .join(", ");
 
   const lines = [
-    `Hello ${bakeryName}, I would like to check availability for a custom cake.`,
+    `Hi ${bakeryName}, I would like to check the availability and price of a custom cake.`,
     line("Name", inquiry.name),
     line("Callback number", inquiry.callback),
     line("Occasion", inquiry.occasion),
@@ -58,7 +58,7 @@ export function buildInquiryMessage(
     line("Collection or delivery", inquiry.fulfilment),
     line("Dietary or allergy notes", inquiry.dietary),
     line("Additional notes", inquiry.notes),
-    "Please confirm availability and the final price. Thank you.",
+    "Please confirm whether this order is available and share the final price. Thank you.",
   ];
 
   return lines.filter((l): l is string => l !== null).join("\n");

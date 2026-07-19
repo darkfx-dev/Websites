@@ -49,7 +49,7 @@ export function Hero() {
           className="hero-fade mb-6 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-caramel"
           style={{ "--d": "0.15s" } as React.CSSProperties}
         >
-          Freshly baked in Bhestan, Surat
+          Freshly baked, made to order
         </p>
 
         <h1 className="font-display text-[clamp(2.6rem,9vw,5.75rem)] font-medium leading-[1.04] tracking-[-0.02em]">
@@ -69,8 +69,8 @@ export function Hero() {
           className="hero-fade mt-7 max-w-[46ch] text-lg leading-relaxed text-cream/80"
           style={{ "--d": "0.85s" } as React.CSSProperties}
         >
-          Custom cakes and fresh pastries from {site.addressShort}. Designed by
-          hand, baked the same day, handed over with a smile.
+          Custom cakes and fresh pastries from {site.name}. Designed by hand,
+          baked the same day, handed over with a smile.
         </p>
 
         <div
@@ -97,7 +97,7 @@ export function Hero() {
         >
           <span className="font-semibold text-caramel">{site.rating}★</span>
           {" · "}
-          {site.reviewCount} happy customers on Google
+          {site.reviewCount} reviews on Google
         </p>
       </div>
     </section>

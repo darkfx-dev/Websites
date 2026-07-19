@@ -3,9 +3,9 @@ import { Reveal } from "@/components/Reveal";
 import { site } from "@/lib/site";
 
 /**
- * Address, hours, and the two actions that matter: call and directions.
- * The map is a styled card linking out to Google Maps — no third-party
- * iframe cost on first load, which matters more than an embedded pan/zoom.
+ * Hours, phone, and the two actions that matter: call and directions.
+ * No confirmed street address was supplied, so the location is a labelled
+ * link to Google Maps rather than invented address text.
  */
 export function Location() {
   return (
@@ -17,12 +17,20 @@ export function Location() {
               Come say hello
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.2rem,6vw,4rem)] font-medium leading-[1.06] tracking-[-0.015em]">
-              Find us in Bhestan
+              Find us on the map
             </h2>
 
-            <address className="mt-7 max-w-[40ch] text-lg not-italic leading-relaxed text-ink/75">
-              {site.address}
-            </address>
+            <p className="mt-7 max-w-[40ch] text-lg leading-relaxed text-ink/75">
+              <a
+                href={site.mapsHref}
+                target="_blank"
+                rel="noopener"
+                aria-label="Open Modi Bakers in Google Maps"
+                className="text-cocoa underline decoration-caramel/50 underline-offset-4 transition-colors duration-150 hover:text-caramel"
+              >
+                {site.locationLabel}
+              </a>
+            </p>
 
             <dl className="mt-8 space-y-3 text-lg">
               <div className="flex flex-wrap items-baseline gap-x-3">
@@ -63,7 +71,7 @@ export function Location() {
             href={site.mapsHref}
             target="_blank"
             rel="noopener"
-            aria-label="Open The Quality Baker in Google Maps"
+            aria-label="Open Modi Bakers in Google Maps"
             className="frame block overflow-hidden rounded-2xl border border-cocoa/20 bg-noir"
           >
             {/* Stylised neighbourhood sketch, not a live map */}
@@ -95,7 +103,7 @@ export function Location() {
               </g>
             </svg>
             <p className="border-t border-caramel/15 px-6 py-4 text-sm text-cream/75">
-              Shop No. 10, Sai Ram Residency — tap for directions
+              Tap to open Modi Bakers in Google Maps
             </p>
           </a>
         </Reveal>

@@ -1,22 +1,17 @@
 /**
- * Real customer reviews from the shop's Google listing (4.9★, 95 reviews).
- * Quotes are verbatim — do not invent or embellish new ones.
+ * Featured customer review quotes.
+ *
+ * ⚠ EMPTY ON PURPOSE. Modi Bakers' aggregate rating (4.3★ across 373 Google
+ * reviews) is confirmed by the owner and shown in the reviews section, but no
+ * individual quotes have been supplied yet. Add Modi Bakers' OWN verbatim
+ * Google review quotes here to feature them — never invent or borrow quotes.
+ *
+ * Example shape:
+ *   { quote: "Best cake in town!", source: "Google review" }
  */
 export type Review = {
   quote: string;
   source: string;
 };
 
-export const reviews: Review[] = [
-  { quote: "Design was fab and cake taste good.", source: "Google review" },
-  {
-    quote: "Very very tasty cakes and pastry… too kind behaviour.",
-    source: "Google review",
-  },
-  {
-    quote: "Cake quality and taste both are too good.",
-    source: "Google review",
-  },
-  { quote: "Fast service and tasty cake.", source: "Google review" },
-  { quote: "Very good quality and taste.", source: "Google review" },
-];
+export const reviews: Review[] = [];

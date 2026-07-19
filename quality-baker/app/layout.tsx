@@ -18,16 +18,15 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "The Quality Baker — Custom Cakes & Pastries in Bhestan, Surat",
+  title: "Modi Bakers — Custom Cakes & Fresh Pastries",
   description:
-    "Custom design cakes, birthday cakes and fresh pastries in Bhestan, Surat. 4.9★ on Google. Open 10 AM – 11 PM, all 7 days. Order on WhatsApp: +91 94278 75256.",
+    "Custom design cakes, birthday cakes and fresh pastries from Modi Bakers. 4.3★ on Google. Open 10 AM – 11 PM, all 7 days. Order on WhatsApp: +91 94263 92062.",
   // Set to the real domain at deploy time
-  metadataBase: new URL("https://thequalitybaker.example"),
+  metadataBase: new URL("https://modibakers.example"),
   alternates: { canonical: "/" },
   openGraph: {
-    title: "The Quality Baker",
-    description:
-      "Custom cakes & fresh pastries in Bhestan, Surat. 4.9★ on Google.",
+    title: "Modi Bakers",
+    description: "Custom cakes & fresh pastries. 4.3★ on Google.",
     type: "website",
     locale: "en_IN",
   },
@@ -41,20 +40,15 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Bakery",
   name: site.name,
-  telephone: "+91 94278 75256",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Shop No. 10, Sai Ram Residency, Bhestan",
-    addressLocality: "Surat",
-    addressRegion: "Gujarat",
-    postalCode: "395023",
-    addressCountry: "IN",
-  },
+  telephone: "+91 94263 92062",
+  // No confirmed street address supplied — point to the Google Maps place
+  // instead of publishing an invented PostalAddress.
+  hasMap: site.mapsHref,
   openingHours: "Mo-Su 10:00-23:00",
   aggregateRating: {
     "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "95",
+    ratingValue: site.rating,
+    reviewCount: String(site.reviewCount),
   },
   servesCuisine: "Bakery",
   priceRange: "₹₹",

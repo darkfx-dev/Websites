@@ -5,9 +5,9 @@ import { Reveal } from "@/components/Reveal";
 import { useMotionTier } from "@/lib/motion";
 
 /**
- * The three things every review mentions, in the reviewers' own themes:
- * design, taste, care. On the full tier the section pins and the statements
- * take turns; on lite/static they stack with simple reveals.
+ * The three things we hold ourselves to: design, taste, care. On the full
+ * tier the section pins and the statements take turns; on lite/static they
+ * stack with simple reveals.
  */
 const statements = [
   {
@@ -20,7 +20,7 @@ const statements = [
   },
   {
     title: "Kindness is part of the recipe.",
-    body: "Reviewers keep mentioning our behaviour, and we take that as seriously as the baking. By your second visit, we'll greet you by name.",
+    body: "How we treat you matters as much as the baking. By your second visit, we'll greet you by name.",
   },
 ];
 
@@ -98,7 +98,7 @@ export function Craft() {
       <div className="mx-auto w-full max-w-4xl px-5 py-24 sm:px-8 md:py-32">
         <Reveal>
           <p className="font-display text-lg italic text-cocoa">
-            What 95 reviews keep telling us
+            What we hold ourselves to
           </p>
         </Reveal>
 

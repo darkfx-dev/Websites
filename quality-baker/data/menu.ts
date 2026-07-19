@@ -47,7 +47,7 @@ export const products: Product[] = [
     name: "Classic Birthday Cake",
     category: "Birthday Cakes",
     description:
-      "Fresh cream, soft sponge, and your message piped on top — free. The cake most of Bhestan grew up on.",
+      "Fresh cream, soft sponge, and your message piped on top — free. The one everyone keeps coming back for.",
     price: 450,
     priceQualifier: "from",
     art: "candles",
@@ -61,7 +61,7 @@ export const products: Product[] = [
     name: "Custom Design Cake",
     category: "Custom Design Cakes",
     description:
-      "Cartoons, portraits, hobbies, the joke only your family gets. Tell us the idea — we sketch it with you before the oven comes on. Reviewers call the results “fab”, and we intend to keep it that way.",
+      "Cartoons, portraits, hobbies, the joke only your family gets. Tell us the idea — we sketch it with you before the oven comes on, and it's approved by you before we bake.",
     price: 900,
     priceQualifier: "from",
     art: "tiered",

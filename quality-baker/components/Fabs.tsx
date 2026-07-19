@@ -62,7 +62,7 @@ export function Fabs() {
         href={site.mapsDirectionsHref}
         target="_blank"
         rel="noopener"
-        aria-label="Get directions to The Quality Baker"
+        aria-label="Open Modi Bakers in Google Maps"
         aria-hidden={docked}
         tabIndex={docked ? -1 : undefined}
         className={`fab map flex h-12 w-12 items-center justify-center rounded-full transition-opacity duration-200 sm:h-[54px] sm:w-[54px] ${

@@ -49,7 +49,7 @@ function formatItem(item: OrderItem, index: number): string {
 
 export function buildOrderMessage(items: OrderItem[]): string {
   const lines = [
-    "Hi! I'd like to order:",
+    "Hi Modi Bakers, I'd like to order:",
     ...items.map(formatItem),
     "Please confirm availability and price. Thank you!",
   ];

@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 const values = [
   {
     title: "Designed before it's baked",
-    body: "Custom cakes start as a sketch we agree on together. Reviewers call the results “fab”.",
+    body: "Custom cakes start as a sketch we agree on together — approved by you before the oven comes on.",
   },
   {
     title: "Fresh for the day",
@@ -20,7 +20,7 @@ const values = [
   },
   {
     title: "Open when you need us",
-    body: `${site.hours}, ${site.hoursNote.toLowerCase()}. Collection from the shop in Bhestan.`,
+    body: `${site.hours}, ${site.hoursNote.toLowerCase()}. Collection from the shop.`,
   },
 ];
 

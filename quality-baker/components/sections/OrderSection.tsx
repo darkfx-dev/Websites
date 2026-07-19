@@ -207,7 +207,7 @@ function ExpandedDetail({
 
   const singleOrderHref = whatsappHref(
     [
-      `Hi! I'd like to order: ${product.name}`,
+      `Hi Modi Bakers, I'd like to order: ${product.name}`,
       size && `Size: ${size}`,
       flavor && `Flavour: ${flavor}`,
       selection.cakeMessage && `Message on cake: "${selection.cakeMessage}"`,

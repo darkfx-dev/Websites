@@ -1,4 +1,4 @@
-# The Quality Baker
+# Modi Bakers
 
 ## Register
 brand
@@ -7,10 +7,10 @@ brand
 web
 
 ## What this is
-Single-page marketing site for The Quality Baker, a small premium bakery in Bhestan, Surat (Shop No. 10, Sai Ram Residency, 395023). One craftsperson-run shop, 4.9★ across 95 Google reviews. The site's job: make a visitor trust the shop enough to call or WhatsApp an order, and make the owner proud enough to show it on their own phone.
+Single-page marketing site for Modi Bakers, a small premium bakery. No confirmed street address is published — the location is a Google Maps link only. 4.3★ across 373 Google reviews (owner-confirmed aggregate). The site's job: make a visitor trust the shop enough to call or WhatsApp an order, and make the owner proud enough to show it on their own phone.
 
 ## Target users
-- Local customers (Surat) browsing on mid-range Android phones, often on 4G. Mobile-first is not a slogan here; it is the primary device.
+- Local customers browsing on mid-range Android phones, often on 4G. Mobile-first is not a slogan here; it is the primary device.
 - The owner, demoing the site to customers in person.
 
 ## Brand personality
@@ -35,6 +35,6 @@ Warm, personal, handcrafted, quietly premium. A patisserie at golden hour: espre
 - Menu pricing lives in `data/menu.ts` as one clearly-commented editable array (illustrative prices until the owner supplies real ones).
 
 ## Conversion & proof
-- Primary actions: click-to-call (+91 94278 75256) and WhatsApp order.
-- Proof: 4.9★ / 95 reviews, five real review quotes (verbatim, never fabricated).
-- Hours: 10:00–23:00, all 7 days. Directions via Google Maps link.
+- Primary actions: click-to-call (+91 94263 92062) and WhatsApp order (919426392062).
+- Proof: 4.3★ / 373 reviews (owner-confirmed aggregate). No individual quotes supplied — the reviews section links to Google rather than showing invented quotes.
+- Hours: 10:00–23:00, all 7 days. Location + directions via Google Maps link only (no confirmed street address).

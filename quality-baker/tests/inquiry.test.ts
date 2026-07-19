@@ -23,7 +23,7 @@ test("full inquiry includes every provided field in order", () => {
     dietary: "Eggless please",
     notes: "Gold sprinkles if possible",
   });
-  assert.match(msg, /^Hello The Quality Baker/);
+  assert.match(msg, /^Hi Modi Bakers, I would like to check the availability and price of a custom cake\./);
   assert.match(msg, /Name: Poonam/);
   assert.match(msg, /Occasion: Birthday/);
   assert.match(msg, /Required date: 2026-07-25/);
@@ -37,7 +37,10 @@ test("full inquiry includes every provided field in order", () => {
   assert.match(msg, /Collection or delivery: Collect from the shop/);
   assert.match(msg, /Dietary or allergy notes: Eggless please/);
   assert.match(msg, /Additional notes: Gold sprinkles if possible/);
-  assert.match(msg, /Please confirm availability and the final price\./);
+  assert.match(
+    msg,
+    /Please confirm whether this order is available and share the final price\. Thank you\.$/
+  );
 });
 
 test("empty optional fields are omitted entirely", () => {
@@ -72,7 +75,7 @@ test("wa.me href targets the right number and encodes special characters", () =>
     inscription: 'Happy B\'day "Chotu" 100%',
     notes: "Line1\nLine2",
   });
-  assert.ok(href.startsWith("https://wa.me/919427875256?text="));
+  assert.ok(href.startsWith("https://wa.me/919426392062?text="));
   const decoded = decodeURIComponent(href.split("?text=")[1]);
   assert.match(decoded, /Name: A & B/);
   assert.match(decoded, /Happy B'day "Chotu" 100%/);

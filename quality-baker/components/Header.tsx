@@ -58,7 +58,7 @@ export function Header() {
           href="#top"
           className="font-display text-lg font-semibold tracking-tight text-porcelain"
         >
-          The Quality Baker
+          Modi Bakers
         </a>
 
         <div className="hidden items-center gap-7 md:flex">
@@ -105,7 +105,7 @@ export function Header() {
       >
         <div className="flex items-center justify-between px-5 py-4">
           <span className="font-display text-lg font-semibold text-porcelain">
-            The Quality Baker
+            Modi Bakers
           </span>
           <button
             type="button"
