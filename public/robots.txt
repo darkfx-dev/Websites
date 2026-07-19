@@ -1,0 +1,5 @@
+# Robots policy for St. Thomas School, Surat website.
+# A Sitemap line should be added here once SITE_URL / a production domain is
+# configured (see README.md) — no domain is invented until then.
+User-agent: *
+Allow: /

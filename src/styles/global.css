@@ -1,0 +1,466 @@
+/* ── Guided Ascent design system ─────────────────────────────────────────────
+   Palette, type and spacing tokens for St. Thomas School, Surat.
+   Documented in docs/design-system.md. Change tokens here, not in components. */
+
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/source-serif-4";
+
+:root {
+  /* Colour tokens (approved white / red / gray system) */
+  --paper: #ffffff;
+  --surface: #f6f6f7;
+  --border: #dedfe3;
+  --ink-muted: #5e626b;
+  --ink: #1d1f23;
+  --red: #b21f2d;
+  --red-deep: #7e1520;
+  --red-tint: #fbeaec;
+
+  /* Type */
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Source Serif 4 Variable", ui-serif, Georgia, "Times New Roman",
+    serif;
+
+  /* Scale — 4px rhythm */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  --measure: 62ch;
+  --container: 72rem;
+
+  /* Z-index scale */
+  --z-header: 40;
+  --z-dock: 50;
+  --z-drawer: 60;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-med: 260ms;
+}
+
+/* ── Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 620;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-4);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+}
+h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+}
+h3 {
+  font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--red);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--red-deep);
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--red-tint);
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  transform: translateY(-300%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.skip-link:focus {
+  transform: none;
+  color: var(--paper);
+}
+
+/* ── Layout primitives ── */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+.section {
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+.section--alt {
+  background: var(--surface);
+  border-block: 1px solid var(--border);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: var(--space-4);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  background: var(--red);
+}
+
+.lede {
+  font-size: 1.125rem;
+  color: var(--ink-muted);
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.btn--primary {
+  background: var(--red);
+  color: #fff;
+}
+.btn--primary:hover {
+  background: var(--red-deep);
+  color: #fff;
+}
+
+.btn--secondary {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--border);
+}
+.btn--secondary:hover {
+  border-color: var(--ink-muted);
+  color: var(--ink);
+}
+
+.btn--quiet {
+  background: transparent;
+  color: var(--red);
+  padding-inline: var(--space-3);
+}
+
+.btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+}
+
+/* ── Header ── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 64px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-decoration: none;
+  color: var(--ink);
+  min-width: 0;
+}
+.brand:hover {
+  color: var(--ink);
+}
+.brand__name {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+.brand__sub {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.nav-desktop {
+  display: none;
+  align-items: center;
+  gap: var(--space-6);
+}
+.nav-desktop a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding-block: var(--space-2);
+  border-bottom: 2px solid transparent;
+}
+.nav-desktop a:hover {
+  color: var(--red);
+}
+.nav-desktop a[aria-current="page"] {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+@media (min-width: 860px) {
+  .nav-desktop {
+    display: flex;
+  }
+  .brand__name--full {
+    display: inline;
+  }
+  .brand__name--compact {
+    display: none;
+  }
+}
+@media (max-width: 859.98px) {
+  .brand__name--full {
+    display: none;
+  }
+  .brand__name--compact {
+    display: inline;
+  }
+}
+
+/* ── Footer ── */
+.site-footer {
+  background: var(--ink);
+  color: #d6d7da;
+  padding-block: var(--space-16) var(--space-24);
+  margin-top: var(--space-16);
+}
+.site-footer a {
+  color: #fff;
+}
+.site-footer a:hover {
+  color: var(--red-tint);
+}
+.site-footer h2 {
+  color: #fff;
+  font-size: 1.25rem;
+}
+.site-footer .footer-grid {
+  display: grid;
+  gap: var(--space-8);
+}
+@media (min-width: 768px) {
+  .site-footer .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+.site-footer .footer-note {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid #3a3d44;
+  font-size: 0.875rem;
+  color: #a5a8ae;
+}
+
+/* ── Floating action dock ─────────────────────────────────────────────────
+   Mobile: bottom bar. Desktop: vertical rail, lower right.
+   Halo: slow white → silver → pale-red shift; paused for reduced motion,
+   hidden tabs (animation-play-state via .halo-paused), and low-power UAs. */
+
+.action-dock {
+  position: fixed;
+  z-index: var(--z-dock);
+  display: flex;
+  gap: var(--space-2);
+}
+
+@media (max-width: 859.98px) {
+  .action-dock {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    width: min(calc(100% - 1.5rem), 26rem);
+  }
+  .action-dock .dock-btn {
+    flex: 1;
+  }
+  /* Reserve room so the dock never covers page content or form actions */
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (min-width: 860px) {
+  .action-dock {
+    flex-direction: column;
+    right: var(--space-6);
+    bottom: var(--space-8);
+  }
+}
+
+.dock-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  min-width: 48px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 14px 1px rgba(255, 255, 255, 0.35);
+  animation: halo-shift 9s linear infinite;
+}
+.dock-btn--whatsapp {
+  background: var(--red-deep);
+}
+.dock-btn:hover {
+  color: #fff;
+  background: var(--red);
+}
+.dock-btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+}
+
+@keyframes halo-shift {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25),
+      0 0 14px 1px rgba(255, 255, 255, 0.35);
+  }
+  33% {
+    box-shadow: 0 0 0 1px rgba(196, 199, 204, 0.3),
+      0 0 14px 2px rgba(196, 199, 204, 0.4);
+  }
+  66% {
+    box-shadow: 0 0 0 1px rgba(251, 234, 236, 0.35),
+      0 0 16px 2px rgba(226, 156, 164, 0.35);
+  }
+}
+
+.halo-paused .dock-btn {
+  animation-play-state: paused;
+}
+
+/* ── Scroll-reveal targets (GSAP adds motion; static without JS) ── */
+[data-reveal] {
+  opacity: 1;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .dock-btn {
+    animation: none;
+  }
+}

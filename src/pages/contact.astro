@@ -1,0 +1,128 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { school } from "../data/school";
+
+/* Office hours and email are intentionally absent — none were supplied. */
+---
+
+<Base
+  title={`Contact — ${school.shortName}`}
+  description={`Contact ${school.formalName} in Bharthana, Surat: call ${school.phoneDisplay}, message on WhatsApp, or get one-tap Google Maps directions.`}
+>
+  <section class="section">
+    <div class="container contact">
+      <p class="eyebrow">Contact</p>
+      <h1>Three ways to reach the school.</h1>
+      <p class="lede">
+        Choose whichever suits you — each opens directly on your phone.
+      </p>
+
+      <div class="contact__choices">
+        <a
+          class="contact__choice"
+          href={school.whatsappBase}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-reveal
+        >
+          <Icon name="whatsapp" />
+          <span class="contact__choice-title">WhatsApp</span>
+          <span class="contact__choice-sub">Opens WhatsApp with the school's number</span>
+        </a>
+        <a class="contact__choice" href={school.phoneHref} data-reveal>
+          <Icon name="phone" />
+          <span class="contact__choice-title">Call {school.phoneDisplay}</span>
+          <span class="contact__choice-sub">Rings the school office</span>
+        </a>
+        <a
+          class="contact__choice"
+          href={school.directionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-reveal
+        >
+          <Icon name="map-pin" />
+          <span class="contact__choice-title">Directions</span>
+          <span class="contact__choice-sub">Opens Google Maps navigation</span>
+        </a>
+      </div>
+
+      <div class="contact__details" data-reveal>
+        <h2>Address</h2>
+        <address>{school.addressDisplay}</address>
+
+        <h2>Follow</h2>
+        <p>
+          <a
+            href={school.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram — @st_thomas_school_surat (opens in a new tab)
+          </a>
+        </p>
+
+        <h2>Admissions</h2>
+        <p>
+          For admission questions, the fastest route is the <a href="/admissions">Admission Enquiry page</a> — it prepares a
+          WhatsApp message with your details so the office can help you sooner.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact {
+    max-width: 52rem;
+  }
+  .contact__choices {
+    display: grid;
+    gap: 1rem;
+    margin-block: 2.5rem;
+  }
+  @media (min-width: 640px) {
+    .contact__choices {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .contact__choice {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .contact__choice:hover {
+    border-color: var(--red);
+    color: var(--ink);
+  }
+  .contact__choice :global(svg) {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--red);
+  }
+  .contact__choice-title {
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .contact__choice-sub {
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+  .contact__details h2 {
+    font-size: 1.15rem;
+    margin-top: 2rem;
+  }
+  .contact__details address {
+    font-style: normal;
+    color: var(--ink-muted);
+    max-width: 44ch;
+  }
+</style>

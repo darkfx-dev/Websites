@@ -1,0 +1,393 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import HeroVisual from "../components/hero/HeroVisual.astro";
+import AcademicPathway from "../components/AcademicPathway.astro";
+import FAQ from "../components/FAQ.tsx";
+import { school } from "../data/school";
+
+const faqItems = [
+  {
+    q: "Which board does the school follow?",
+    a: `${school.formalName} follows the ${school.academics.board} curriculum, taught in English medium.`,
+  },
+  {
+    q: "Which standards are available?",
+    a: "Classes are available from Standard 1 through Standard 12.",
+  },
+  {
+    q: "Which Higher Secondary streams are available?",
+    a: "At the Higher Secondary level (Standard 11 and 12), the school offers Science and Commerce streams.",
+  },
+  {
+    q: "How can I ask about fees?",
+    a: `Please contact the school directly for fee details — call ${school.phoneDisplay} or send a WhatsApp message. Fee information is shared by the school office.`,
+  },
+  {
+    q: "How do I start an admission enquiry?",
+    a: "Use the Admission Enquiry page on this website. You enter basic details, review them, and then continue in WhatsApp or by phone. Sending an enquiry does not confirm admission — the school will confirm availability and next steps directly.",
+  },
+  {
+    q: "Where is the school located?",
+    a: school.addressDisplay,
+  },
+];
+---
+
+<Base
+  title={`${school.shortName} — GSEB English Medium School, Standard 1–12`}
+  description={`${school.formalName} offers GSEB English-medium education in Surat from Standard 1 to 12, with Science and Commerce streams at Higher Secondary level. Start an admission enquiry online.`}
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">GSEB • English Medium • Surat</p>
+        <h1>A clear path from Standard&nbsp;1 to Standard&nbsp;12.</h1>
+        <p class="lede">
+          {school.formalName} offers GSEB education in Surat, with Science and
+          Commerce pathways at the Higher Secondary level.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/admissions">
+            Start an Admission Enquiry
+            <Icon name="arrow-right" />
+          </a>
+          <a
+            class="btn btn--secondary"
+            href={school.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="map-pin" />
+            Get Directions
+          </a>
+        </div>
+        <p class="hero__tertiary">
+          Prefer to talk? <a href={school.phoneHref}>Call {school.phoneDisplay}</a>
+        </p>
+      </div>
+      <HeroVisual />
+    </div>
+  </section>
+
+  <!-- Trust strip -->
+  <section class="trust" aria-label="School at a glance">
+    <div class="container">
+      <ul class="trust__list">
+        <li>English Medium</li>
+        <li>GSEB Curriculum</li>
+        <li>Standard 1–12</li>
+        <li>Science &amp; Commerce</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Academic pathway -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Academics</p>
+      <h2>One school, twelve standards, one steady climb.</h2>
+      <p class="lede" style="margin-bottom: 3rem;">
+        Every stage of the GSEB pathway is taught here in English medium — from
+        the first day of Standard 1 to the Higher Secondary board year.
+      </p>
+      <AcademicPathway />
+    </div>
+  </section>
+
+  <!-- How enquiry works -->
+  <section class="section section--alt">
+    <div class="container">
+      <p class="eyebrow">Admissions</p>
+      <h2>Three honest steps to reach the school.</h2>
+      <ol class="steps">
+        <li data-reveal>
+          <h3>Enter basic details</h3>
+          <p>
+            Parent and student names, the standard you are applying for, and
+            what your enquiry is about. Nothing more.
+          </p>
+        </li>
+        <li data-reveal>
+          <h3>Review your enquiry</h3>
+          <p>
+            Check everything on one screen before anything leaves this website.
+          </p>
+        </li>
+        <li data-reveal>
+          <h3>Continue in WhatsApp or call</h3>
+          <p>
+            Your enquiry opens as a prepared WhatsApp message you review and
+            send yourself — or simply call the school office.
+          </p>
+        </li>
+      </ol>
+      <p class="steps__note">
+        Sending an enquiry does not confirm admission. The school will confirm
+        availability and the next steps directly.
+      </p>
+      <a class="btn btn--primary" href="/admissions">
+        Start an Admission Enquiry
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Contact panel -->
+  <section class="section">
+    <div class="container contact-panel">
+      <div data-reveal>
+        <p class="eyebrow">Visit or reach us</p>
+        <h2>On New City Light Road, Bharthana.</h2>
+        <address class="contact-panel__address">
+          {school.addressDisplay}
+        </address>
+        <div class="contact-panel__actions">
+          <a
+            class="btn btn--primary"
+            href={school.whatsappBase}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="whatsapp" /> WhatsApp the school
+          </a>
+          <a class="btn btn--secondary" href={school.phoneHref}>
+            <Icon name="phone" /> Call {school.phoneDisplay}
+          </a>
+          <a
+            class="btn btn--secondary"
+            href={school.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="map-pin" /> Get directions to {school.abbreviation}
+          </a>
+          <a
+            class="btn btn--secondary"
+            href={school.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="instagram" /> Instagram
+          </a>
+        </div>
+      </div>
+      <div class="contact-panel__card" data-reveal aria-hidden="true">
+        <div class="contact-panel__pin">
+          <Icon name="map-pin" />
+        </div>
+        <p>New City Light Rd<br />Bharthana, Surat<br />Gujarat 395007</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--alt">
+    <div class="container faq-wrap">
+      <p class="eyebrow">Questions parents ask</p>
+      <h2>Straight answers, before you visit.</h2>
+      <FAQ client:visible items={faqItems} />
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section final-cta">
+    <div class="container" data-reveal>
+      <h2>Speak with the school about admissions.</h2>
+      <p class="lede">
+        The office answers questions about admissions, fees and standards
+        directly — by WhatsApp or phone.
+      </p>
+      <div class="final-cta__actions">
+        <a
+          class="btn btn--primary"
+          href={school.whatsappBase}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="whatsapp" /> WhatsApp
+        </a>
+        <a class="btn btn--secondary" href={school.phoneHref}>
+          <Icon name="phone" /> Call {school.phoneDisplay}
+        </a>
+        <a class="btn btn--secondary" href="/admissions">
+          Admission Enquiry <Icon name="arrow-right" />
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(2.5rem, 7vw, 5.5rem);
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--paper) 70%, var(--surface) 100%);
+  }
+  .hero__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block: 1.5rem 1rem;
+  }
+  .hero__tertiary {
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .trust {
+    background: var(--ink);
+    color: #fff;
+    padding-block: 1rem;
+  }
+  .trust__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2.5rem;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .trust__list li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .trust__list li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 2.5rem 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .steps li {
+    counter-increment: step;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+  }
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--red);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .steps h3 {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+  .steps p {
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .steps__note {
+    font-weight: 600;
+    color: var(--ink);
+    border-left: 3px solid var(--red);
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .contact-panel {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .contact-panel {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+  }
+  .contact-panel__address {
+    font-style: normal;
+    color: var(--ink-muted);
+    max-width: 44ch;
+    margin-bottom: 1.5rem;
+  }
+  .contact-panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .contact-panel__card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2.5rem;
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+  }
+  .contact-panel__card p {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.7;
+  }
+  .contact-panel__pin {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    background: var(--red-tint);
+    color: var(--red);
+    border-radius: 50%;
+  }
+  .contact-panel__pin :global(svg) {
+    width: 28px;
+    height: 28px;
+  }
+
+  .faq-wrap {
+    max-width: 52rem;
+  }
+
+  .final-cta {
+    text-align: center;
+  }
+  .final-cta .lede {
+    margin-inline: auto;
+  }
+  .final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+</style>

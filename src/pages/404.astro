@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { school } from "../data/school";
+---
+
+<Base
+  title={`Page not found — ${school.shortName}`}
+  description="That page could not be found. Go to the St. Thomas School, Surat homepage, call the school, message on WhatsApp, or get directions."
+>
+  <section class="section notfound">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>That page isn't here.</h1>
+      <p class="lede">
+        The address may have been typed differently. Everything on this site is
+        one tap away below.
+      </p>
+      <div class="notfound__actions">
+        <a class="btn btn--primary" href="/">Go to the homepage</a>
+        <a class="btn btn--secondary" href={school.phoneHref}>
+          <Icon name="phone" /> Call {school.phoneDisplay}
+        </a>
+        <a
+          class="btn btn--secondary"
+          href={school.whatsappBase}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="whatsapp" /> WhatsApp
+        </a>
+        <a
+          class="btn btn--secondary"
+          href={school.directionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="map-pin" /> Directions
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 50vh;
+    display: grid;
+    align-items: center;
+  }
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+</style>

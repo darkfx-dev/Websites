@@ -1,0 +1,84 @@
+---
+import Base from "../layouts/Base.astro";
+import AcademicPathway from "../components/AcademicPathway.astro";
+import { school } from "../data/school";
+---
+
+<Base
+  title={`Academics — ${school.shortName}`}
+  description={`Academics at ${school.formalName}: the GSEB English-medium pathway from Standard 1 to Standard 12, with Science and Commerce streams at Higher Secondary level.`}
+>
+  <section class="section">
+    <div class="container academics">
+      <p class="eyebrow">Academics</p>
+      <h1>The GSEB pathway, standard by standard.</h1>
+      <p class="lede" style="margin-bottom: 3rem;">
+        Four stages, one school. Instruction is in English medium throughout,
+        following the {school.academics.board} curriculum.
+      </p>
+      <AcademicPathway withCtas />
+
+      <div class="academics__streams" data-reveal>
+        <h2>Choosing a stream at Higher Secondary</h2>
+        <p>
+          At Standard 11 and 12, students continue in one of two streams:
+        </p>
+        <div class="academics__stream-cards">
+          <div>
+            <h3>Science</h3>
+            <p>
+              The Science stream at the GSEB Higher Secondary level.
+              Speak with the school for subject details.
+            </p>
+          </div>
+          <div>
+            <h3>Commerce</h3>
+            <p>
+              The Commerce stream at the GSEB Higher Secondary level.
+              Speak with the school for subject details.
+            </p>
+          </div>
+        </div>
+        <p>
+          Stream availability and subject combinations are confirmed by the
+          school office during the admission conversation.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .academics {
+    max-width: 56rem;
+  }
+  .academics__streams {
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .academics__stream-cards {
+    display: grid;
+    gap: 1.25rem;
+    margin-block: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .academics__stream-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .academics__stream-cards > div {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    background: var(--paper);
+  }
+  .academics__stream-cards h3 {
+    margin-bottom: 0.4rem;
+  }
+  .academics__stream-cards p {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+</style>

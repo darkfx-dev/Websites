@@ -1,0 +1,195 @@
+---
+import "../styles/global.css";
+import { school, navigation, features } from "../data/school";
+import Icon from "../components/Icon.astro";
+import MobileMenu from "../components/MobileMenu.tsx";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const canonical = Astro.site ? new URL(currentPath, Astro.site).href : undefined;
+
+/* JSON-LD limited strictly to supplied facts. */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "School",
+  name: school.formalName,
+  alternateName: [school.abbreviation, school.shortName],
+  telephone: "+917435975575",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress:
+      "Sai Dwar Society, 6, New City Light Rd, opp. St. Thomas School, Bharthana",
+    addressLocality: "Surat",
+    addressRegion: "Gujarat",
+    postalCode: "395007",
+    addressCountry: "IN",
+  },
+  sameAs: [school.instagramUrl],
+  ...(canonical ? { url: new URL("/", Astro.site).href } : {}),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={school.shortName} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="theme-color" content="#B21F2D" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="/">
+          <span class="brand__name brand__name--full">{school.formalName}</span>
+          <span class="brand__name brand__name--compact">{school.abbreviation}</span>
+          <span class="brand__sub">GSEB · English Medium · {school.city}</span>
+        </a>
+        <nav class="nav-desktop" aria-label="Main">
+          {
+            navigation.map((item) => (
+              <a
+                href={item.href}
+                aria-current={currentPath === item.href ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+          <a class="btn btn--primary" href="/admissions">Admission Enquiry</a>
+        </nav>
+        <MobileMenu client:media="(max-width: 859.98px)" items={navigation} currentPath={currentPath} />
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h2>{school.formalName}</h2>
+            <p style="max-width: 36ch; color: #a5a8ae;">
+              {school.academics.medium} · {school.academics.board} ·
+              {school.academics.standards}
+            </p>
+            <p style="color: #d6d7da;">{school.addressDisplay}</p>
+          </div>
+          <div>
+            <h2>Visit</h2>
+            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem;">
+              {navigation.map((item) => (
+                <li><a href={item.href}>{item.label}</a></li>
+              ))}
+              <li><a href="/privacy">Privacy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Reach us</h2>
+            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem;">
+              <li>
+                <a href={school.phoneHref}>Call {school.phoneDisplay}</a>
+              </li>
+              <li>
+                <a href={school.whatsappBase} target="_blank" rel="noopener noreferrer">
+                  WhatsApp the school (opens WhatsApp)
+                </a>
+              </li>
+              <li>
+                <a href={school.instagramUrl} target="_blank" rel="noopener noreferrer">
+                  Instagram (opens in a new tab)
+                </a>
+              </li>
+              <li>
+                <a href={school.directionsUrl} target="_blank" rel="noopener noreferrer">
+                  Get directions to {school.abbreviation} (opens Google Maps)
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p class="footer-note">
+          © {new Date().getFullYear()} {school.formalName}. Website content is
+          awaiting final review by the school office.
+        </p>
+      </div>
+    </footer>
+
+    {
+      /* The dock is hidden on /admissions: the portal has its own WhatsApp /
+         Call actions and the dock must never cover form buttons. */
+      features.enableActionDock && currentPath !== "/admissions" && (
+        <nav class="action-dock" aria-label="Quick contact actions">
+          <a
+            class="dock-btn dock-btn--whatsapp"
+            href={school.whatsappBase}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="whatsapp" />
+            <span>WhatsApp</span>
+          </a>
+          <a class="dock-btn" href={school.phoneHref}>
+            <Icon name="phone" />
+            <span>Call</span>
+          </a>
+          <a
+            class="dock-btn"
+            href={school.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="map-pin" />
+            <span>Directions</span>
+          </a>
+        </nav>
+      )
+    }
+
+    <script>
+      // Pause the dock halo when the tab is hidden or the device saves power.
+      const root = document.documentElement;
+      const update = () => {
+        const saveData =
+          "connection" in navigator &&
+          (navigator as any).connection?.saveData === true;
+        root.classList.toggle("halo-paused", document.hidden || saveData);
+      };
+      document.addEventListener("visibilitychange", update);
+      update();
+
+      // Scroll reveals: loaded lazily, skipped entirely for reduced motion.
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (!prefersReduced && document.querySelector("[data-reveal]")) {
+        const start = () => {
+          import("../scripts/reveal").then((m) => m.initReveals());
+        };
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(start, { timeout: 2000 });
+        } else {
+          setTimeout(start, 300);
+        }
+      }
+    </script>
+  </body>
+</html>

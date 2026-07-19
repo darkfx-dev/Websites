@@ -1,0 +1,116 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { school } from "../data/school";
+
+/*
+ * Content slots for school-approved history and leadership exist in the data
+ * model (CONTENT_REVIEW.md) but stay hidden until the school supplies and
+ * approves that information. Nothing here is invented.
+ */
+---
+
+<Base
+  title={`About — ${school.shortName}`}
+  description={`About ${school.formalName}: an English-medium GSEB school in Bharthana, Surat, teaching Standard 1 to Standard 12 with Science and Commerce at Higher Secondary level.`}
+>
+  <section class="section">
+    <div class="container about">
+      <p class="eyebrow">About the school</p>
+      <h1>An English-medium GSEB school in Surat.</h1>
+      <p class="lede">
+        {school.formalName} — {school.abbreviation} for short — teaches the
+        Gujarat State Education Board curriculum in English medium, from
+        Standard 1 through Standard 12.
+      </p>
+
+      <div class="about__facts" data-reveal>
+        <dl>
+          <div>
+            <dt>Medium of instruction</dt>
+            <dd>English</dd>
+          </div>
+          <div>
+            <dt>Curriculum</dt>
+            <dd>{school.academics.board}</dd>
+          </div>
+          <div>
+            <dt>Classes</dt>
+            <dd>Standard 1 to Standard 12</dd>
+          </div>
+          <div>
+            <dt>Higher Secondary streams</dt>
+            <dd>Science and Commerce</dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd>Bharthana, New City Light Road, Surat</dd>
+          </div>
+        </dl>
+      </div>
+
+      <h2>The pathway in brief</h2>
+      <p>
+        Students can join at Standard 1 and continue at the same school through
+        the Standard 10 GSEB board examination and on to Higher Secondary. At
+        Standard 11 and 12, students choose between the Science and Commerce
+        streams.
+      </p>
+      <p>
+        For anything this page does not answer — fees, dates, documents, or
+        seat availability — the school office is the right source. They respond
+        on WhatsApp and by phone.
+      </p>
+
+      <div class="about__actions">
+        <a class="btn btn--primary" href="/admissions">
+          Start an Admission Enquiry <Icon name="arrow-right" />
+        </a>
+        <a class="btn btn--secondary" href="/academics">See academics</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    max-width: 52rem;
+  }
+  .about__facts {
+    margin-block: 2.5rem;
+  }
+  .about__facts dl {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
+  .about__facts dl > div {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 640px) {
+    .about__facts dl > div {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 2rem;
+    }
+  }
+  .about__facts dt {
+    font-weight: 800;
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .about__facts dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  .about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+</style>

@@ -1,0 +1,89 @@
+---
+/**
+ * The Guided Ascent hero visual.
+ * The static SVG below is the real deliverable — it renders everywhere,
+ * instantly, with zero JS. On capable devices Hero3DGate hydrates after idle
+ * and, if (and only if) the device passes its checks, replaces the SVG with
+ * a lightweight WebGL scene.
+ */
+import Hero3DGate from "./Hero3DGate.tsx";
+import { features } from "../../data/school";
+---
+
+<div class="hero-visual" data-hero-visual>
+  <svg
+    class="hero-visual__svg"
+    viewBox="0 0 480 420"
+    role="img"
+    aria-label="Abstract illustration of a path rising through four stages, from Standard 1 to Standard 12"
+  >
+    <!-- fine academic grid -->
+    <g stroke="#DEDFE3" stroke-width="1">
+      {Array.from({ length: 9 }, (_, i) => (
+        <line x1={40 + i * 50} y1="20" x2={40 + i * 50} y2="400" />
+      ))}
+      {Array.from({ length: 8 }, (_, i) => (
+        <line x1="20" y1={40 + i * 50} x2="460" y2={40 + i * 50} />
+      ))}
+    </g>
+
+    <!-- open page / ribbon forms -->
+    <path
+      d="M60 330 Q150 300 240 330 Q330 360 420 330 L420 368 Q330 398 240 368 Q150 338 60 368 Z"
+      fill="#F6F6F7"
+      stroke="#DEDFE3"
+    ></path>
+    <path
+      d="M60 330 Q150 300 240 330 L240 368 Q150 338 60 368 Z"
+      fill="#FFFFFF"
+      stroke="#DEDFE3"
+    ></path>
+
+    <!-- the rising path -->
+    <path
+      d="M70 340 C 140 330, 160 290, 205 265 C 250 240, 270 200, 310 170 C 350 140, 370 110, 408 78"
+      fill="none"
+      stroke="#B21F2D"
+      stroke-width="3"
+      stroke-linecap="round"
+    ></path>
+
+    <!-- four stage marks -->
+    <g>
+      <circle cx="70" cy="340" r="7" fill="#FFFFFF" stroke="#B21F2D" stroke-width="3"></circle>
+      <circle cx="205" cy="265" r="7" fill="#FFFFFF" stroke="#B21F2D" stroke-width="3"></circle>
+      <circle cx="310" cy="170" r="7" fill="#FFFFFF" stroke="#B21F2D" stroke-width="3"></circle>
+      <circle cx="408" cy="78" r="9" fill="#B21F2D" stroke="#7E1520" stroke-width="3"></circle>
+    </g>
+
+    <g font-family="Manrope Variable, sans-serif" font-size="13" font-weight="700" fill="#5E626B">
+      <text x="58" y="368">Std 1</text>
+      <text x="188" y="294">Std 5–8</text>
+      <text x="290" y="199">Std 9–10</text>
+      <text x="360" y="60">Std 11–12</text>
+    </g>
+  </svg>
+
+  {features.enable3DHero && <Hero3DGate client:idle />}
+</div>
+
+<style>
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 8 / 7;
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+  .hero-visual__svg {
+    width: 100%;
+    height: 100%;
+  }
+  .hero-visual :global(.hero-3d) {
+    position: absolute;
+    inset: 0;
+  }
+  /* When the 3D scene mounts it sets data-3d-active on the wrapper */
+  .hero-visual[data-3d-active] .hero-visual__svg {
+    visibility: hidden;
+  }
+</style>

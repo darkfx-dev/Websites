@@ -1,0 +1,86 @@
+---
+import Base from "../layouts/Base.astro";
+import { school } from "../data/school";
+---
+
+<Base
+  title={`Privacy — ${school.shortName}`}
+  description={`How the ${school.shortName} website handles information: the admission enquiry form stores nothing — details go only into a WhatsApp message you review and send yourself.`}
+>
+  <section class="section">
+    <div class="container privacy">
+      <p class="eyebrow">Privacy</p>
+      <h1>What this website does with your information.</h1>
+      <p class="lede">Written in plain language, because it should be.</p>
+
+      <h2>The short version</h2>
+      <p>
+        This website does not store your information. There is no database, no
+        account system, no analytics tracker, and no cookie banner because
+        there is nothing to consent to.
+      </p>
+
+      <h2>The admission enquiry form</h2>
+      <p>
+        When you fill in the enquiry form, everything you type stays on your
+        own device while you complete it. Nothing is sent to this website's
+        servers, saved in your browser for later, or shared with any third
+        party.
+      </p>
+      <p>
+        When you choose <strong>Continue on WhatsApp</strong>, your details are
+        placed into a prepared WhatsApp message. You see the full message in
+        WhatsApp before it goes anywhere, and it is only sent if you press send
+        yourself. From that point the conversation is between you and the
+        school on WhatsApp, covered by WhatsApp's own terms.
+      </p>
+      <p>
+        If you choose to call instead, no form information leaves your device
+        at all.
+      </p>
+
+      <h2>What we deliberately do not ask for</h2>
+      <p>
+        The enquiry form does not ask for a child's date of birth, Aadhaar
+        number, documents, photographs, medical details, or home address. A
+        first enquiry does not need them; the school will ask for whatever is
+        required later, directly.
+      </p>
+
+      <h2>External links</h2>
+      <p>
+        Buttons for WhatsApp, phone, Instagram and Google Maps open those apps
+        or sites. Each is run by its own company under its own privacy policy.
+      </p>
+
+      <h2>Questions</h2>
+      <p>
+        Ask the school office directly — call <a href={school.phoneHref}>{school.phoneDisplay}</a> or message on <a href={school.whatsappBase} target="_blank" rel="noopener noreferrer">WhatsApp</a>.
+      </p>
+
+      <p class="privacy__note">
+        This notice describes how the website currently works. If the school
+        later adds a form that stores enquiries, this page will be updated
+        first and the change will require school approval.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .privacy {
+    max-width: 46rem;
+  }
+  .privacy h2 {
+    font-size: 1.25rem;
+    margin-top: 2.5rem;
+  }
+  .privacy__note {
+    margin-top: 3rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-left: 3px solid var(--red);
+    color: var(--ink-muted);
+    font-size: 0.9375rem;
+  }
+</style>

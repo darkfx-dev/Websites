@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+import AdmissionForm from "../components/AdmissionForm.tsx";
+import { school } from "../data/school";
+---
+
+<Base
+  title={`Admission Enquiry — ${school.shortName}`}
+  description={`Start an admission enquiry with ${school.formalName} for Standard 1–12. Enter basic details, review them, then continue on WhatsApp or call the school — nothing is stored by this website.`}
+>
+  <section class="section admissions">
+    <div class="container">
+      <div class="admissions__intro">
+        <p class="eyebrow">Admissions</p>
+        <h1>Admission Enquiry</h1>
+        <p class="lede">
+          A few basic details, reviewed by you, then handed to the school on
+          WhatsApp or by phone. This website stores nothing.
+        </p>
+      </div>
+      <AdmissionForm client:load />
+      <aside class="admissions__aside">
+        <h2>Prefer to skip the form?</h2>
+        <p>
+          Call <a href={school.phoneHref}>{school.phoneDisplay}</a> or message the school on <a href={school.whatsappBase} target="_blank" rel="noopener noreferrer">WhatsApp</a> directly. The form simply prepares your message for you.
+        </p>
+        <p>
+          Read how your details are handled on the <a href="/privacy">privacy page</a>.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .admissions__intro {
+    max-width: 40rem;
+    margin-bottom: 2.5rem;
+  }
+  .admissions__aside {
+    max-width: 40rem;
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .admissions__aside h2 {
+    font-size: 1.15rem;
+  }
+  .admissions__aside p {
+    color: var(--ink-muted);
+  }
+</style>
