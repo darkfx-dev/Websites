@@ -33,11 +33,11 @@ export const school = {
 
   /** Postal address, exactly as supplied by the client. */
   addressDisplay:
-    "St. Thomas English Medium Higher Secondary School,Surat, Sai Dwar Society, 6, New City Light Rd, opp. St. Thomas School, Bharthana, Surat, Gujarat 395007",
+    "St. Thomas English Medium Higher Secondary School, Surat, Sai Dwar Society, 6, New City Light Rd, opp. St. Thomas School, Bharthana, Surat, Gujarat 395007",
 
   /** Universal Google Maps directions link (no API key required). */
   directionsUrl:
-    "https://www.google.com/maps/dir/?api=1&destination=St.%20Thomas%20English%20Medium%20Higher%20Secondary%20School%2CSurat%2C%20Sai%20Dwar%20Society%2C%206%2C%20New%20City%20Light%20Rd%2C%20opp.%20St.%20Thomas%20School%2C%20Bharthana%2C%20Surat%2C%20Gujarat%20395007",
+    "https://www.google.com/maps/dir/?api=1&destination=St.%20Thomas%20English%20Medium%20Higher%20Secondary%20School%2C%20Surat%2C%20Sai%20Dwar%20Society%2C%206%2C%20New%20City%20Light%20Rd%2C%20opp.%20St.%20Thomas%20School%2C%20Bharthana%2C%20Surat%2C%20Gujarat%20395007",
 
   academics: {
     medium: "English Medium",
