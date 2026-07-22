@@ -1,0 +1,61 @@
+/* ============================================================
+   DarkFX — Design tokens (single source of truth for visuals)
+   Edit colors, fonts, spacing here; components consume vars.
+   ============================================================ */
+:root {
+  /* Color — editorial spatial minimalism: near-black canvas,
+     one controlled accent, sparing secondary material accent */
+  --canvas: #090a0d;
+  --surface: #111318;
+  --surface-2: #16191f;
+  --text: #f7f8fa;
+  --text-muted: #a7adb8;
+  /* accent: solid fills that carry white text (AA 5.0:1) */
+  --accent: #4d5ef2;
+  /* accent-text: accent-colored text on the dark canvas (AA 7.7:1) */
+  --accent-text: #8d9aff;
+  --accent-soft: rgba(86, 104, 255, 0.14);
+  --accent-2: #77e0c1;
+  --border: rgba(255, 255, 255, 0.12);
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --focus: #a9b4ff;
+
+  /* Typography */
+  --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Archivo Variable", "Archivo", system-ui, sans-serif;
+
+  /* Fluid type scale */
+  --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --text-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
+  --text-hero: clamp(2.25rem, 1.6rem + 3.4vw, 4.25rem);
+
+  /* Spacing — 8px foundation */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* Layout */
+  --container: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section-y: clamp(4rem, 10vw, 8rem);
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Elevation — restrained */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px rgba(0, 0, 0, 0.35);
+}
