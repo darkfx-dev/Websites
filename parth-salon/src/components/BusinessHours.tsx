@@ -1,7 +1,7 @@
 import { m } from "framer-motion";
 import { Phone } from "lucide-react";
 import { business } from "../config/business";
-import { getOpenState, getWeekRows } from "../lib/hours";
+import { getOpenState, getWeekRows, statusLabel } from "../lib/hours";
 import { staggerParent, staggerChild, sectionReveal, viewportOnce } from "../motion/variants";
 import { AccessibleButton } from "./AccessibleButton";
 import { ChatGlyph } from "./Icons";
@@ -45,8 +45,7 @@ export function BusinessHours() {
               }`}
               aria-hidden="true"
             />
-            {open.isOpen ? "Open now" : "Closed"}
-            <span className="font-normal text-muted-ink">· {open.detail}</span>
+            {statusLabel()}
           </div>
 
           <p className="mt-6 max-w-[38ch] text-[0.85rem] text-muted-ink">

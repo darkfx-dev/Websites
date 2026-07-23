@@ -15,7 +15,7 @@ export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 32));
 
   // Menu open: focus first link, lock scroll, Escape to close, focus trap.
@@ -181,6 +181,14 @@ export function Header() {
           </m.div>
         )}
       </AnimatePresence>
+
+      {/* Reading-progress line — a direct MotionValue → scaleX binding (no
+          keyframes), so it stays cheap and never triggers layout. Decorative. */}
+      <m.div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-forest-rich"
+        style={{ scaleX: scrollYProgress }}
+      />
     </header>
   );
 }

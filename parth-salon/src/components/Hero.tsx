@@ -2,7 +2,7 @@ import { m } from "framer-motion";
 import { Phone, Navigation } from "lucide-react";
 import { business } from "../config/business";
 import { directionsUrl } from "../lib/whatsapp";
-import { getOpenState } from "../lib/hours";
+import { getOpenState, statusLabel } from "../lib/hours";
 import { staggerParent, staggerChild } from "../motion/variants";
 import { AccessibleButton } from "./AccessibleButton";
 import { ArchMotif } from "./ArchMotif";
@@ -54,6 +54,15 @@ export function Hero() {
             <br />
             quiet confidence.
           </m.h1>
+
+          {business.selectedTagline && (
+            <m.p
+              variants={staggerChild}
+              className="mt-5 font-display text-[1.35rem] italic text-silver sm:text-[1.6rem]"
+            >
+              {business.selectedTagline}
+            </m.p>
+          )}
 
           <m.p
             variants={staggerChild}
@@ -107,7 +116,7 @@ export function Hero() {
                 }`}
                 aria-hidden="true"
               />
-              {open.isOpen ? "Open now" : "Closed"} · {open.detail}
+              {statusLabel()}
             </span>
             <span className="hidden h-3 w-px bg-silver/40 sm:inline-block" aria-hidden="true" />
             <span>Established in 2003</span>

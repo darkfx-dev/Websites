@@ -38,6 +38,8 @@ When you save a change there, the website rebuilds and updates by itself
 | Google Maps link | `mapsUrl:` | replace `null` with `"https://maps.app.goo.gl/…"` in quotes |
 | Opening hours | `openingHours:` | change `"09:30"` / `"21:30"` (24-hour clock) |
 | Holiday note | `holidayHoursNotice:` | text in quotes |
+| Tagline under the hero | `selectedTagline:` | `"Designed for comfort, dedicated to style."` |
+| Instagram link | `instagram:` → `url:` and `handle:` | `"https://www.instagram.com/parth_salon_/"` |
 
 > **WhatsApp number rule:** `phoneInternational` must be digits only, with the
 > country code and **no** `+` and **no** leading `0`. For India that's
@@ -57,20 +59,46 @@ showRating: true,            // change false → true to show it
 
 Don't put a range (like 4.5–4.6). Use one confirmed number.
 
-### Adding your services and prices
+### Changing the tagline under the hero
 
-Services are empty right now, so the site shows a friendly
-"ask on WhatsApp" message instead of made-up prices. To add real ones, change
-`services: []` to a list like this:
+The short line under the big hero heading is `selectedTagline` in
+`business.ts`. Edit the text in quotes, or set it to `null` (no quotes) to hide
+the line completely.
 
-```ts
-services: [
-  { name: "Haircut", price: "₹150", duration: "30 min" },
-  { name: "Beard trim", price: "₹80" },
-],
-```
+### Updating the Instagram link
 
-As soon as you add them, the services section fills in automatically.
+The Instagram button (in the footer) uses the `instagram` block in
+`business.ts`. Update `url:` to your profile link and `handle:` to your
+`@name`. We never show follower counts or pull posts automatically — it's just
+a link to your profile.
+
+### Adding your services and prices (two-step safety gate)
+
+To make sure the website **never shows a price or service you didn't confirm**,
+the service menu is kept private until you approve it. There are two files:
+
+1. **The menu list** lives in `parth-salon/src/content/services.ts`. Every
+   service is already listed there but switched **off** and carries **no
+   price** (so nothing unverified can appear).
+2. **The master switch** is `servicesPublicationApproved` in `business.ts`.
+
+While the menu is off, the site shows a friendly "ask on WhatsApp" message
+instead of made-up prices. To publish your real menu:
+
+- In `src/content/services.ts`, for each service you want to show, change
+  `enabled: false` → `enabled: true` and
+  `verificationStatus: "client-supplied"` → `verificationStatus: "confirmed"`.
+  Only add a `priceDisplay:` (e.g. `priceDisplay: "₹150"`) when the price is
+  confirmed — leave it as `null` to show the service with no price.
+- Then in `business.ts` set `servicesPublicationApproved: false` → `true`.
+
+The services section then fills in automatically, grouped by category. Turn the
+master switch back to `false` at any time to hide the whole menu again.
+
+> The same private-until-confirmed rule protects **testimonials**
+> (`src/content/testimonials.ts`) and **team members**
+> (`src/content/team.ts`). They stay hidden until you set an entry's
+> `enabled: true`, so nothing unverified is ever published.
 
 ### Changing the interior photo or adding gallery photos
 

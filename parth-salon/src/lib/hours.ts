@@ -118,6 +118,47 @@ export function getOpenState(now = new Date()): OpenState {
   return { isOpen: false, closingSoon: false, detail: "Closed" };
 }
 
+/** Prompt-exact combined status, e.g. "Open now · Closes at 10:30 PM" or
+    "Closed · Opens today at 9:30 AM" / "Closed · Opens tomorrow at 9:30 AM". */
+export function statusLabel(now = new Date()): string {
+  const s = getOpenState(now);
+  if (s.isOpen) return `Open now · ${s.detail.replace("Closes ", "Closes at ")}`;
+  let d = s.detail;
+  if (/^Opens \d/.test(d)) d = d.replace("Opens ", "Opens today at ");
+  else if (d.startsWith("Opens tomorrow ")) d = d.replace("Opens tomorrow ", "Opens tomorrow at ");
+  else d = d.replace(/^Opens (\w+) /, "Opens $1 at ");
+  return `Closed · ${d}`;
+}
+
+export interface TimeWithinHours {
+  within: boolean;
+  dayLabel: string;
+  opens: string; // 12h
+  closes: string; // 12h
+}
+
+/** Is a chosen date+time inside that weekday's regular hours? Used to warn (not
+    block) when an enquiry asks for a time outside opening hours. Returns null
+    when either field is missing. Weekday comes from the calendar date itself. */
+export function checkTimeWithinHours(
+  dateISO: string,
+  timeHHMM: string,
+): TimeWithinHours | null {
+  if (!dateISO || !timeHHMM) return null;
+  const d = new Date(`${dateISO}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  const key = DAY_KEYS[d.getDay()];
+  const h = business.openingHours[key];
+  if (!h) return { within: false, dayLabel: DAY_LABELS[key], opens: "", closes: "" };
+  const t = toMinutes(timeHHMM);
+  return {
+    within: t >= toMinutes(h.opens) && t < toMinutes(h.closes),
+    dayLabel: DAY_LABELS[key],
+    opens: formatTime12(h.opens),
+    closes: formatTime12(h.closes),
+  };
+}
+
 export interface WeekRow {
   key: DayKey;
   label: string;

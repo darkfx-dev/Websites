@@ -17,8 +17,10 @@ seconds on every screen, including a sticky mobile action bar.
 
 - **React 19 + TypeScript + Vite** (static build, deploys anywhere free)
 - **Tailwind CSS v4** — design tokens for the forest-green / ivory / silver system
-- **Framer Motion** — one centralized, calm motion system (`LazyMotion` +
-  `domAnimation`, honours reduced motion)
+- **Framer Motion** — one centralized, calm motion system driven by shared
+  tokens (`src/motion/tokens.ts`: duration / distance / easing / spring),
+  `LazyMotion` + `domAnimation`, an adaptive-motion hook (`useAdaptiveMotion`)
+  that gates parallax to capable pointers, and full reduced-motion support
 - **Self-hosted fonts** (Cormorant Garamond + Manrope via `@fontsource`) — no
   Google Fonts network dependency
 - **lucide-react** + inline SVG icons — no emoji, no icon-font
@@ -82,13 +84,19 @@ After deploying, add your real domain in the host's dashboard and set the
 parth-salon/
 ├── src/
 │   ├── config/business.ts     ← SINGLE source of truth (owner edits here)
-│   ├── lib/                    hours (Asia/Kolkata), whatsapp, validation, structured data
-│   ├── motion/variants.ts      all animation timing
+│   ├── content/                gated data models: services, testimonials, team
+│   │                           (private-until-confirmed catalogue)
+│   ├── lib/                    hours (Asia/Kolkata) incl. statusLabel +
+│   │                           checkTimeWithinHours, whatsapp (enquiry +
+│   │                           consultation), validation, structured data
+│   ├── motion/                 tokens.ts (timing scale), variants.ts,
+│   │                           useAdaptiveMotion.ts
 │   ├── data/nav.ts             section links
 │   ├── components/             Header, Hero, TrustStrip, HeritageStory, Gallery,
-│   │                           ServicesInquiry, BusinessHours, AppointmentForm,
-│   │                           LocationSection, FinalCTA, FloatingActions,
-│   │                           MobileActionBar, Footer, + primitives
+│   │                           ServicesInquiry, BusinessHours, EnquiryBuilder
+│   │                           (3-step WhatsApp consultation), LocationSection,
+│   │                           FinalCTA, FloatingActions, MobileActionBar,
+│   │                           Footer, + primitives
 │   ├── index.css               design tokens + base styles
 │   └── App.tsx
 ├── public/images/              interior photo + generated AVIF/WebP/OG variants
@@ -112,17 +120,20 @@ parth-salon/
 ## Tests & checks actually run
 
 - `npm run build` — image optimization + `tsc` + Vite build: **passing**
-- `npm run lint` (oxlint): **clean**
-- `scripts/logic.test.mjs` — **16/16** logic checks (hours schedule, IST
-  open/closed, phone/date validation, WhatsApp encoding, directions fallback)
-- Playwright site audit — **30/30**: WhatsApp/tel/directions links, hours table
-  & today highlight, form validation + WhatsApp hand-off, mobile menu (open/
-  Escape/scroll-lock), no overflow at 320/390, reduced motion, JSON-LD, and
-  axe (0 violations) on desktop and mobile.
-- Playwright gallery audit — **18/18**: grid renders real images, thumbnails
-  served as AVIF/WebP, lightbox opens as a modal dialog, focus trap, Escape,
-  ←/→ navigation with wrap, focus restored to the opening tile, keyboard-open
-  via Enter, and axe (0 violations) with the lightbox open on desktop and mobile.
+- `npm run lint` (oxlint): **clean**; `tsc --noEmit`: **clean**
+- `npm test` (`scripts/logic.test.mjs`) — **37/37** logic checks: hours schedule
+  & half-open open/closed boundaries, `statusLabel` (open / opens-today /
+  opens-tomorrow), `checkTimeWithinHours` enquiry-time hint, phone/date
+  validation, the 3-step consultation validation + `STEP_FIELDS`, the exact
+  consultation WhatsApp message (safe defaults + no-booking disclaimer + single
+  encode), the services publication gate, and directions fallback.
+- Playwright interaction + accessibility audit — **16/16**: the full 3-step
+  enquiry flow (step-1 validation blocks with an error summary → advance →
+  WhatsApp hand-off builds the correct `wa.me` link with no booking claim),
+  the hero tagline + live open-now status, the honest unpublished-services
+  prompt, mobile menu open/Escape, no horizontal overflow at 320/375/768/1440,
+  reduced-motion flow, and axe (**0 serious/critical violations**) at 1440px,
+  375px, and under reduced motion.
 
 ## Remaining verification before go-live
 
@@ -132,8 +143,45 @@ These are content facts only Parth Salon can confirm (all flagged in
 1. Exact **Google Maps** sharing link → set `mapsUrl`.
 2. Spelling of **"Avlon Comercial Hub"** in the address.
 3. One verified **rating + review count + source** → then `showRating: true`.
-4. Current **service list and prices** → add to `services`.
+4. Current **service list and prices** → confirm items in
+   `src/content/services.ts`, then flip `servicesPublicationApproved: true`.
 5. **Public-holiday** hours (a notice is already shown).
+6. **Testimonials / team** → stay hidden until an entry in
+   `src/content/testimonials.ts` / `team.ts` is verified and `enabled: true`.
 
 The interior photograph has been confirmed by the owner as genuine and is used
-as the main "Inside Parth Salon" visual.
+as the main "Inside Parth Salon" visual. The **Instagram** handle
+(`@parth_salon_`) is a plain profile link — no scraping, no follower counts.
+
+---
+
+## Part 2 — cinematic motion, service discovery & WhatsApp conversion
+
+Part 2 is an enhancement layer over the original build. Conflicts were resolved
+in this priority order: **factual accuracy → accessibility/mobile → performance/
+conversion → optional visual flourish** (a working free fallback always wins).
+
+- **Centralized motion system** — one `motion/tokens.ts` scale (duration,
+  distance, easing, spring) that `variants.ts` and every component read from, so
+  the whole site shares one rhythm. `useAdaptiveMotion` gates optional parallax
+  to fine-pointer, motion-OK devices; reduced motion always wins.
+- **Distinctive hero** — the arch motif echoing the interior, the owner-selected
+  tagline *"Designed for comfort, dedicated to style."*, and a live open-now
+  status (`statusLabel`, computed in Asia/Kolkata).
+- **Reading-progress line** — a 2px header underline bound directly to
+  `scrollYProgress` (a cheap MotionValue → `scaleX`, no keyframes).
+- **Data-driven service explorer** — the full menu lives in
+  `content/services.ts` but is **publication-gated**: nothing shows until the
+  owner confirms items *and* flips the master switch, so no unverified price or
+  service can ever appear. Published cards deep-link to WhatsApp with each
+  item's own enquiry prompt.
+- **3-step WhatsApp consultation builder** (`EnquiryBuilder`) — enquiry →
+  timing & details → your details, composing the exact prefilled WhatsApp
+  message (encoded once). It never claims a booking is confirmed, keeps state
+  for the session only (with "Clear form"), warns — without blocking — when a
+  chosen time is outside opening hours, and is fully accessible: per-step error
+  summary, focus moved to the first invalid field, `aria-describedby` errors,
+  announced step changes, ≤16px non-color-alone step transitions, and state
+  preserved on Back.
+- **Honest by default** — testimonials, team, and the star rating remain hidden
+  until verified; Instagram is a link, not a scrape.

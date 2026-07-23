@@ -6,7 +6,7 @@ import { HeritageStory } from "./components/HeritageStory";
 import { Gallery } from "./components/Gallery";
 import { ServicesInquiry } from "./components/ServicesInquiry";
 import { BusinessHours } from "./components/BusinessHours";
-import { AppointmentForm } from "./components/AppointmentForm";
+import { EnquiryBuilder } from "./components/EnquiryBuilder";
 import { LocationSection } from "./components/LocationSection";
 import { FinalCTA } from "./components/FinalCTA";
 import { Footer } from "./components/Footer";
@@ -27,7 +27,7 @@ export default function App() {
         <Gallery />
         <ServicesInquiry />
         <BusinessHours />
-        <AppointmentForm />
+        <EnquiryBuilder />
         <LocationSection />
         <FinalCTA />
       </main>

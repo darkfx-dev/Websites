@@ -1,15 +1,17 @@
-/* Centralized motion system. Every duration/easing lives here so the whole
-   site moves with one calm, consistent rhythm. */
-import type { Variants, Transition } from "framer-motion";
+/* Reusable Framer Motion variants, all built from the canonical motionTokens
+   so the whole site shares one rhythm. */
+import type { Variants } from "framer-motion";
+import { motionTokens } from "./tokens";
 
 // Heritage easing from the brief: cubic-bezier(0.22, 1, 0.36, 1)
-export const easeHeritage: Transition["ease"] = [0.22, 1, 0.36, 1];
+export const easeHeritage = motionTokens.easing.entrance;
 
 export const duration = {
-  micro: 0.18,
-  nav: 0.3,
-  reveal: 0.6,
-  heroStep: 0.55,
+  micro: motionTokens.duration.instant, // 0.12
+  nav: motionTokens.duration.fast, // 0.2
+  reveal: motionTokens.duration.reveal, // 0.68
+  heroStep: motionTokens.duration.standard, // 0.46
+  step: 0.22, // enquiry step transition
 };
 
 /** Gentle upward reveal for in-view sections. */

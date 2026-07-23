@@ -3,7 +3,7 @@ import { business } from "../config/business";
 import { directionsUrl } from "../lib/whatsapp";
 import { getWeekRows } from "../lib/hours";
 import { navLinks } from "../data/nav";
-import { ChatGlyph } from "./Icons";
+import { ChatGlyph, InstagramGlyph } from "./Icons";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -64,6 +64,15 @@ export function Footer() {
               className="tap inline-flex items-center justify-center rounded-[8px] bg-map-blue px-3 text-white"
             >
               <Navigation className="h-[18px] w-[18px]" aria-hidden="true" />
+            </a>
+            <a
+              href={business.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Parth Salon on Instagram (${business.instagram.handle})`}
+              className="tap inline-flex items-center justify-center rounded-[8px] border border-white/15 px-3 text-ivory hover:bg-white/10"
+            >
+              <InstagramGlyph className="h-[18px] w-[18px]" />
             </a>
           </div>
         </nav>

@@ -93,14 +93,29 @@ export const business = {
   rating: null as number | null,
   reviewCount: null as number | null,
   ratingSource: null as string | null,
+  ratingVerifiedAt: null as string | null,
   showRating: false,
 
-  // --- Services (empty until confirmed) ------------------------------------
-  // Leave empty to show the "ask on WhatsApp" prompt. Add confirmed services
-  // and the full pricing layout renders automatically.
+  // --- Tagline (owner-selected) --------------------------------------------
+  // One line under the hero headline. Set to null to keep the hero copy alone.
+  selectedTagline: "Designed for comfort, dedicated to style." as string | null,
+
+  // --- Services publication gate -------------------------------------------
+  // The service catalogue lives in src/content/services.ts. Nothing is shown
+  // publicly until BOTH this flag is true AND an individual service is
+  // confirmed + enabled. Until then the site shows the honest "contact for the
+  // current menu" prompt — never invented prices or durations.
+  servicesPublicationApproved: false,
+
+  // --- Legacy inline services (unused; catalogue is in content/services.ts) -
   services: [] as Service[],
 
-  // --- Social links (none supplied) ----------------------------------------
+  // --- Social links --------------------------------------------------------
+  // Instagram handle is confirmed. Never scrape it or hard-code follower counts.
+  instagram: {
+    handle: "@parth_salon_",
+    url: "https://www.instagram.com/parth_salon_/",
+  },
   socialLinks: {} as Record<string, string>,
 
   // --- Visuals -------------------------------------------------------------
