@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0B2E23"/>
+  <!-- Arch motif echoing the salon interior -->
+  <path d="M9 24 V15 a7 7 0 0 1 14 0 V24" fill="none" stroke="#B8C3BE" stroke-width="1.6"/>
+  <path d="M13 24 V16 a3 3 0 0 1 6 0 V24" fill="none" stroke="#145C45" stroke-width="1.6"/>
+</svg>

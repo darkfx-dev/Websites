@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (no CDN, no network dependency).
+   Cormorant Garamond — editorial display serif; Manrope — interface sans. */
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource-variable/manrope";
+
+/* ============================================================
+   Design tokens — Modern Heritage Grooming
+   Forest green + white dominant; silver as a restrained detail.
+   ============================================================ */
+@theme {
+  --color-forest-deep: #061a14;
+  --color-forest: #0b2e23;
+  --color-forest-rich: #145c45;
+  --color-graphite: #101714;
+  --color-white: #ffffff;
+  --color-ivory: #f5f7f2;
+  --color-silver: #b8c3be;
+  /* Darker silver for large decorative type on ivory (meets 3:1 large-text). */
+  --color-silver-ink: #7e8d84;
+  --color-silver-line: #dde4e0;
+  --color-whatsapp: #25d366; /* filled backgrounds (with dark text) */
+  /* Darker WhatsApp green for icons/labels on light grounds (AA on ivory). */
+  --color-whatsapp-ink: #0e7a3a;
+  /* Map blue darkened from #1A73E8 so white-on-blue buttons and blue-on-ivory
+     labels both clear WCAG AA (4.5:1). Still a recognisable maps blue. */
+  --color-map-blue: #1461c6;
+  --color-map-red: #ea4335;
+  --color-error: #b42318;
+
+  /* Muted green-biased neutral for secondary text on ivory (AA on ivory). */
+  --color-muted-ink: #4a5751;
+
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-body:
+    "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-heritage: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-ivory);
+    color: var(--color-graphite);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-forest-rich);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Ivory ground → focus ring needs to read on dark green surfaces too */
+  .on-dark :focus-visible {
+    outline-color: var(--color-silver);
+  }
+
+  ::selection {
+    background: var(--color-forest-rich);
+    color: var(--color-white);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   Utilities / motifs
+   ============================================================ */
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 78rem; /* ~1248px */
+    margin-inline: auto;
+    padding-inline: clamp(1.125rem, 5vw, 4rem);
+  }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* Skip link */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    padding: 0.75rem 1.1rem;
+    background: var(--color-forest);
+    color: var(--color-white);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform 180ms var(--ease-heritage);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+
+  /* Brushed-silver hairline used for dividers and image frames */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-silver) 20%,
+      var(--color-silver) 80%,
+      transparent
+    );
+  }
+
+  /* The salon's signature arch, echoed as a structural motif.
+     A slim top-arched frame drawn purely in CSS. */
+  .arch-top {
+    border-top-left-radius: 999px;
+    border-top-right-radius: 999px;
+  }
+}
+
+/* Minimum comfortable tap target helper */
+.tap {
+  min-height: 44px;
+  min-width: 44px;
+}
