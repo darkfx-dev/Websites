@@ -26,6 +26,18 @@ seconds on every screen, including a sticky mobile action bar.
 
 No database, no CMS, no API keys, no paid services.
 
+### Components adapted from 21st.dev
+
+- **Gallery + lightbox** (`src/components/Gallery.tsx`) — the grid + animated
+  lightbox pattern is adapted from the 21st.dev "Gallery Grid with Lightbox"
+  component. It was reworked onto the Parth Salon design system, its shadcn
+  `Badge`/`Button`/`Card` dependencies removed, rebuilt on the `m` LazyMotion
+  primitives and `ResponsiveMedia`, and the lightbox hardened for
+  accessibility: focus trap, Escape to close, ←/→ navigation, body scroll-lock,
+  and focus returned to the triggering tile on close. It renders only when real
+  `galleryImages` exist. The three images are genuine views of the confirmed
+  interior photograph (a wide shot plus two real detail crops).
+
 ## Local development
 
 ```bash
@@ -73,7 +85,7 @@ parth-salon/
 │   ├── lib/                    hours (Asia/Kolkata), whatsapp, validation, structured data
 │   ├── motion/variants.ts      all animation timing
 │   ├── data/nav.ts             section links
-│   ├── components/             Header, Hero, TrustStrip, HeritageStory,
+│   ├── components/             Header, Hero, TrustStrip, HeritageStory, Gallery,
 │   │                           ServicesInquiry, BusinessHours, AppointmentForm,
 │   │                           LocationSection, FinalCTA, FloatingActions,
 │   │                           MobileActionBar, Footer, + primitives
@@ -103,10 +115,14 @@ parth-salon/
 - `npm run lint` (oxlint): **clean**
 - `scripts/logic.test.mjs` — **16/16** logic checks (hours schedule, IST
   open/closed, phone/date validation, WhatsApp encoding, directions fallback)
-- Playwright audit — **30/30**: WhatsApp/tel/directions links, hours table &
-  today highlight, form validation + WhatsApp hand-off, mobile menu (open/
+- Playwright site audit — **30/30**: WhatsApp/tel/directions links, hours table
+  & today highlight, form validation + WhatsApp hand-off, mobile menu (open/
   Escape/scroll-lock), no overflow at 320/390, reduced motion, JSON-LD, and
   axe (0 violations) on desktop and mobile.
+- Playwright gallery audit — **18/18**: grid renders real images, thumbnails
+  served as AVIF/WebP, lightbox opens as a modal dialog, focus trap, Escape,
+  ←/→ navigation with wrap, focus restored to the opening tile, keyboard-open
+  via Enter, and axe (0 violations) with the lightbox open on desktop and mobile.
 
 ## Remaining verification before go-live
 

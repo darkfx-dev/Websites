@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { TrustStrip } from "./components/TrustStrip";
 import { HeritageStory } from "./components/HeritageStory";
+import { Gallery } from "./components/Gallery";
 import { ServicesInquiry } from "./components/ServicesInquiry";
 import { BusinessHours } from "./components/BusinessHours";
 import { AppointmentForm } from "./components/AppointmentForm";
@@ -23,6 +24,7 @@ export default function App() {
         <Hero />
         <TrustStrip />
         <HeritageStory />
+        <Gallery />
         <ServicesInquiry />
         <BusinessHours />
         <AppointmentForm />

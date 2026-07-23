@@ -31,9 +31,13 @@ export interface Service {
 export interface GalleryImage {
   /** base path without width/extension, e.g. "/images/parth-salon-interior" */
   src: string;
+  /** short human label shown on hover and in the lightbox caption */
+  title: string;
   alt: string;
   width: number;
   height: number;
+  /** the responsive widths generated for this source (see optimize-images.mjs) */
+  widths: number[];
 }
 
 export const business = {
@@ -108,14 +112,35 @@ export const business = {
     interiorImageHeight: 1031,
   },
 
-  // Gallery renders only when this array has entries. The confirmed interior
-  // photograph is included as a genuine gallery image.
+  // Gallery renders only when this array has entries. These are all genuine
+  // views of the confirmed interior photograph (a wide shot plus two real
+  // detail crops of the same room) — no invented imagery. To add more photos,
+  // upload them to public/images, run `npm run optimize-images`, and add an
+  // entry here with its generated widths.
   galleryImages: [
     {
       src: "/images/parth-salon-interior",
+      title: "Inside the salon",
       alt: "Interior of Parth Salon: forest-green leather styling chairs beneath arched mirrors in a softly-lit grey plaster room.",
       width: 1526,
       height: 1031,
+      widths: [400, 640, 960, 1440, 1526],
+    },
+    {
+      src: "/images/parth-salon-arches",
+      title: "The arched alcoves",
+      alt: "An arched plaster alcove at Parth Salon with a brass wall light, a black grooming counter and a forest-green styling chair.",
+      width: 700,
+      height: 800,
+      widths: [400, 640, 700],
+    },
+    {
+      src: "/images/parth-salon-chairs",
+      title: "Styling chairs",
+      alt: "Forest-green leather styling chairs and black grooming counters on a grey terrazzo floor at Parth Salon.",
+      width: 820,
+      height: 500,
+      widths: [400, 640, 820],
     },
   ] as GalleryImage[],
 } as const;
