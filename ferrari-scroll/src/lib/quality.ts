@@ -9,13 +9,12 @@ export interface Quality {
   pointerFine: boolean;
 }
 
+/* Check WebGL *support* without creating a context — creating a throwaway
+   context can consume the one context slot some environments allow, starving
+   the real R3F canvas. A genuine context-creation failure is still handled at
+   runtime by the scene error boundary (→ static poster). */
 function hasWebGL(): boolean {
-  try {
-    const c = document.createElement("canvas");
-    return !!(c.getContext("webgl2") || c.getContext("webgl"));
-  } catch {
-    return false;
-  }
+  return typeof window !== "undefined" && "WebGLRenderingContext" in window;
 }
 
 export function detectQuality(): Quality {

@@ -3,8 +3,9 @@ import { brand } from "../../content/experience";
 import { Poster } from "./Poster";
 
 /* Shown until the WebGL scene has painted its first frame. No fake percentage —
-   a brand indeterminate indicator that completes on the real ready signal. The
-   poster is visible underneath so the page never starts on empty black. */
+   a brand indeterminate bar (CSS-animated, so it never touches the WAAPI
+   keyframe path) that completes on the real ready signal. The poster is visible
+   underneath so the page never starts on empty black. */
 export function CinematicLoader({ visible }: { visible: boolean }) {
   return (
     <AnimatePresence>
@@ -22,12 +23,8 @@ export function CinematicLoader({ visible }: { visible: boolean }) {
             <span className="font-display text-[1.4rem] tracking-[0.2em] text-warm-white">
               {brand.wordmark}
             </span>
-            <span className="relative h-[2px] w-40 overflow-hidden bg-white/10">
-              <m.span
-                className="absolute inset-y-0 w-1/3 bg-red"
-                animate={{ x: ["-100%", "300%"] }}
-                transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
-              />
+            <span className="relative block h-[2px] w-40 overflow-hidden bg-white/10">
+              <span className="loader-bar absolute inset-y-0 left-0 w-1/3 bg-red" />
             </span>
             <span className="sr-only">Loading the experience</span>
           </div>

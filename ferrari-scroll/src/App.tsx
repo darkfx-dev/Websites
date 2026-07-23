@@ -1,9 +1,8 @@
 import { useCallback, useState } from "react";
-import { LazyMotion, domAnimation, MotionConfig, useScroll, useMotionValueEvent } from "framer-motion";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 import { detectQuality } from "./lib/quality";
 import { scroll } from "./lib/progress";
 import { scenes, legal } from "./content/experience";
-import { easeCine } from "./lib/motion";
 import { SiteHeader } from "./components/navigation/SiteHeader";
 import { ScrollWorldExperience } from "./components/cinematic/ScrollWorldExperience";
 import { SceneOverlay } from "./components/cinematic/SceneOverlay";
@@ -26,21 +25,13 @@ export default function App() {
   }, []);
 
   if (quality.tier === "static") {
-    return (
-      <LazyMotion features={domAnimation} strict>
-        <MotionConfig reducedMotion="user" transition={{ ease: easeCine }}>
-          <a href="#main" className="skip-link">Skip to content</a>
-          <StaticExperience />
-        </MotionConfig>
-      </LazyMotion>
-    );
+    return <StaticExperience />;
   }
 
   return (
-    <LazyMotion features={domAnimation} strict>
-      <MotionConfig reducedMotion="user" transition={{ ease: easeCine }}>
-        <a href="#main" className="skip-link">Skip to content</a>
-        <SiteHeader />
+    <>
+      <a href="#main" className="skip-link">Skip to content</a>
+      <SiteHeader />
 
         {/* Fixed cinematic layer (behind everything) */}
         <ScrollWorldExperience tier={quality.tier} onReady={() => setReady(true)} />
@@ -81,7 +72,6 @@ export default function App() {
         </p>
 
         <CinematicLoader visible={!ready} />
-      </MotionConfig>
-    </LazyMotion>
+    </>
   );
 }

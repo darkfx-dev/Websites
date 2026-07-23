@@ -9,6 +9,7 @@ import { SiteHeader } from "../navigation/SiteHeader";
 export function StaticExperience() {
   return (
     <div className="relative">
+      <a href="#main" className="skip-link">Skip to content</a>
       <SiteHeader />
       <div className="fixed inset-0 z-0">
         <Poster />
