@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "motion": "^12.42.2"
+  },
+  "devDependencies": {
+    "shadcn": "^4.14.0"
   }
 }
