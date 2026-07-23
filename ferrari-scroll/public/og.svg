@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#070707"/>
+  <rect x="0" y="430" width="1200" height="200" fill="#7a0000" opacity="0.25"/>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d40000"/><stop offset="1" stop-color="#7a0000"/>
+    </linearGradient>
+  </defs>
+  <polygon points="220,400 340,378 470,300 690,290 830,325 980,345 1030,400 990,415 235,415" fill="url(#b)"/>
+  <circle cx="410" cy="415" r="52" fill="#0a0a0a"/><circle cx="410" cy="415" r="22" fill="#a7aaad"/>
+  <circle cx="880" cy="415" r="52" fill="#0a0a0a"/><circle cx="880" cy="415" r="22" fill="#a7aaad"/>
+  <rect x="120" y="150" width="48" height="3" fill="#d40000"/>
+  <text x="120" y="140" fill="#a7aaad" font-family="Georgia,serif" font-size="22" letter-spacing="8">A STUDY IN VELOCITY</text>
+  <text x="118" y="215" fill="#f2efe8" font-family="Georgia,serif" font-size="72">THE RED LINE</text>
+  <text x="120" y="255" fill="#9a9c9e" font-family="Arial,sans-serif" font-size="22">Unofficial interactive design concept — not affiliated with Ferrari.</text>
+</svg>

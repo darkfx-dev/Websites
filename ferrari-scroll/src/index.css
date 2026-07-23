@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Fonts — Bodoni Moda (editorial display) + Instrument Sans (interface). */
+@import "@fontsource/bodoni-moda/400.css";
+@import "@fontsource/bodoni-moda/500.css";
+@import "@fontsource-variable/instrument-sans";
+
+/* ============================================================
+   THE RED LINE — design tokens
+   ============================================================ */
+@theme {
+  --color-carbon: #070707;
+  --color-graphite: #141414;
+  --color-graphite-2: #1c1c1c;
+  --color-red: #d40000;
+  --color-red-deep: #7a0000;
+  --color-warm-white: #f2efe8;
+  --color-silver: #a7aaad;
+  --color-yellow: #ffd400; /* tiny technical accents only */
+
+  /* muted ink for secondary text on carbon (AA on #070707) */
+  --color-ink-soft: #9a9c9e;
+
+  --font-display: "Bodoni Moda", ui-serif, Georgia, serif;
+  --font-body: "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-carbon);
+    color: var(--color-warm-white);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  ::selection {
+    background: var(--color-red);
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-silver);
+  }
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    padding: 0.7rem 1rem;
+    background: var(--color-red);
+    color: #fff;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform 160ms var(--ease-cine);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+  /* thin red technical hairline */
+  .redline {
+    height: 2px;
+    width: 3rem;
+    background: var(--color-red);
+  }
+}
+
+.tap { min-height: 44px; min-width: 44px; }
