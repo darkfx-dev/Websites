@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset in-page anchors so the sticky header never covers section tops. */
+    scroll-padding-top: 84px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream text-charcoal font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible, high-contrast focus for keyboard users across the site. */
+  :focus-visible {
+    outline: 3px solid #15120f;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: #f2a93b;
+    color: #15120f;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* Page width + responsive gutters used by every section. */
+  .container-page {
+    @apply mx-auto w-full max-w-content px-gutter md:px-gutter-md lg:px-gutter-lg;
+  }
+
+  /* Consistent vertical rhythm between major sections. */
+  .section-y {
+    padding-block: clamp(72px, 10vw, 144px);
+  }
+
+  /*
+   * Extremely subtle paper grain (~3.5% opacity) rendered from an inline SVG
+   * so there is no extra network request. Sits behind content and never
+   * intercepts pointer events or reduces text contrast.
+   */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/*
+ * Scroll-reveal states. Elements are visible by DEFAULT so that with no JS
+ * (or if hydration fails) all content shows. The hidden pre-animation state is
+ * only applied when `js` is present on <html> — a class added by an inline
+ * script before first paint, so there is no flash of hidden content.
+ */
+html.js .reveal,
+html.js .reveal-group > .reveal-child {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 16px));
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.js .reveal-group > .reveal-child {
+  transition-duration: 450ms;
+}
+
+html.js .reveal.is-visible,
+html.js .reveal-group.is-visible > .reveal-child {
+  opacity: 1;
+  transform: none;
+}
+
+/* Honour the user's reduced-motion preference site-wide. */
+@media (prefers-reduced-motion: reduce) {
+  /* Never leave reveal content hidden for reduced-motion users. */
+  html.js .reveal,
+  html.js .reveal-group > .reveal-child {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
