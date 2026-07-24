@@ -4,10 +4,19 @@ import { cn } from "@/lib/utils";
 type Variant = "primary" | "secondary" | "whatsapp" | "dark";
 type Size = "md" | "lg";
 
+// Motion note: CSS owns this button's hover/press feedback (a small 3D lift and
+// press-in), per the project's GSAP/Framer/CSS ownership split. `will-change` is
+// deliberately omitted — these are short, discrete transitions, not sustained
+// animation, so promoting every button to its own layer would cost more than it
+// saves. Motion is dropped entirely under prefers-reduced-motion via the global
+// rule in globals.css.
 const base =
   "group inline-flex items-center justify-center gap-2 rounded-button font-semibold " +
-  "min-h-[48px] px-5 text-[0.9375rem] sm:text-base leading-none transition-colors " +
-  "duration-160 ease-standard focus-visible:outline-none focus-visible:ring-2 " +
+  "min-h-[48px] px-5 text-[0.9375rem] sm:text-base leading-none " +
+  "transition-[color,background-color,border-color,transform,box-shadow] " +
+  "duration-220 ease-standard transform-gpu " +
+  "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] " +
+  "focus-visible:outline-none focus-visible:ring-2 " +
   "focus-visible:ring-offset-2 focus-visible:ring-offset-transparent " +
   "disabled:pointer-events-none disabled:opacity-50 select-none";
 

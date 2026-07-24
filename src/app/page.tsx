@@ -1,6 +1,8 @@
 import { LoadingScreen } from "@/components/loading-screen";
 import { SkipLink } from "@/components/skip-link";
 import { SiteHeader } from "@/components/site-header";
+import { Section3D } from "@/components/motion/section-3d";
+import { SmoothAnchorScroll } from "@/components/motion/smooth-anchor-scroll";
 import { HeroSection } from "@/components/hero-section";
 import { TrustStrip } from "@/components/trust-strip";
 import dynamic from "next/dynamic";
@@ -27,19 +29,41 @@ export default function HomePage() {
     <>
       <LoadingScreen />
       <StructuredData />
+      <SmoothAnchorScroll />
       <SkipLink />
       <SiteHeader />
       <main id="main">
+        {/*
+         * Section3D adds the scroll-linked depth hand-off between sections
+         * (desktop + motion-OK only; see the component for the safety notes).
+         * Two sections deliberately opt out: the hero, which runs its own
+         * entrance choreography, and MenuScrollStory, whose ScrollTrigger pin
+         * must not sit inside a transformed ancestor. MenuExplorer also opts
+         * out — tilting a container while the user is filtering and typing in
+         * it would fight the interaction rather than support it.
+         */}
         <HeroSection />
         <TrustStrip />
-        <MenuHighlights />
+        <Section3D>
+          <MenuHighlights />
+        </Section3D>
         <MenuScrollStory />
         <MenuExplorer />
-        <ServiceHighlights />
-        <ReputationSection />
-        <LocationSection />
-        <ContactSection />
-        <InstagramSection />
+        <Section3D>
+          <ServiceHighlights />
+        </Section3D>
+        <Section3D>
+          <ReputationSection />
+        </Section3D>
+        <Section3D>
+          <LocationSection />
+        </Section3D>
+        <Section3D>
+          <ContactSection />
+        </Section3D>
+        <Section3D>
+          <InstagramSection />
+        </Section3D>
       </main>
       <SiteFooter />
       {/* Persistent conversion controls */}
