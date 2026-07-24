@@ -37,15 +37,23 @@ export function HeroArtwork({ className }: { className?: string }) {
       {/* Warm glow */}
       <circle cx="260" cy="248" r="240" fill="#f2a93b" opacity="0.08" />
 
-      {/* Rising steam */}
-      <g stroke="url(#steam)" strokeWidth="6" strokeLinecap="round" fill="none">
+      {/* Rising steam (entrance draw-on target) */}
+      <g
+        data-gsap="steam"
+        stroke="url(#steam)"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      >
         <path d="M212 150 C 196 118, 236 104, 220 70" opacity="0.8" />
         <path d="M262 140 C 246 104, 288 88, 270 52" opacity="0.9" />
         <path d="M312 150 C 296 120, 336 104, 320 72" opacity="0.7" />
       </g>
 
-      {/* Tawa / griddle */}
-      <circle cx="260" cy="266" r="196" fill="url(#tawa)" />
+      {/* Tawa scene (entrance-scale + pointer-parallax target) */}
+      <g data-gsap="scene">
+        {/* Tawa / griddle */}
+        <circle cx="260" cy="266" r="196" fill="url(#tawa)" />
       <circle
         cx="260"
         cy="266"
@@ -94,6 +102,7 @@ export function HeroArtwork({ className }: { className?: string }) {
         <circle cx="286" cy="300" r="4" />
         <circle cx="232" cy="252" r="4" />
         <circle cx="268" cy="308" r="4" />
+      </g>
       </g>
 
       {/* Pav (bread) discs, top-left */}

@@ -3,8 +3,17 @@ import { Phone, MapPin, ArrowRight, Star } from "lucide-react";
 import { business } from "@/data/business";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/icons";
+import dynamic from "next/dynamic";
 import { HeroArtwork } from "@/components/hero-artwork";
+import { MagneticButton } from "@/components/motion/magnetic-button";
 import { Reveal } from "@/components/motion-primitives";
+
+// GSAP entrance + parallax is a client-only enhancement layered over the
+// server-rendered SVG; deferring it keeps GSAP out of the initial payload while
+// the artwork itself still renders from first paint.
+const HeroChoreography = dynamic(
+  () => import("@/components/motion/hero-choreography")
+);
 
 const trust = [
   { label: "Google Rating", value: `${business.rating}` },
@@ -58,13 +67,15 @@ export function HeroSection() {
           {/* Primary + secondary CTAs */}
           <Reveal delay={0.24}>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="#menu" variant="primary" size="lg">
-                Explore the Menu
-                <ArrowRight
-                  className="h-[18px] w-[18px] transition-transform duration-160 group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </Button>
+              <MagneticButton>
+                <Button href="#menu" variant="primary" size="lg">
+                  Explore the Menu
+                  <ArrowRight
+                    className="h-[18px] w-[18px] transition-transform duration-160 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </Button>
+              </MagneticButton>
               <Button
                 href={business.whatsapp.primary}
                 external
@@ -120,9 +131,9 @@ export function HeroSection() {
 
         {/* Artwork column */}
         <Reveal delay={0.2} className="order-first lg:order-none">
-          <div className="relative mx-auto w-full max-w-[440px]">
+          <HeroChoreography>
             <HeroArtwork className="h-auto w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]" />
-          </div>
+          </HeroChoreography>
         </Reveal>
       </div>
     </section>

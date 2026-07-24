@@ -86,25 +86,33 @@ export const business = {
 export type MenuCategory = {
   name: string;
   count: number;
+  /** Stable slug — joins this category to individual dishes in `menu.ts`. */
+  slug: string;
   /** Optional verified items — safe to populate later. */
   items?: string[];
 };
 
+/**
+ * `count` is the approximate total on the delivery menu (dynamic — see
+ * `lastVerified`). The number of individually-named dishes in `menu.ts` may be
+ * smaller (notably South Indian), which is surfaced honestly in the UI rather
+ * than padded with invented names.
+ */
 export const menuCategories: MenuCategory[] = [
-  { name: "MPB Special Combos", count: 5 },
-  { name: "Pav Bhaji", count: 21 },
-  { name: "Rice", count: 9 },
-  { name: "Delightful Combos", count: 7 },
-  { name: "South Indian", count: 46 },
-  { name: "Chinese", count: 13 },
-  { name: "Fried Rice and Noodles", count: 16 },
-  { name: "Soups", count: 6 },
-  { name: "Pizza", count: 5 },
-  { name: "Sandwiches", count: 10 },
-  { name: "Accompaniments", count: 5 },
-  { name: "Snacks and Chaats", count: 10 },
-  { name: "Spring Potatoes", count: 5 },
-  { name: "Cold Drinks", count: 2 },
+  { name: "MPB Special Combos", count: 5, slug: "mpb-special-combos" },
+  { name: "Pav Bhaji", count: 21, slug: "pav-bhaji" },
+  { name: "Rice", count: 9, slug: "rice" },
+  { name: "Delightful Combos", count: 7, slug: "delightful-combos" },
+  { name: "South Indian", count: 46, slug: "south-indian" },
+  { name: "Chinese", count: 13, slug: "chinese" },
+  { name: "Fried Rice and Noodles", count: 16, slug: "fried-rice-and-noodles" },
+  { name: "Soups", count: 6, slug: "soups" },
+  { name: "Pizza", count: 5, slug: "pizza" },
+  { name: "Sandwiches", count: 10, slug: "sandwiches" },
+  { name: "Accompaniments", count: 5, slug: "accompaniments" },
+  { name: "Snacks and Chaats", count: 10, slug: "snacks-and-chaats" },
+  { name: "Spring Potatoes", count: 5, slug: "spring-potatoes" },
+  { name: "Cold Drinks", count: 2, slug: "cold-drinks" },
 ];
 
 /**

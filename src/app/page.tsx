@@ -2,9 +2,16 @@ import { SkipLink } from "@/components/skip-link";
 import { SiteHeader } from "@/components/site-header";
 import { HeroSection } from "@/components/hero-section";
 import { TrustStrip } from "@/components/trust-strip";
+import dynamic from "next/dynamic";
 import { MenuHighlights } from "@/components/menu-highlights";
-import { MenuCategoryGrid } from "@/components/menu-category-grid";
+import { MenuExplorer } from "@/components/menu/menu-explorer";
 import { ServiceHighlights } from "@/components/service-highlights";
+
+// Lazy-load the GSAP-powered scroll story so GSAP stays out of the initial
+// bundle. SSR stays on, so its stacked content is present without JS.
+const MenuScrollStory = dynamic(() =>
+  import("@/components/motion/menu-scroll-story").then((m) => m.MenuScrollStory)
+);
 import { ReputationSection } from "@/components/reputation-section";
 import { LocationSection } from "@/components/location-section";
 import { ContactSection } from "@/components/contact-section";
@@ -24,7 +31,8 @@ export default function HomePage() {
         <HeroSection />
         <TrustStrip />
         <MenuHighlights />
-        <MenuCategoryGrid />
+        <MenuScrollStory />
+        <MenuExplorer />
         <ServiceHighlights />
         <ReputationSection />
         <LocationSection />
