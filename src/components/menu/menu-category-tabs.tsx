@@ -14,12 +14,16 @@ export type CategoryValue = "all" | string;
  * Native <button>s give full keyboard support with no custom key handling.
  * The active pill slides between buttons via a shared `layoutId`; state is also
  * conveyed by colour + `aria-pressed`, never by motion/position alone.
+ *
+ * `active` is `null` when the explorer's current filter spans more than one
+ * category (chosen from the 3D highlight ring) and so matches no single chip —
+ * pressing "All" then would be a lie. The explorer labels that case separately.
  */
 export function MenuCategoryTabs({
   active,
   onChange,
 }: {
-  active: CategoryValue;
+  active: CategoryValue | null;
   onChange: (next: CategoryValue) => void;
 }) {
   const activeRef = React.useRef<HTMLButtonElement>(null);

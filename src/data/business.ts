@@ -118,10 +118,23 @@ export const menuCategories: MenuCategory[] = [
 /**
  * Curated highlight groups for the "Signature menu highlights" section.
  * Descriptions use ONLY the verified menu range — no invented dishes or prices.
+ *
+ * `slugs` / `keywords` are what make a highlight *clickable*: selecting one in
+ * the 3D ring filters the menu explorer down to exactly the dishes it describes.
+ * They are pure pointers into existing verified data — a highlight can never
+ * surface a dish that isn't already named in `menu.ts`.
  */
 export type MenuHighlight = {
   title: string;
   description: string;
+  /** Category slugs (from `menuCategories`) this group draws its dishes from. */
+  slugs: string[];
+  /**
+   * Optional narrowing *within* those categories, matched case-insensitively
+   * against dish names. Used where two highlight groups describe different
+   * slices of the same category (e.g. classic vs. Jain/paneer pav bhaji).
+   */
+  keywords?: string[];
 };
 
 export const menuHighlights: MenuHighlight[] = [
@@ -129,37 +142,46 @@ export const menuHighlights: MenuHighlight[] = [
     title: "Classic Pav Bhaji",
     description:
       "Regular, cheese, green, red, yellow, khada and fry bhaji variations.",
+    slugs: ["pav-bhaji"],
   },
   {
     title: "Jain & Paneer Bhaji",
     description: "Jain pav bhaji and paneer bhaji for every preference.",
+    slugs: ["pav-bhaji"],
+    keywords: ["jain", "paneer"],
   },
   {
     title: "South Indian Dosa",
     description:
       "Sada, masala, Mysore, nylon, palak, Chinese, Manchurian and Jini-roll dosa.",
+    slugs: ["south-indian"],
   },
   {
     title: "Indo-Chinese",
     description:
       "Chinese bhel, Manchurian, paneer chilli, paneer 65 and more.",
+    slugs: ["chinese"],
   },
   {
     title: "Rice & Noodles",
     description:
       "Tawa, Kashmiri and jeera rice with Hakka, Schezwan and Singapuri noodles.",
+    slugs: ["rice", "fried-rice-and-noodles"],
   },
   {
     title: "Pizza & Sandwiches",
     description: "Vegetarian pizzas and a range of toasted sandwiches.",
+    slugs: ["pizza", "sandwiches"],
   },
   {
     title: "Chaats & Snacks",
     description: "Street-style chaats, snacks and spiral spring potatoes.",
+    slugs: ["snacks-and-chaats", "spring-potatoes"],
   },
   {
     title: "Combos",
     description: "MPB Special Combos and Delightful Combos to mix and match.",
+    slugs: ["mpb-special-combos", "delightful-combos"],
   },
 ];
 

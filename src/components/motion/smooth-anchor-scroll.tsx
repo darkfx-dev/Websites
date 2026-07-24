@@ -1,11 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { gsap } from "@/lib/gsap";
+import { scrollToElement } from "@/lib/scroll";
 import { useReducedMotionPreference } from "@/hooks/use-reduced-motion-preference";
-
-/** Matches `scroll-padding-top` in globals.css so the sticky header never covers a target. */
-const HEADER_OFFSET = 84;
 
 /**
  * Eased in-page navigation. Intercepts same-page anchor clicks and animates the
@@ -42,28 +39,8 @@ export function SmoothAnchorScroll() {
 
       e.preventDefault();
 
-      const destination = Math.max(
-        0,
-        Math.min(
-          target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
-          document.documentElement.scrollHeight - window.innerHeight
-        )
-      );
-
-      // Temporarily disable CSS smooth scrolling so it can't fight the tween.
-      const root = document.documentElement;
-      const previousBehavior = root.style.scrollBehavior;
-      root.style.scrollBehavior = "auto";
-
-      const proxy = { y: window.scrollY };
-      gsap.to(proxy, {
-        y: destination,
-        duration: 0.9,
-        ease: "power3.inOut",
-        overwrite: true,
-        onUpdate: () => window.scrollTo(0, proxy.y),
+      scrollToElement(target, {
         onComplete: () => {
-          root.style.scrollBehavior = previousBehavior;
           history.pushState(null, "", href);
           // Send focus to the section without re-triggering a jump.
           const hadTabIndex = target.hasAttribute("tabindex");

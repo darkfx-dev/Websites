@@ -4,11 +4,10 @@ import { SiteHeader } from "@/components/site-header";
 import { Section3D } from "@/components/motion/section-3d";
 import { SmoothAnchorScroll } from "@/components/motion/smooth-anchor-scroll";
 import { ClickRipple } from "@/components/motion/click-ripple";
-import { DishCarousel3D } from "@/components/motion/dish-carousel-3d";
 import { HeroSection } from "@/components/hero-section";
 import { TrustStrip } from "@/components/trust-strip";
 import dynamic from "next/dynamic";
-import { MenuHighlights } from "@/components/menu-highlights";
+import { MenuRing3D } from "@/components/menu/menu-ring-3d";
 import { MenuExplorer } from "@/components/menu/menu-explorer";
 import { ServiceHighlights } from "@/components/service-highlights";
 
@@ -47,10 +46,12 @@ export default function HomePage() {
          */}
         <HeroSection />
         <TrustStrip />
-        <DishCarousel3D />
-        <Section3D>
-          <MenuHighlights />
-        </Section3D>
+        {/*
+         * MenuRing3D is the "#menu" section. It opts out of Section3D for the
+         * same reason MenuScrollStory does: it owns its own perspective stage,
+         * and a transformed ancestor would flatten it.
+         */}
+        <MenuRing3D />
         <MenuScrollStory />
         <MenuExplorer />
         <Section3D>
