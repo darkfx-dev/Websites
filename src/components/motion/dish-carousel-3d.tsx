@@ -51,6 +51,13 @@ export function DishCarousel3D() {
       const cards = gsap.utils.toArray<HTMLElement>("[data-ring-card]", ring);
 
       // Seat each card on the cylinder face.
+      //
+      // NOTE: GSAP composes transforms translate-then-rotate, the opposite of
+      // raw CSS (which applies them left-to-right). So `z` alone would move
+      // every card forward and then spin it about the centre, collapsing them
+      // all onto the same spot. Pushing the transform-origin back by the radius
+      // is what actually seats them around the ring here. (A hand-written CSS
+      // version of this same effect needs `rotateY() translateZ()` instead.)
       cards.forEach((card, i) => {
         const angle = (360 / count) * i;
         gsap.set(card, {
