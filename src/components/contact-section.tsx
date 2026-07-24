@@ -22,30 +22,54 @@ export function ContactSection() {
   const [message, setMessage] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [status, setStatus] = React.useState("");
+  const nameRef = React.useRef<HTMLInputElement>(null);
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (name.trim().length < 2) {
-      setError("Please enter your name so we know who we're chatting with.");
-      return;
-    }
-    setError(null);
-
-    // Compose a WhatsApp message from the locally-entered details. Nothing is
-    // stored or transmitted anywhere except the WhatsApp chat the user opens.
+  // Live WhatsApp deep-link built from the locally-entered details. Nothing is
+  // stored or transmitted anywhere except the WhatsApp chat the user opens.
+  const waHref = React.useMemo(() => {
     const parts = [
-      `Hi ${business.name}, my name is ${name.trim()}.`,
+      `Hi ${business.name}, my name is ${name.trim() || "there"}.`,
       `Inquiry: ${inquiry}.`,
     ];
     if (message.trim()) parts.push(`Message: ${message.trim()}`);
-    const url = `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(
+    return `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(
       parts.join(" ")
     )}`;
+  }, [name, inquiry, message]);
 
+  // Require a name before opening WhatsApp. Returns whether the CTA may proceed.
+  const validate = (): boolean => {
+    if (name.trim().length < 2) {
+      setError("Please enter your name so we know who we're chatting with.");
+      nameRef.current?.focus();
+      return false;
+    }
+    setError(null);
     // Truthful state: WhatsApp is being opened — we never claim a message was
     // "sent" or an order was confirmed.
     setStatus("Opening WhatsApp…");
-    window.open(url, "_blank", "noopener,noreferrer");
+    return true;
+  };
+
+  // The CTA is a REAL anchor (like every other working WhatsApp button on the
+  // site) so the browser performs a genuine navigation — reliable in sandboxed
+  // iframes and with mobile WhatsApp deep-links, unlike JS window.open().
+  const onCtaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!validate()) e.preventDefault();
+  };
+
+  // Enter-key support: a hidden submit button lets the form submit; if valid we
+  // trigger a real anchor click within the same user gesture.
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    const a = document.createElement("a");
+    a.href = waHref;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   };
 
   return (
@@ -140,6 +164,7 @@ export function ContactSection() {
                 name="name"
                 type="text"
                 autoComplete="name"
+                ref={nameRef}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 aria-required="true"
@@ -199,10 +224,29 @@ export function ContactSection() {
               />
             </div>
 
-            <Button variant="whatsapp" size="lg" type="submit" className="w-full">
+            {/* Real anchor navigation (reliable everywhere); onClick gates on a
+                valid name. */}
+            <Button
+              href={waHref}
+              external
+              variant="whatsapp"
+              size="lg"
+              className="w-full"
+              onClick={onCtaClick}
+            >
               <Send className="h-[18px] w-[18px]" aria-hidden="true" />
               Continue on WhatsApp
             </Button>
+            {/* Enables Enter-to-submit from the fields; hidden from pointer,
+                keyboard-tab and screen readers (the visible anchor is the CTA). */}
+            <button
+              type="submit"
+              aria-hidden="true"
+              tabIndex={-1}
+              className="sr-only"
+            >
+              Continue on WhatsApp
+            </button>
 
             <p className="text-xs text-charcoal/70">
               This opens WhatsApp with your details prefilled. Your information
