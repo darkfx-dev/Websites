@@ -1,4 +1,5 @@
 import * as React from "react";
+import Image from "next/image";
 import { Phone, MapPin, Clock } from "lucide-react";
 import { business, navLinks } from "@/data/business";
 import { WhatsAppIcon, InstagramIcon } from "@/components/icons";
@@ -12,7 +13,14 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand + address */}
           <div>
-            <p className="font-display text-2xl font-semibold">
+            <p className="flex items-center gap-3 font-display text-2xl font-semibold">
+              <Image
+                src="/images/mpb-logo.png"
+                alt=""
+                width={44}
+                height={25}
+                className="h-8 w-auto shrink-0"
+              />
               {business.name}
             </p>
             <address className="mt-4 flex items-start gap-3 not-italic leading-relaxed text-cream/75">

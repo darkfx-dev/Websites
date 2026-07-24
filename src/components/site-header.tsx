@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { business, navLinks } from "@/data/business";
@@ -103,8 +104,29 @@ export function SiteHeader() {
         >
           <a
             href="#home"
-            className="rounded-control font-display text-lg font-semibold tracking-tight text-charcoal sm:text-xl"
+            className={cn(
+              "flex items-center gap-2.5 rounded-control font-display text-lg font-semibold tracking-tight transition-colors duration-220 sm:text-xl",
+              scrolled || open ? "text-charcoal" : "text-cream"
+            )}
           >
+            <motion.span
+              className="inline-flex shrink-0"
+              animate={reduce ? undefined : { y: [0, -3, 0] }}
+              transition={
+                reduce
+                  ? undefined
+                  : { duration: 3, repeat: Infinity, ease: "easeInOut" }
+              }
+            >
+              <Image
+                src="/images/mpb-logo.png"
+                alt=""
+                width={44}
+                height={25}
+                priority
+                className="h-8 w-auto drop-shadow-[0_4px_10px_rgba(0,0,0,0.25)] sm:h-9"
+              />
+            </motion.span>
             Mahesh Pav Bhaji
           </a>
 
@@ -119,16 +141,23 @@ export function SiteHeader() {
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
                       "relative rounded-control px-3 py-2 text-sm font-medium transition-colors duration-160",
-                      isActive
-                        ? "text-tomato"
-                        : "text-charcoal/80 hover:text-charcoal"
+                      scrolled || open
+                        ? isActive
+                          ? "text-tomato"
+                          : "text-charcoal/80 hover:text-charcoal"
+                        : isActive
+                          ? "text-saffron"
+                          : "text-cream/85 hover:text-cream"
                     )}
                   >
                     {link.label}
                     {isActive ? (
                       <span
                         aria-hidden="true"
-                        className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-tomato"
+                        className={cn(
+                          "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full",
+                          scrolled || open ? "bg-tomato" : "bg-saffron"
+                        )}
                       />
                     ) : null}
                   </a>

@@ -23,9 +23,17 @@ export function MenuCategoryTabs({
   onChange: (next: CategoryValue) => void;
 }) {
   const activeRef = React.useRef<HTMLButtonElement>(null);
+  const isFirstRender = React.useRef(true);
 
-  // Keep the active chip in view within the mobile horizontal strip.
+  // Keep the active chip in view within the mobile horizontal strip — only in
+  // response to an actual category change, never on initial mount (the strip
+  // can be far below the fold, and `scrollIntoView` would otherwise scroll the
+  // whole page down to reveal it as soon as this component mounts).
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     activeRef.current?.scrollIntoView({
       inline: "center",
       block: "nearest",

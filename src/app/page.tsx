@@ -1,3 +1,4 @@
+import { LoadingScreen } from "@/components/loading-screen";
 import { SkipLink } from "@/components/skip-link";
 import { SiteHeader } from "@/components/site-header";
 import { HeroSection } from "@/components/hero-section";
@@ -24,6 +25,7 @@ import { StructuredData } from "@/components/structured-data";
 export default function HomePage() {
   return (
     <>
+      <LoadingScreen />
       <StructuredData />
       <SkipLink />
       <SiteHeader />
