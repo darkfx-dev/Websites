@@ -112,7 +112,7 @@ html.js .reveal-group.is-visible > .reveal-child {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  background: #15120f; /* charcoal, matches the hero */
+  background: #ffffff; /* white, matches the page ground */
   animation: loading-fade 450ms ease-out forwards;
   animation-delay: 550ms;
 }
@@ -127,7 +127,7 @@ html.js .reveal-group.is-visible > .reveal-child {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff8eb;
+  color: #15120f;
   opacity: 0.85;
 }
 

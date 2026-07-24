@@ -53,14 +53,14 @@ export function MenuHighlights() {
                   className={cn(
                     "flex h-full flex-col rounded-feature border border-warm-border bg-white p-6 shadow-card transition-transform duration-220 ease-standard hover:-translate-y-0.5",
                     featured &&
-                      "bg-charcoal text-cream lg:justify-between lg:p-8"
+                      "border-saffron/40 bg-saffron/10 lg:justify-between lg:p-8"
                   )}
                 >
                   <span
                     className={cn(
                       "inline-flex h-12 w-12 items-center justify-center rounded-card",
                       featured
-                        ? "bg-saffron/15 text-saffron"
+                        ? "bg-saffron text-charcoal"
                         : "bg-ivory text-tomato"
                     )}
                   >
@@ -84,7 +84,7 @@ export function MenuHighlights() {
                     <p
                       className={cn(
                         "mt-2 text-sm leading-relaxed",
-                        featured ? "text-cream/80" : "text-charcoal/70"
+                        featured ? "text-charcoal/75" : "text-charcoal/70"
                       )}
                     >
                       {item.description}

@@ -6,7 +6,6 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { menuCategories } from "@/data/business";
 import { sampleDishNames } from "@/data/menu";
 import { useReducedMotionPreference } from "@/hooks/use-reduced-motion-preference";
-import { HeroArtwork } from "@/components/hero-artwork";
 import { RevealStagger, RevealItem } from "@/components/motion-primitives";
 
 type Stage = { title: string; slugs: string[] };
@@ -137,21 +136,21 @@ export function MenuScrollStory() {
     return (
       <section
         aria-labelledby="menu-universe-heading"
-        className="grain relative isolate overflow-hidden bg-charcoal py-20"
+        className="relative isolate overflow-hidden bg-ivory py-20"
       >
         <div className="container-page">
           <div className="mx-auto max-w-2xl text-center">
-            <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-saffron">
+            <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-tomato">
               <span aria-hidden="true" className="h-px w-6 bg-current opacity-60" />
               Explore the menu universe
             </span>
             <h2
               id="menu-universe-heading"
-              className="mt-3 font-display text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-tight text-cream"
+              className="mt-3 font-display text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-tight text-charcoal"
             >
               Roughly 160 dishes, one kitchen
             </h2>
-            <p className="mt-3 text-cream/75">
+            <p className="mt-3 text-charcoal/70">
               A quick tour of the range — a few favourites from each part of the
               menu. See everything, and ask about anything, below.
             </p>
@@ -164,17 +163,17 @@ export function MenuScrollStory() {
               <RevealItem
                 as="li"
                 key={stage.title}
-                className="rounded-feature border border-white/10 bg-white/5 p-6"
+                className="rounded-feature border border-warm-border bg-white p-6 shadow-card"
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-display text-xl font-semibold text-cream">
+                  <h3 className="font-display text-xl font-semibold text-charcoal">
                     {stage.title}
                   </h3>
-                  <span className="font-display text-2xl font-semibold text-saffron">
+                  <span className="font-display text-2xl font-semibold text-tomato">
                     {stage.count}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-cream/70">
+                <p className="mt-2 text-sm text-charcoal/70">
                   A few favourites: {stage.samples.join(", ")}.
                 </p>
               </RevealItem>
@@ -183,7 +182,7 @@ export function MenuScrollStory() {
           <div className="mt-8 text-center">
             <a
               href="#menu-explorer"
-              className="inline-flex min-h-[48px] items-center gap-2 rounded-button bg-saffron px-6 font-semibold text-charcoal transition-colors hover:bg-[#e79b2b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+              className="inline-flex min-h-[48px] items-center gap-2 rounded-button bg-saffron px-6 font-semibold text-charcoal transition-colors hover:bg-[#e79b2b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               View the full menu
               <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
@@ -199,25 +198,26 @@ export function MenuScrollStory() {
     <section ref={sectionRef} aria-label="Explore the menu universe" className="relative">
       <div
         ref={pinRef}
-        className="grain relative isolate flex h-screen items-center justify-center overflow-hidden bg-charcoal text-cream"
+        className="relative isolate flex h-screen items-center justify-center overflow-hidden bg-ivory text-charcoal"
       >
-        {/* Ambient tawa anchor at the rear depth plane. */}
+        {/* Soft accent wash at the rear depth plane (replaces the old tawa
+            illustration, which read as a dark blob on the white ground). */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
         >
-          <HeroArtwork className="w-[520px] max-w-[70vw]" />
+          <div className="h-[520px] w-[520px] max-w-[70vw] rounded-full bg-saffron/10 blur-3xl" />
         </div>
 
         <div className="absolute left-0 right-0 top-16 z-20 text-center">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-saffron">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-tomato">
             <span aria-hidden="true" className="h-px w-6 bg-current opacity-60" />
             Explore the menu universe
           </span>
         </div>
         <a
           href="#menu-explorer"
-          className="absolute bottom-14 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-2 rounded-button border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-cream backdrop-blur-sm transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream"
+          className="absolute bottom-14 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-2 rounded-button border border-warm-border bg-white px-5 py-3 text-sm font-semibold text-charcoal shadow-card transition-colors hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
         >
           View the full menu
           <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
@@ -236,13 +236,13 @@ export function MenuScrollStory() {
                 data-panel
                 className="absolute left-1/2 top-1/2 w-[min(90vw,640px)] -translate-x-1/2 -translate-y-1/2 text-center"
               >
-                <p className="font-display text-lg font-semibold text-saffron">
+                <p className="font-display text-lg font-semibold text-tomato">
                   {stage.count} dishes &amp; variations
                 </p>
-                <h3 className="mt-2 font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none text-cream">
+                <h3 className="mt-2 font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none text-charcoal">
                   {stage.title}
                 </h3>
-                <p className="mx-auto mt-5 max-w-md text-lg text-cream/75">
+                <p className="mx-auto mt-5 max-w-md text-lg text-charcoal/70">
                   A few favourites: {stage.samples.join(", ")}.
                 </p>
               </div>

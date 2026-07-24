@@ -3,6 +3,8 @@ import { SkipLink } from "@/components/skip-link";
 import { SiteHeader } from "@/components/site-header";
 import { Section3D } from "@/components/motion/section-3d";
 import { SmoothAnchorScroll } from "@/components/motion/smooth-anchor-scroll";
+import { ClickRipple } from "@/components/motion/click-ripple";
+import { DishCarousel3D } from "@/components/motion/dish-carousel-3d";
 import { HeroSection } from "@/components/hero-section";
 import { TrustStrip } from "@/components/trust-strip";
 import dynamic from "next/dynamic";
@@ -30,6 +32,7 @@ export default function HomePage() {
       <LoadingScreen />
       <StructuredData />
       <SmoothAnchorScroll />
+      <ClickRipple />
       <SkipLink />
       <SiteHeader />
       <main id="main">
@@ -44,6 +47,7 @@ export default function HomePage() {
          */}
         <HeroSection />
         <TrustStrip />
+        <DishCarousel3D />
         <Section3D>
           <MenuHighlights />
         </Section3D>

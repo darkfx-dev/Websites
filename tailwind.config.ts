@@ -5,17 +5,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // White theme: `cream` is the page ground (pure white) and `ivory` is a
+        // barely-there tint used only to separate alternating bands. Charcoal
+        // stays as the text/ink colour; the saffron/tomato/coriander accents
+        // carry the brand identity against the white ground.
         charcoal: {
-          DEFAULT: "#15120F", // Spiced Charcoal
-          deep: "#0D0C0A", // Deep Charcoal
+          DEFAULT: "#15120F", // Ink
+          deep: "#0D0C0A",
         },
-        cream: "#FFF8EB", // Warm Cream
-        ivory: "#F7EEDC", // Soft Ivory
+        cream: "#FFFFFF", // Page ground — pure white
+        ivory: "#F7F7F5", // Faint band tint (reads as white)
         saffron: "#F2A93B", // Saffron Gold
         tomato: "#B9382D", // Tomato Red
         coriander: "#2F6849", // Coriander Green
         brown: "#765743", // Muted Brown
-        "warm-border": "#E6D6BE", // Warm Border
+        "warm-border": "#E8E6E1", // Neutral hairline
       },
       fontFamily: {
         // Wired to next/font CSS variables in layout.tsx, with system fallbacks.

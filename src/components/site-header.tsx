@@ -94,7 +94,7 @@ export function SiteHeader() {
         className={cn(
           "transition-colors duration-220 ease-standard",
           scrolled || open
-            ? "bg-cream/90 shadow-card backdrop-blur-md supports-[backdrop-filter]:bg-cream/80"
+            ? "border-b border-warm-border bg-white/90 shadow-card backdrop-blur-md supports-[backdrop-filter]:bg-white/80"
             : "bg-transparent"
         )}
       >
@@ -104,10 +104,7 @@ export function SiteHeader() {
         >
           <a
             href="#home"
-            className={cn(
-              "flex items-center gap-2.5 rounded-control font-display text-lg font-semibold tracking-tight transition-colors duration-220 sm:text-xl",
-              scrolled || open ? "text-charcoal" : "text-cream"
-            )}
+            className="flex items-center gap-2.5 rounded-control font-display text-lg font-semibold tracking-tight text-charcoal sm:text-xl"
           >
             <motion.span
               className="inline-flex shrink-0"
@@ -141,23 +138,16 @@ export function SiteHeader() {
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
                       "relative rounded-control px-3 py-2 text-sm font-medium transition-colors duration-160",
-                      scrolled || open
-                        ? isActive
-                          ? "text-tomato"
-                          : "text-charcoal/80 hover:text-charcoal"
-                        : isActive
-                          ? "text-saffron"
-                          : "text-cream/85 hover:text-cream"
+                      isActive
+                        ? "text-tomato"
+                        : "text-charcoal/80 hover:text-charcoal"
                     )}
                   >
                     {link.label}
                     {isActive ? (
                       <span
                         aria-hidden="true"
-                        className={cn(
-                          "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full",
-                          scrolled || open ? "bg-tomato" : "bg-saffron"
-                        )}
+                        className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-tomato"
                       />
                     ) : null}
                   </a>

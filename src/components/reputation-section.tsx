@@ -17,7 +17,7 @@ function StarRow({ rating }: { rating: number }) {
         const fill = Math.max(0, Math.min(1, rating - i));
         return (
           <span key={i} className="relative inline-block h-6 w-6">
-            <Star className="absolute inset-0 h-6 w-6 text-white/25" aria-hidden="true" />
+            <Star className="absolute inset-0 h-6 w-6 text-charcoal/20" aria-hidden="true" />
             <span
               className="absolute inset-0 overflow-hidden"
               style={{ width: `${fill * 100}%` }}
@@ -36,14 +36,12 @@ export function ReputationSection() {
   return (
     <section
       aria-labelledby="reputation-heading"
-      className="grain relative isolate overflow-hidden bg-charcoal text-cream"
+      className="relative isolate overflow-hidden bg-ivory text-charcoal"
     >
       <div className="container-page section-y">
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
           <Reveal>
-            <SectionHeading
-              tone="light"
-              eyebrow="Loved locally"
+            <SectionHeading              eyebrow="Loved locally"
               title={
                 <span id="reputation-heading">
                   Rated 4.6 by Surat diners
@@ -60,39 +58,39 @@ export function ReputationSection() {
           </Reveal>
 
           <Reveal delay={0.12}>
-            <div className="rounded-feature border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+            <div className="rounded-feature border border-warm-border bg-white p-8 shadow-card">
               <div className="flex items-end gap-4">
-                <span className="font-display text-6xl font-semibold leading-none text-cream">
+                <span className="font-display text-6xl font-semibold leading-none text-charcoal">
                   {business.rating}
                 </span>
                 <div className="pb-1">
                   <StarRow rating={business.rating} />
-                  <p className="mt-1 text-sm text-cream/70">
+                  <p className="mt-1 text-sm text-charcoal/70">
                     Average Google rating
                   </p>
                 </div>
               </div>
 
               <dl className="mt-8 grid grid-cols-2 gap-4">
-                <div className="rounded-card border border-white/10 bg-charcoal/40 p-4">
-                  <dt className="text-xs uppercase tracking-wide text-cream/60">
+                <div className="rounded-card border border-warm-border bg-white p-4">
+                  <dt className="text-xs uppercase tracking-wide text-charcoal/60">
                     Total reviews
                   </dt>
-                  <dd className="mt-1 font-display text-2xl font-semibold text-cream">
+                  <dd className="mt-1 font-display text-2xl font-semibold text-charcoal">
                     {business.reviewCount.toLocaleString("en-IN")}
                   </dd>
                 </div>
-                <div className="rounded-card border border-white/10 bg-charcoal/40 p-4">
-                  <dt className="text-xs uppercase tracking-wide text-cream/60">
+                <div className="rounded-card border border-warm-border bg-white p-4">
+                  <dt className="text-xs uppercase tracking-wide text-charcoal/60">
                     Five-star reviews
                   </dt>
-                  <dd className="mt-1 font-display text-2xl font-semibold text-cream">
+                  <dd className="mt-1 font-display text-2xl font-semibold text-charcoal">
                     {business.fiveStarReviews.toLocaleString("en-IN")}
                   </dd>
                 </div>
               </dl>
 
-              <p className="mt-6 text-xs text-cream/55">
+              <p className="mt-6 text-xs text-charcoal/55">
                 Figures last verified on {business.lastVerifiedDisplay} and may
                 change.
               </p>
