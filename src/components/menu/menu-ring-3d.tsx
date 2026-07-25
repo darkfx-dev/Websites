@@ -15,12 +15,24 @@ import { RevealStagger, RevealItem } from "@/components/motion-primitives";
 import { highlightIcon } from "./highlight-icons";
 import { cn } from "@/lib/utils";
 
-const CARD_WIDTH = 300;
 const CARD_HEIGHT = 236;
-/** Ring radius: circumference ≈ count × card width, so cards sit shoulder-to-shoulder. */
-const RADIUS = 430;
-/** Seconds for one full ambient revolution when the user isn't scrolling. */
-const DRIFT_SECONDS = 64;
+/**
+ * Card width by viewport, so the ring also works in a narrower window rather
+ * than only at full desktop width. Radius follows from it: circumference ≈
+ * count × card width keeps the cards shoulder-to-shoulder around the ring.
+ */
+function cardWidthFor(viewportWidth: number): number {
+  if (viewportWidth >= 1200) return 300;
+  if (viewportWidth >= 900) return 268;
+  return 236;
+}
+const RADIUS_RATIO = 1.43;
+/**
+ * Seconds for one full ambient revolution. The ring always turns under its own
+ * power and scroll adds to that, rather than scroll being the only driver —
+ * so the carousel still visibly rotates while the page is sitting still.
+ */
+const DRIFT_SECONDS = 30;
 
 /**
  * The signature food groups arranged on a vertical cylinder that turns as the
@@ -35,12 +47,13 @@ const DRIFT_SECONDS = 64;
  * property. CSS owns hover/focus feedback only.
  *
  * SAFETY: the ring is assembled client-side, so the server renders — and no-JS,
- * reduced-motion and sub-1024px keep — the plain bento grid below, which is
- * equally clickable. No content or action exists only inside the 3D view.
+ * reduced-motion and narrow viewports keep — the plain bento grid below, which
+ * is equally clickable. No content or action exists only inside the 3D view.
  */
 export function MenuRing3D() {
   const reduced = useReducedMotionPreference();
   const [enable3D, setEnable3D] = React.useState(false);
+  const [cardWidth, setCardWidth] = React.useState(300);
   const sectionRef = React.useRef<HTMLDivElement>(null);
   const ringRef = React.useRef<HTMLUListElement>(null);
   /** Nudge the ring by ±1 card; assigned once the 3D effect is live. */
@@ -49,17 +62,25 @@ export function MenuRing3D() {
   const items = menuHighlights;
   const count = items.length;
   const step = 360 / count;
+  const radius = Math.round(cardWidth * RADIUS_RATIO);
 
   React.useEffect(() => {
     if (reduced) {
       setEnable3D(false);
       return;
     }
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setEnable3D(mq.matches);
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => {
+      setEnable3D(mq.matches);
+      setCardWidth(cardWidthFor(window.innerWidth));
+    };
     update();
     mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    window.addEventListener("resize", update);
+    return () => {
+      mq.removeEventListener("change", update);
+      window.removeEventListener("resize", update);
+    };
   }, [reduced]);
 
   React.useEffect(() => {
@@ -69,6 +90,8 @@ export function MenuRing3D() {
     if (!section || !ring) return;
 
     let ticker: (() => void) | null = null;
+    /** True while a pointer rests on the ring or a card holds focus. */
+    let pointerOrFocusHeld = false;
 
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>("[data-ring-card]", ring);
@@ -86,8 +109,8 @@ export function MenuRing3D() {
       cards.forEach((card, i) => {
         gsap.set(card, {
           rotateY: step * i,
-          z: RADIUS,
-          transformOrigin: `50% 50% ${-RADIUS}px`,
+          z: radius,
+          transformOrigin: `50% 50% ${-radius}px`,
         });
       });
 
@@ -162,6 +185,28 @@ export function MenuRing3D() {
       ticker = render;
       gsap.ticker.add(render);
 
+      // Don't burn a frame callback (and an ambient tween) on a section that
+      // isn't on screen — this sits well below the fold for most of the visit.
+      const visibility = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            if (!ticker) {
+              ticker = render;
+              gsap.ticker.add(render);
+            }
+            if (!pointerOrFocusHeld) drift.play();
+          } else {
+            if (ticker) {
+              gsap.ticker.remove(ticker);
+              ticker = null;
+            }
+            drift.pause();
+          }
+        },
+        { rootMargin: "200px 0px" }
+      );
+      visibility.observe(section);
+
       // Rotate a card to the front. `turns` is signed, so we always take the
       // short way round rather than unwinding through the back of the ring.
       const rotateToFront = (index: number, duration: number) => {
@@ -177,25 +222,31 @@ export function MenuRing3D() {
       };
 
       nudgeRef.current = (direction: number) => {
-        drift.pause();
         gsap.to(state, {
           focus: state.focus + direction * step,
           duration: 0.7,
           ease: "power3.out",
           overwrite: true,
         });
-        drift.play();
       };
 
       // Pause the ambient spin while the pointer is over it, so a card the user
-      // is reaching for doesn't slide out from under the cursor.
-      const pause = () => drift.pause();
-      const resume = () => drift.play();
+      // is reaching for doesn't slide out from under the cursor. Tracked as a
+      // flag as well, so the visibility observer doesn't restart the spin under
+      // a pointer that's still resting on the ring.
+      const hold = () => {
+        pointerOrFocusHeld = true;
+        drift.pause();
+      };
+      const release = () => {
+        pointerOrFocusHeld = false;
+        drift.play();
+      };
 
       // Keyboard: bring the focused card round to the front, otherwise it would
       // be facing away and invisible when it takes focus.
       const onFocusIn = (event: FocusEvent) => {
-        drift.pause();
+        hold();
         const card = (event.target as HTMLElement).closest<HTMLElement>(
           "[data-ring-card]"
         );
@@ -206,18 +257,19 @@ export function MenuRing3D() {
       const onFocusOut = (event: FocusEvent) => {
         const next = event.relatedTarget as Node | null;
         if (next && ring.contains(next)) return;
-        drift.play();
+        release();
       };
 
       const stage = ring.parentElement;
-      stage?.addEventListener("pointerenter", pause);
-      stage?.addEventListener("pointerleave", resume);
+      stage?.addEventListener("pointerenter", hold);
+      stage?.addEventListener("pointerleave", release);
       ring.addEventListener("focusin", onFocusIn);
       ring.addEventListener("focusout", onFocusOut);
 
       return () => {
-        stage?.removeEventListener("pointerenter", pause);
-        stage?.removeEventListener("pointerleave", resume);
+        visibility.disconnect();
+        stage?.removeEventListener("pointerenter", hold);
+        stage?.removeEventListener("pointerleave", release);
         ring.removeEventListener("focusin", onFocusIn);
         ring.removeEventListener("focusout", onFocusOut);
       };
@@ -234,7 +286,7 @@ export function MenuRing3D() {
       nudgeRef.current = null;
       ctx.revert();
     };
-  }, [enable3D, count, step]);
+  }, [enable3D, count, step, radius]);
 
   const heading = (
     <SectionHeading
@@ -304,9 +356,9 @@ export function MenuRing3D() {
               // `data-away` additionally stops them swallowing pointer events.
               style={{
                 backfaceVisibility: "hidden",
-                width: CARD_WIDTH,
+                width: cardWidth,
                 height: CARD_HEIGHT,
-                marginLeft: -CARD_WIDTH / 2,
+                marginLeft: -cardWidth / 2,
                 marginTop: -CARD_HEIGHT / 2,
               }}
               className="group/card absolute left-0 top-0 data-[away=true]:pointer-events-none"
