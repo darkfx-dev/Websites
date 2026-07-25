@@ -15,16 +15,36 @@ import { RevealStagger, RevealItem } from "@/components/motion-primitives";
 import { highlightIcon } from "./highlight-icons";
 import { cn } from "@/lib/utils";
 
-const CARD_HEIGHT = 236;
+type RingMetrics = {
+  cardWidth: number;
+  cardHeight: number;
+  stageHeight: number;
+  /** Smaller viewports get a shorter perspective so the depth still reads. */
+  perspective: number;
+};
+
 /**
- * Card width by viewport, so the ring also works in a narrower window rather
- * than only at full desktop width. Radius follows from it: circumference ≈
- * count × card width keeps the cards shoulder-to-shoulder around the ring.
+ * Ring dimensions by viewport, so the carousel works on a phone as well as a
+ * full desktop. Radius follows from the card width: circumference ≈ count ×
+ * card width keeps the cards shoulder-to-shoulder around the ring.
  */
-function cardWidthFor(viewportWidth: number): number {
-  if (viewportWidth >= 1200) return 300;
-  if (viewportWidth >= 900) return 268;
-  return 236;
+function metricsFor(viewportWidth: number): RingMetrics {
+  // Card height stays generous at every size: the content is a fixed stack
+  // (icon, title, blurb, link) that needs ~232px however narrow the card is.
+  // Narrow viewports get a *longer* perspective instead, because the front
+  // card is magnified by perspective/(perspective - radius) — too short a
+  // perspective and the magnified card runs off both edges of a phone screen.
+  if (viewportWidth >= 1200)
+    return { cardWidth: 300, cardHeight: 248, stageHeight: 404, perspective: 1500 };
+  if (viewportWidth >= 900)
+    return { cardWidth: 268, cardHeight: 248, stageHeight: 404, perspective: 1400 };
+  if (viewportWidth >= 640)
+    return { cardWidth: 236, cardHeight: 244, stageHeight: 392, perspective: 1300 };
+  if (viewportWidth >= 430)
+    return { cardWidth: 204, cardHeight: 240, stageHeight: 360, perspective: 1400 };
+  if (viewportWidth >= 360)
+    return { cardWidth: 184, cardHeight: 240, stageHeight: 352, perspective: 1300 };
+  return { cardWidth: 164, cardHeight: 240, stageHeight: 344, perspective: 1200 };
 }
 const RADIUS_RATIO = 1.43;
 /**
@@ -57,7 +77,7 @@ const DRIFT_SECONDS = 30;
 export function MenuRing3D() {
   const reduced = useReducedMotionPreference();
   const [enable3D, setEnable3D] = React.useState(false);
-  const [cardWidth, setCardWidth] = React.useState(300);
+  const [metrics, setMetrics] = React.useState<RingMetrics>(() => metricsFor(1280));
   const sectionRef = React.useRef<HTMLDivElement>(null);
   const ringRef = React.useRef<HTMLUListElement>(null);
   /** Nudge the ring by ±1 card; assigned once the 3D effect is live. */
@@ -66,25 +86,22 @@ export function MenuRing3D() {
   const items = menuHighlights;
   const count = items.length;
   const step = 360 / count;
-  const radius = Math.round(cardWidth * RADIUS_RATIO);
+  const radius = Math.round(metrics.cardWidth * RADIUS_RATIO);
 
+  // Enabled at every width — the ring is sized down for phones rather than
+  // withheld from them. Only reduced-motion (and no-JS) keep the flat grid.
   React.useEffect(() => {
     if (reduced) {
       setEnable3D(false);
       return;
     }
-    const mq = window.matchMedia("(min-width: 768px)");
     const update = () => {
-      setEnable3D(mq.matches);
-      setCardWidth(cardWidthFor(window.innerWidth));
+      setEnable3D(true);
+      setMetrics(metricsFor(window.innerWidth));
     };
     update();
-    mq.addEventListener("change", update);
     window.addEventListener("resize", update);
-    return () => {
-      mq.removeEventListener("change", update);
-      window.removeEventListener("resize", update);
-    };
+    return () => window.removeEventListener("resize", update);
   }, [reduced]);
 
   React.useEffect(() => {
@@ -450,8 +467,12 @@ export function MenuRing3D() {
         role="group"
         aria-label="Food group carousel — drag sideways or use the arrow keys to turn it"
         tabIndex={0}
-        className="relative mt-14 h-[400px] cursor-grab select-none touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-charcoal active:cursor-grabbing"
-        style={{ perspective: "1500px", perspectiveOrigin: "50% 50%" }}
+        className="relative mt-12 cursor-grab select-none touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-charcoal active:cursor-grabbing sm:mt-14"
+        style={{
+          height: metrics.stageHeight,
+          perspective: `${metrics.perspective}px`,
+          perspectiveOrigin: "50% 50%",
+        }}
       >
         {/* Soft floor glow, purely decorative depth cue. */}
         <div
@@ -474,10 +495,10 @@ export function MenuRing3D() {
               // `data-away` additionally stops them swallowing pointer events.
               style={{
                 backfaceVisibility: "hidden",
-                width: cardWidth,
-                height: CARD_HEIGHT,
-                marginLeft: -cardWidth / 2,
-                marginTop: -CARD_HEIGHT / 2,
+                width: metrics.cardWidth,
+                height: metrics.cardHeight,
+                marginLeft: -metrics.cardWidth / 2,
+                marginTop: -metrics.cardHeight / 2,
               }}
               className="group/card absolute left-0 top-0 data-[away=true]:pointer-events-none"
             >
@@ -490,20 +511,25 @@ export function MenuRing3D() {
 
       {/* Pointer affordance for browsing without scrolling. Kept outside the
           perspective stage so it can't be intersected by the turning cards. */}
+      {/* On a narrow screen the hint is too long to sit between the buttons, so
+          it drops to its own line underneath them rather than wrapping into
+          the middle of the row. */}
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
         <RingNudgeButton
+          className="order-1"
           direction={1}
           label="Turn the carousel to the previous food group"
           onNudge={() => nudgeRef.current?.(1)}
         />
-        <p className="text-center text-sm text-charcoal/55">
-          Drag or swipe sideways to turn the ring — pick a group to see its dishes
-        </p>
         <RingNudgeButton
+          className="order-2 sm:order-3"
           direction={-1}
           label="Turn the carousel to the next food group"
           onNudge={() => nudgeRef.current?.(-1)}
         />
+        <p className="order-3 w-full text-center text-sm text-charcoal/55 sm:order-2 sm:w-auto">
+          Drag or swipe sideways to turn the ring — pick a group to see its dishes
+        </p>
       </div>
     </section>
   );
@@ -513,10 +539,12 @@ function RingNudgeButton({
   direction,
   label,
   onNudge,
+  className,
 }: {
   direction: number;
   label: string;
   onNudge: () => void;
+  className?: string;
 }) {
   const Icon = direction > 0 ? ChevronLeft : ChevronRight;
   return (
@@ -524,7 +552,10 @@ function RingNudgeButton({
       type="button"
       onClick={onNudge}
       aria-label={label}
-      className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-warm-border bg-white text-charcoal shadow-card transition-colors hover:border-charcoal/40 hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2"
+      className={cn(
+        "pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-warm-border bg-white text-charcoal shadow-card transition-colors hover:border-charcoal/40 hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2",
+        className
+      )}
     >
       <Icon className="h-5 w-5" aria-hidden="true" />
     </button>
@@ -554,7 +585,8 @@ function HighlightButton({
       type="button"
       onClick={() => selectMenuGroup(selection)}
       className={cn(
-        "group flex h-full w-full flex-col rounded-feature border border-warm-border bg-white p-6 text-left shadow-card transition-[transform,border-color,box-shadow] duration-220 ease-standard hover:-translate-y-0.5 hover:border-saffron/60 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2",
+        "group flex h-full w-full flex-col overflow-hidden rounded-feature border border-warm-border bg-white text-left shadow-card transition-[transform,border-color,box-shadow] duration-220 ease-standard hover:-translate-y-0.5 hover:border-saffron/60 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2",
+        onRing ? "p-5" : "p-6",
         featured && "border-saffron/40 bg-saffron/10 lg:justify-between lg:p-8",
         // The frontmost ring card gets the accent, so the ring always has a
         // clear focal point as it turns.
@@ -564,29 +596,64 @@ function HighlightButton({
     >
       <span
         className={cn(
-          "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-card transition-colors",
+          "inline-flex shrink-0 items-center justify-center rounded-card transition-colors",
+          onRing ? "h-10 w-10" : "h-12 w-12",
           featured ? "bg-saffron text-charcoal" : "bg-ivory text-tomato",
           "group-hover:bg-saffron group-hover:text-charcoal"
         )}
       >
-        <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" />
+        <Icon
+          className={cn(onRing ? "h-5 w-5" : "h-6 w-6")}
+          strokeWidth={1.75}
+          aria-hidden="true"
+        />
       </span>
 
-      <span className={cn("block", featured ? "mt-6 lg:mt-10" : "mt-5")}>
+      {/* overflow-hidden matters: this block is allowed to shrink inside the
+          card's fixed height, and without it the clamped lines spill out and
+          render on top of the "View N dishes" link below. */}
+      <span
+        className={cn(
+          "block min-h-0 overflow-hidden",
+          featured ? "mt-6 lg:mt-10" : onRing ? "mt-4" : "mt-5"
+        )}
+      >
+        {/* NOTE: no `block` alongside `line-clamp-*`. Tailwind's line-clamp
+            needs `display: -webkit-box`, and `block` overrides it in the
+            generated stylesheet — the clamp then silently does nothing. */}
         <span
           className={cn(
-            "block font-display font-semibold text-charcoal",
-            featured ? "text-2xl lg:text-3xl" : "text-xl"
+            "font-display font-semibold text-charcoal",
+            featured
+              ? "block text-2xl lg:text-3xl"
+              : onRing
+                ? "line-clamp-2 text-lg leading-tight"
+                : "block text-xl"
           )}
         >
           {item.title}
         </span>
-        <span className="mt-2 block text-sm leading-relaxed text-charcoal/70">
+        <span
+          className={cn(
+            "text-charcoal/70",
+            onRing
+              // Two lines, not three: on a narrow card the title already wraps
+              // to two lines, and a third blurb line pushes the stack past the
+              // card's fixed height and over the link below.
+              ? "mt-1.5 line-clamp-2 text-xs leading-snug"
+              : "mt-2 block text-sm leading-relaxed"
+          )}
+        >
           {item.description}
         </span>
       </span>
 
-      <span className="mt-auto flex items-center gap-1.5 pt-4 text-sm font-semibold text-tomato">
+      <span
+        className={cn(
+          "mt-auto flex shrink-0 items-center gap-1.5 font-semibold text-tomato",
+          onRing ? "pt-3 text-xs" : "pt-4 text-sm"
+        )}
+      >
         View {dishCount} {dishCount === 1 ? "dish" : "dishes"}
         <ArrowDown
           className="h-4 w-4 transition-transform duration-160 group-hover:translate-y-0.5"
