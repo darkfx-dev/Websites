@@ -20,6 +20,8 @@ import { ReputationSection } from "@/components/reputation-section";
 import { LocationSection } from "@/components/location-section";
 import { ContactSection } from "@/components/contact-section";
 import { OutletFinderSection } from "@/components/outlets/outlet-finder-section";
+import { OutletActionProvider } from "@/components/outlets/outlet-action-provider";
+import { OutletActionDialog } from "@/components/outlets/outlet-action-dialog";
 import { InstagramSection } from "@/components/instagram-section";
 import { SiteFooter } from "@/components/site-footer";
 import { FloatingWhatsAppButton } from "@/components/floating-whatsapp-button";
@@ -28,7 +30,14 @@ import { StructuredData } from "@/components/structured-data";
 
 export default function HomePage() {
   return (
-    <>
+    /*
+     * The business has seven outlets, so every contact action — WhatsApp, call,
+     * directions, address, dish and menu enquiries — has to know which branch
+     * the visitor means before it can go anywhere. OutletActionProvider is the
+     * one router that asks, and OutletActionDialog (rendered once, at the end)
+     * is the one selector every entry point on the page shares.
+     */
+    <OutletActionProvider>
       <LoadingScreen />
       <StructuredData />
       <SmoothAnchorScroll />
@@ -85,6 +94,7 @@ export default function HomePage() {
       <MobileActionBar />
       {/* Spacer so the fixed mobile action bar never covers the footer's end. */}
       <div className="h-[76px] lg:hidden" aria-hidden="true" />
-    </>
+      <OutletActionDialog />
+    </OutletActionProvider>
   );
 }

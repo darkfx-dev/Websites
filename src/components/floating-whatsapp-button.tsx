@@ -2,17 +2,21 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { business } from "@/data/business";
 import { WhatsAppIcon } from "@/components/icons";
+import { useOutletTrigger } from "@/components/outlets/outlet-action-provider";
 
 /**
  * Persistent WhatsApp entry point. Sits bottom-right, above the mobile action
  * bar, and respects the safe-area inset. A single gentle attention animation
  * runs once after the page settles, and never under reduced-motion.
+ *
+ * It opens the shared outlet selector rather than one branch's chat — the same
+ * router every other WhatsApp control on the site uses.
  */
 export function FloatingWhatsAppButton() {
   const reduce = useReducedMotion();
   const [play, setPlay] = React.useState(false);
+  const trigger = useOutletTrigger(() => ({ type: "general-whatsapp" }));
 
   React.useEffect(() => {
     if (reduce) return;
@@ -36,11 +40,9 @@ export function FloatingWhatsAppButton() {
         Chat on WhatsApp
       </span>
 
-      <motion.a
-        href={business.whatsapp.primary}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat with Mahesh Pav Bhaji on WhatsApp"
+      <motion.button
+        {...trigger}
+        aria-label="Choose an outlet to chat with on WhatsApp"
         className="group flex h-14 w-14 items-center justify-center rounded-full bg-coriander text-white shadow-elevated transition-colors duration-160 hover:bg-[#27563c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coriander focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         animate={
           play && !reduce
@@ -52,7 +54,7 @@ export function FloatingWhatsAppButton() {
         whileTap={reduce ? undefined : { scale: 0.94 }}
       >
         <WhatsAppIcon className="h-7 w-7" />
-      </motion.a>
+      </motion.button>
     </div>
   );
 }

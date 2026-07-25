@@ -2,28 +2,27 @@
 
 import * as React from "react";
 import { LocateFixed } from "lucide-react";
-import { outlets, hasOutletCoordinates, type Outlet } from "@/data/outlets";
-import { haversineKm, formatApproxKm } from "@/lib/distance";
+import { outlets } from "@/data/outlets";
+import { formatApproxKm } from "@/lib/distance";
 import { SectionHeading } from "@/components/section-heading";
 import { RevealStagger, RevealItem, Reveal } from "@/components/motion-primitives";
 import { Button } from "@/components/ui/button";
 import { OutletCard } from "./outlet-card";
-import { OutletEnquiryModal } from "./outlet-enquiry-modal";
-
-type LocationState =
-  | { status: "idle" }
-  | { status: "locating" }
-  | { status: "ready"; distancesKm: Record<string, number | null> }
-  | { status: "error"; message: string };
+import { useOutletAction } from "./outlet-action-provider";
 
 /**
  * "Which Outlet is Nearest to You?" — browse all outlets, optionally use the
  * browser's location to highlight the closest one, then send a structured
  * enquiry to that outlet's WhatsApp.
  *
+ * Selecting a card starts a general WhatsApp enquiry with that outlet already
+ * chosen, so it opens straight on the enquiry step of the site-wide outlet
+ * dialog rather than asking again. Location state lives in the shared router,
+ * so a distance measured here is also available to every other outlet action.
+ *
  * PRIVACY: coordinates are read once, on an explicit user action, held only in
- * this component's state for the lifetime of the interaction, and never stored,
- * transmitted, logged, or included in the WhatsApp message.
+ * memory for the lifetime of the interaction, and never stored, transmitted,
+ * logged, or included in the WhatsApp message.
  *
  * Location is strictly an enhancement — every outlet is selectable without it,
  * and the control is not offered at all while outlet coordinates are unverified
@@ -31,118 +30,20 @@ type LocationState =
  * cannot produce an answer.
  */
 export function OutletFinderSection() {
-  const [location, setLocation] = React.useState<LocationState>({
-    status: "idle",
-  });
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  // Keyed by outlet id so focus can be returned to the exact card that opened
-  // the dialog, per WCAG focus-restoration expectations.
-  const cardRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const {
+    start,
+    pending,
+    selectedOutletId,
+    canUseLocation,
+    location,
+    distancesKm,
+    nearestId,
+    nearestOutlet,
+    requestLocation,
+  } = useOutletAction();
 
-  const distancesKm =
-    location.status === "ready" ? location.distancesKm : null;
-
-  /** Nearest outlet id, or null when no usable distance exists. */
-  const nearestId = React.useMemo(() => {
-    if (!distancesKm) return null;
-    let bestId: string | null = null;
-    let bestKm = Infinity;
-    for (const outlet of outlets) {
-      const km = distancesKm[outlet.id];
-      // Compared as raw numbers — never as formatted strings.
-      if (typeof km === "number" && Number.isFinite(km) && km < bestKm) {
-        bestKm = km;
-        bestId = outlet.id;
-      }
-    }
-    return bestId;
-  }, [distancesKm]);
-
-  const nearestOutlet = nearestId
-    ? outlets.find((o) => o.id === nearestId) ?? null
-    : null;
-
-  const requestLocation = () => {
-    // Check the API is actually usable rather than merely present: in an
-    // insecure or otherwise unsupported context `navigator.geolocation` can
-    // exist as a key while being undefined or lacking the method.
-    const geo =
-      typeof navigator !== "undefined" ? navigator.geolocation : undefined;
-    if (!geo || typeof geo.getCurrentPosition !== "function") {
-      setLocation({
-        status: "error",
-        message:
-          "Your browser doesn't support location sharing. You can still select any outlet manually below.",
-      });
-      return;
-    }
-
-    setLocation({ status: "locating" });
-    try {
-      geo.getCurrentPosition(
-      (position) => {
-        const from = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        const next: Record<string, number | null> = {};
-        for (const outlet of outlets) {
-          next[outlet.id] = haversineKm(from, outlet.coordinates);
-        }
-        const anyDistance = Object.values(next).some((km) => km !== null);
-        if (!anyDistance) {
-          setLocation({
-            status: "error",
-            message:
-              "We couldn't work out distances just now. You can still select any outlet manually below.",
-          });
-          return;
-        }
-        setLocation({ status: "ready", distancesKm: next });
-      },
-      (err) => {
-        const message =
-          err.code === err.PERMISSION_DENIED
-            ? "No problem — location wasn't shared. You can still select any outlet manually below."
-            : err.code === err.TIMEOUT
-              ? "Finding your location took too long. You can still select any outlet manually below."
-              : "We couldn't get your location. You can still select any outlet manually below.";
-        setLocation({ status: "error", message });
-        },
-        // One-shot, no watching, no background access, modest timeout.
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
-      );
-    } catch {
-      // Some browsers throw synchronously in a disallowed context rather than
-      // calling the error callback. A recoverable failure must never take the
-      // section down with it.
-      setLocation({
-        status: "error",
-        message:
-          "We couldn't get your location. You can still select any outlet manually below.",
-      });
-    }
-  };
-
-  const openFor = (outlet: Outlet) => {
-    setSelectedId(outlet.id);
-    setModalOpen(true);
-  };
-
-  const closeModal = React.useCallback(() => {
-    setModalOpen(false);
-    // Return focus to the card that opened the dialog.
-    const id = selectedId;
-    if (id) {
-      window.requestAnimationFrame(() => cardRefs.current[id]?.focus());
-    }
-  }, [selectedId]);
-
-  const selectedOutlet = selectedId
-    ? outlets.find((o) => o.id === selectedId) ?? null
-    : null;
-
+  // Focus restoration is handled centrally: the router captures whichever
+  // control started an action and returns focus to it when the dialog closes.
   return (
     <section
       id="outlets"
@@ -161,7 +62,7 @@ export function OutletFinderSection() {
         </Reveal>
 
         {/* Location is requested only after a deliberate tap — never on load. */}
-        {hasOutletCoordinates ? (
+        {canUseLocation ? (
           <Reveal delay={0.06}>
             <div className="mt-8 flex flex-col items-start gap-3 rounded-feature border border-warm-border bg-white p-5 shadow-card sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-charcoal/75">
@@ -223,24 +124,17 @@ export function OutletFinderSection() {
             <RevealItem as="li" key={outlet.id} className="min-w-0">
               <OutletCard
                 outlet={outlet}
-                isSelected={selectedId === outlet.id && modalOpen}
+                isSelected={selectedOutletId === outlet.id && pending !== null}
                 isNearest={nearestId === outlet.id}
                 distanceLabel={formatApproxKm(distancesKm?.[outlet.id] ?? null)}
-                onSelect={() => openFor(outlet)}
-                buttonRef={(node) => {
-                  cardRefs.current[outlet.id] = node;
-                }}
+                onSelect={() =>
+                  start({ type: "general-whatsapp" }, { outletId: outlet.id })
+                }
               />
             </RevealItem>
           ))}
         </RevealStagger>
       </div>
-
-      <OutletEnquiryModal
-        outlet={selectedOutlet}
-        open={modalOpen}
-        onClose={closeModal}
-      />
     </section>
   );
 }

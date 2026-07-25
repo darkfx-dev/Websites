@@ -3,13 +3,12 @@
 import * as React from "react";
 import { MotionConfig, motion } from "motion/react";
 import { ArrowRight, X } from "lucide-react";
-import { business, menuCategories } from "@/data/business";
+import { menuCategories } from "@/data/business";
 import {
   menuItems,
   namedCountForCategory,
   categoryHasUnnamedItems,
 } from "@/data/menu";
-import { buildCategoryInquiryUrl } from "@/lib/whatsapp";
 import {
   MENU_EXPLORER_ID,
   matchesSelection,
@@ -19,6 +18,7 @@ import {
 import { SectionHeading } from "@/components/section-heading";
 import { WhatsAppIcon } from "@/components/icons";
 import { MagneticButton } from "@/components/motion/magnetic-button";
+import { useOutletTrigger } from "@/components/outlets/outlet-action-provider";
 import { MenuCategoryTabs, type CategoryValue } from "./menu-category-tabs";
 import { MenuSearch } from "./menu-search";
 import { DishCard } from "./dish-card";
@@ -107,6 +107,15 @@ export function MenuExplorer() {
       ? `${namedCountForCategory(partialCategory.slug)} of ~${partialCategory.count} listed`
       : `${filtered.length} ${filtered.length === 1 ? "dish" : "dishes"}`;
 
+  // Menus and availability can differ by branch, so both menu requests ask
+  // which outlet before opening WhatsApp. The category one carries the section
+  // the user is currently looking at.
+  const categoryEnquiryTrigger = useOutletTrigger(() => ({
+    type: "request-menu",
+    categoryName: inquiryCategoryName ?? undefined,
+  }));
+  const currentMenuTrigger = useOutletTrigger(() => ({ type: "request-menu" }));
+
   return (
     <section
       id={MENU_EXPLORER_ID}
@@ -159,16 +168,13 @@ export function MenuExplorer() {
                 {countLabel}
               </p>
               {inquiryCategoryName ? (
-                <a
-                  href={buildCategoryInquiryUrl(inquiryCategoryName)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-coriander transition-colors hover:text-[#27563c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coriander focus-visible:ring-offset-2"
+                <button
+                  {...categoryEnquiryTrigger}
+                  className="inline-flex min-h-[24px] items-center gap-1.5 text-sm font-semibold text-coriander transition-colors hover:text-[#27563c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coriander focus-visible:ring-offset-2"
                 >
                   <WhatsAppIcon className="h-4 w-4" />
                   Ask about {inquiryCategoryName}
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                </button>
               ) : null}
             </div>
 
@@ -209,10 +215,8 @@ export function MenuExplorer() {
                 current menu on WhatsApp.
               </p>
               <MagneticButton>
-                <a
-                  href={business.whatsapp.menu}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  {...currentMenuTrigger}
                   className="group inline-flex min-h-[48px] shrink-0 items-center gap-2 rounded-button bg-coriander px-5 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-[#27563c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coriander focus-visible:ring-offset-2"
                 >
                   <WhatsAppIcon className="h-[18px] w-[18px]" />
@@ -221,8 +225,7 @@ export function MenuExplorer() {
                     className="h-[18px] w-[18px] transition-transform duration-160 group-hover:translate-x-1"
                     aria-hidden="true"
                   />
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                </button>
               </MagneticButton>
             </div>
           </div>

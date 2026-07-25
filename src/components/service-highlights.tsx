@@ -10,7 +10,7 @@ export function ServiceHighlights() {
       <div className="container-page grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
         <SectionHeading
           eyebrow="Why visit"
-          title="A neighbourhood favourite in Katargam"
+          title="A Surat favourite across seven outlets"
           description="A large vegetarian kitchen serving Surat families, groups and everyday diners from mid-morning through late night, seven days a week."
         />
 

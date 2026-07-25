@@ -2,60 +2,125 @@
 
 import * as React from "react";
 import { Phone, MapPin, Send } from "lucide-react";
-import { business } from "@/data/business";
+import { outlets } from "@/data/outlets";
+import {
+  ALL_OUTLETS_LABEL,
+  ALL_OUTLETS_OPTION,
+  ALL_OUTLETS_SCOPE,
+  buildContactFormMessage,
+  contactEnquiryTypes,
+  toWhatsAppUrl,
+  type ContactEnquiryType,
+} from "@/lib/outlet-enquiry";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/icons";
-
-const inquiryTypes = [
-  "Current menu",
-  "Order inquiry",
-  "Table availability",
-  "General question",
-] as const;
-
-type Inquiry = (typeof inquiryTypes)[number];
+import {
+  useOutletAction,
+  useOutletTrigger,
+} from "@/components/outlets/outlet-action-provider";
 
 export function ContactSection() {
+  const { selectedOutletId, selectOutlet, start } = useOutletAction();
+
+  // Prefilled from an outlet chosen earlier in the session, but never defaulted
+  // to a branch the visitor didn't pick — "" means "not chosen yet".
+  const [outletId, setOutletId] = React.useState<string>("");
   const [name, setName] = React.useState("");
-  const [inquiry, setInquiry] = React.useState<Inquiry>("General question");
+  const [enquiryType, setEnquiryType] =
+    React.useState<ContactEnquiryType>("General Enquiry");
   const [message, setMessage] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [status, setStatus] = React.useState("");
   const nameRef = React.useRef<HTMLInputElement>(null);
+  const outletRef = React.useRef<HTMLSelectElement>(null);
 
-  // Live WhatsApp deep-link built from the locally-entered details. Nothing is
-  // stored or transmitted anywhere except the WhatsApp chat the user opens.
+  // Follow a session-wide outlet choice while the field is still untouched.
+  React.useEffect(() => {
+    if (selectedOutletId) setOutletId((current) => current || selectedOutletId);
+  }, [selectedOutletId]);
+
+  const whatsAppTrigger = useOutletTrigger(() => ({ type: "general-whatsapp" }));
+  const callTrigger = useOutletTrigger(() => ({ type: "call" }));
+  const directionsTrigger = useOutletTrigger(() => ({ type: "directions" }));
+
+  const isAllOutlets = outletId === ALL_OUTLETS_OPTION;
+  const chosenOutlet = outlets.find((o) => o.id === outletId) ?? null;
+
+  /**
+   * Live WhatsApp deep link, built from the locally-entered details. Nothing is
+   * stored or transmitted anywhere except the WhatsApp chat the visitor opens.
+   *
+   * There is no link at all until a specific outlet is chosen: a message with
+   * no destination is exactly the bug this form used to have.
+   */
   const waHref = React.useMemo(() => {
-    const parts = [
-      `Hi ${business.name}, my name is ${name.trim() || "there"}.`,
-      `Inquiry: ${inquiry}.`,
-    ];
-    if (message.trim()) parts.push(`Message: ${message.trim()}`);
-    return `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(
-      parts.join(" ")
-    )}`;
-  }, [name, inquiry, message]);
+    if (!chosenOutlet) return undefined;
+    return toWhatsAppUrl(
+      chosenOutlet.whatsappNumber,
+      buildContactFormMessage({
+        outlet: chosenOutlet,
+        allOutlets: false,
+        enquiryType,
+        name,
+        message,
+      })
+    );
+  }, [chosenOutlet, enquiryType, name, message]);
 
-  // Require a name before opening WhatsApp. Returns whether the CTA may proceed.
+  /** Shared validation. Returns whether the enquiry may proceed. */
   const validate = (): boolean => {
+    if (!outletId) {
+      setError("Please choose which outlet your enquiry is for.");
+      outletRef.current?.focus();
+      return false;
+    }
     if (name.trim().length < 2) {
       setError("Please enter your name so we know who we're chatting with.");
       nameRef.current?.focus();
       return false;
     }
     setError(null);
-    // Truthful state: WhatsApp is being opened — we never claim a message was
-    // "sent" or an order was confirmed.
-    setStatus("Opening WhatsApp…");
     return true;
   };
 
-  // The CTA is a REAL anchor (like every other working WhatsApp button on the
-  // site) so the browser performs a genuine navigation — reliable in sandboxed
-  // iframes and with mobile WhatsApp deep-links, unlike JS window.open().
+  /**
+   * "All Seven Outlets" is a request category, not a destination — no central
+   * business number has been supplied, and one WhatsApp link can only ever open
+   * one chat. So the enquiry keeps its all-outlets scope and the visitor is
+   * asked which branch should receive it; nothing is silently routed anywhere.
+   */
+  const startAllOutletsEnquiry = () => {
+    setStatus("Choose which outlet should receive your enquiry…");
+    start({
+      type: "contact-form",
+      form: {
+        allOutlets: true,
+        enquiryType,
+        name: name.trim(),
+        message: message.trim(),
+      },
+    });
+  };
+
+  // The specific-outlet CTA is a REAL anchor (like every other working WhatsApp
+  // control on the site) so the browser performs a genuine navigation —
+  // reliable in sandboxed iframes and with mobile deep links, unlike
+  // window.open().
   const onCtaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!validate()) e.preventDefault();
+    if (!validate()) {
+      e.preventDefault();
+      return;
+    }
+    // Truthful state: WhatsApp is being opened — we never claim a message was
+    // "sent" or an order was confirmed.
+    setStatus("Opening WhatsApp…");
+  };
+
+  /** No single destination yet: either nothing is chosen, or it's all-outlets. */
+  const onCtaButtonClick = () => {
+    if (!validate()) return;
+    startAllOutletsEnquiry();
   };
 
   // Enter-key support: a hidden submit button lets the form submit; if valid we
@@ -63,6 +128,12 @@ export function ContactSection() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    if (isAllOutlets) {
+      startAllOutletsEnquiry();
+      return;
+    }
+    if (!waHref) return;
+    setStatus("Opening WhatsApp…");
     const a = document.createElement("a");
     a.href = waHref;
     a.target = "_blank";
@@ -72,6 +143,37 @@ export function ContactSection() {
     a.remove();
   };
 
+  const contactCards = [
+    {
+      key: "whatsapp",
+      trigger: whatsAppTrigger,
+      icon: <WhatsAppIcon className="h-5 w-5" />,
+      iconClass: "bg-coriander/12 text-coriander",
+      title: "WhatsApp",
+      detail: "Choose an outlet, then start a chat",
+    },
+    {
+      key: "call",
+      trigger: callTrigger,
+      icon: (
+        <Phone className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+      ),
+      iconClass: "bg-ivory text-tomato",
+      title: "Call",
+      detail: "Choose an outlet, then see its number",
+    },
+    {
+      key: "directions",
+      trigger: directionsTrigger,
+      icon: (
+        <MapPin className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+      ),
+      iconClass: "bg-ivory text-tomato",
+      title: "Directions",
+      detail: "Choose an outlet, then open the map",
+    },
+  ];
+
   return (
     <section id="contact" className="section-y scroll-mt-20 bg-ivory">
       <div className="container-page grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
@@ -79,79 +181,87 @@ export function ContactSection() {
           <SectionHeading
             eyebrow="Get in touch"
             title="Contact Mahesh Pav Bhaji"
-            description="Reach us directly on WhatsApp or by phone. Prefer to send a few details first? Use the quick form — it opens WhatsApp with your message ready to go."
+            description={`Every outlet has its own number and WhatsApp chat, so we'll ask which of our ${outlets.length} outlets you mean before connecting you. Prefer to send a few details first? Use the quick form.`}
           />
 
-          {/* Direct contact quick links */}
+          {/* Direct contact quick actions — each opens the outlet selector. */}
           <ul className="mt-8 flex flex-col gap-3">
-            <li>
-              <a
-                href={business.whatsapp.primary}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 rounded-card border border-warm-border bg-white p-4 shadow-card transition-transform duration-220 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-              >
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-card bg-coriander/12 text-coriander">
-                  <WhatsAppIcon className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block font-semibold text-charcoal">
-                    WhatsApp
+            {contactCards.map((card) => (
+              <li key={card.key}>
+                <button
+                  {...card.trigger}
+                  className="flex w-full items-center gap-4 rounded-card border border-warm-border bg-white p-4 text-left shadow-card transition-transform duration-220 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
+                >
+                  <span
+                    className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-card ${card.iconClass}`}
+                  >
+                    {card.icon}
                   </span>
-                  <span className="block text-sm text-charcoal/70">
-                    Start a chat with us
-                    <span className="sr-only"> (opens in a new tab)</span>
+                  <span>
+                    <span className="block font-semibold text-charcoal">
+                      {card.title}
+                    </span>
+                    <span className="block text-sm text-charcoal/70">
+                      {card.detail}
+                    </span>
                   </span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                href={`tel:${business.telephone}`}
-                className="flex items-center gap-4 rounded-card border border-warm-border bg-white p-4 shadow-card transition-transform duration-220 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-              >
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-card bg-ivory text-tomato">
-                  <Phone className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="block font-semibold text-charcoal">Call</span>
-                  <span className="block text-sm text-charcoal/70">
-                    {business.displayTelephone}
-                  </span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                href={business.googleMaps}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 rounded-card border border-warm-border bg-white p-4 shadow-card transition-transform duration-220 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-              >
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-card bg-ivory text-tomato">
-                  <MapPin className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="block font-semibold text-charcoal">
-                    Directions
-                  </span>
-                  <span className="block text-sm text-charcoal/70">
-                    Open in Google Maps
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </span>
-                </span>
-              </a>
-            </li>
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Inquiry form → composes a WhatsApp message */}
+        {/* Enquiry form → composes a WhatsApp message for the chosen outlet */}
         <form
           onSubmit={onSubmit}
           noValidate
           className="rounded-feature border border-warm-border bg-white p-6 shadow-card sm:p-8"
         >
           <div className="flex flex-col gap-5">
+            <div>
+              <label
+                htmlFor="contact-outlet"
+                className="mb-1.5 block text-sm font-semibold text-charcoal"
+              >
+                Outlet Name
+              </label>
+              <select
+                id="contact-outlet"
+                name="outlet"
+                ref={outletRef}
+                value={outletId}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setOutletId(next);
+                  setError(null);
+                  // Remember a real outlet for later actions; the all-outlets
+                  // option is a category, so it never becomes a destination.
+                  if (next && next !== ALL_OUTLETS_OPTION) selectOutlet(next);
+                }}
+                aria-required="true"
+                aria-invalid={error && !outletId ? "true" : undefined}
+                aria-describedby={
+                  error && !outletId ? "contact-form-error" : undefined
+                }
+                className="w-full rounded-control border border-warm-border bg-cream px-4 py-3 text-charcoal outline-none transition-colors focus-visible:border-charcoal focus-visible:ring-2 focus-visible:ring-charcoal"
+              >
+                <option value="">Select an outlet…</option>
+                {outlets.map((outlet) => (
+                  <option key={outlet.id} value={outlet.id}>
+                    {outlet.name} — {outlet.subtitle}
+                  </option>
+                ))}
+                <option value={ALL_OUTLETS_OPTION}>{ALL_OUTLETS_LABEL}</option>
+              </select>
+              {isAllOutlets ? (
+                <p className="mt-1.5 text-sm text-charcoal/70">
+                  A WhatsApp chat reaches one branch at a time, so we&rsquo;ll
+                  ask which outlet should receive your enquiry — it will still
+                  be marked &ldquo;{ALL_OUTLETS_SCOPE}&rdquo;.
+                </p>
+              ) : null}
+            </div>
+
             <div>
               <label
                 htmlFor="contact-name"
@@ -168,19 +278,13 @@ export function ContactSection() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 aria-required="true"
-                aria-invalid={error ? "true" : undefined}
-                aria-describedby={error ? "contact-name-error" : undefined}
+                aria-invalid={error && outletId ? "true" : undefined}
+                aria-describedby={
+                  error && outletId ? "contact-form-error" : undefined
+                }
                 className="w-full rounded-control border border-warm-border bg-cream px-4 py-3 text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus-visible:border-charcoal focus-visible:ring-2 focus-visible:ring-charcoal"
                 placeholder="e.g. Priya"
               />
-              {error ? (
-                <p
-                  id="contact-name-error"
-                  className="mt-1.5 text-sm font-medium text-tomato"
-                >
-                  {error}
-                </p>
-              ) : null}
             </div>
 
             <div>
@@ -188,18 +292,20 @@ export function ContactSection() {
                 htmlFor="contact-inquiry"
                 className="mb-1.5 block text-sm font-semibold text-charcoal"
               >
-                Inquiry type
+                Enquiry type
               </label>
               <select
                 id="contact-inquiry"
                 name="inquiry"
-                value={inquiry}
-                onChange={(e) => setInquiry(e.target.value as Inquiry)}
+                value={enquiryType}
+                onChange={(e) =>
+                  setEnquiryType(e.target.value as ContactEnquiryType)
+                }
                 className="w-full rounded-control border border-warm-border bg-cream px-4 py-3 text-charcoal outline-none transition-colors focus-visible:border-charcoal focus-visible:ring-2 focus-visible:ring-charcoal"
               >
-                {inquiryTypes.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
+                {contactEnquiryTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
                   </option>
                 ))}
               </select>
@@ -224,19 +330,46 @@ export function ContactSection() {
               />
             </div>
 
-            {/* Real anchor navigation (reliable everywhere); onClick gates on a
-                valid name. */}
-            <Button
-              href={waHref}
-              external
-              variant="whatsapp"
-              size="lg"
-              className="w-full"
-              onClick={onCtaClick}
-            >
-              <Send className="h-[18px] w-[18px]" aria-hidden="true" />
-              Continue on WhatsApp
-            </Button>
+            {error ? (
+              <p
+                id="contact-form-error"
+                role="alert"
+                className="text-sm font-medium text-tomato"
+              >
+                {error}
+              </p>
+            ) : null}
+
+            {/* Real anchor navigation once a specific outlet is chosen; with no
+                outlet, or the all-outlets category, there is no single
+                destination — so it stays a button that asks. */}
+            {waHref ? (
+              <Button
+                href={waHref}
+                external
+                variant="whatsapp"
+                size="lg"
+                className="w-full"
+                onClick={onCtaClick}
+              >
+                <Send className="h-[18px] w-[18px]" aria-hidden="true" />
+                Continue on WhatsApp
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="whatsapp"
+                size="lg"
+                className="w-full"
+                onClick={onCtaButtonClick}
+                {...(isAllOutlets
+                  ? { "aria-haspopup": "dialog" as const }
+                  : {})}
+              >
+                <Send className="h-[18px] w-[18px]" aria-hidden="true" />
+                Continue on WhatsApp
+              </Button>
+            )}
             {/* Enables Enter-to-submit from the fields; hidden from pointer,
                 keyboard-tab and screen readers (the visible anchor is the CTA). */}
             <button
@@ -249,9 +382,10 @@ export function ContactSection() {
             </button>
 
             <p className="text-xs text-charcoal/70">
-              This opens WhatsApp with your details prefilled. Your information
-              isn&rsquo;t stored or sent anywhere else, and no order or table is
-              confirmed until you chat with us.
+              This opens WhatsApp with your details prefilled, addressed to the
+              outlet you chose. Your information isn&rsquo;t stored or sent
+              anywhere else, and no order or table is confirmed until you chat
+              with us.
             </p>
 
             {/* Truthful, screen-reader-announced status. */}

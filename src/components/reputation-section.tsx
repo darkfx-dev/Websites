@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Star, ExternalLink } from "lucide-react";
 import { business } from "@/data/business";
+import { getOutletById } from "@/data/outlets";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/motion-primitives";
@@ -33,6 +34,11 @@ function StarRow({ rating }: { rating: number }) {
 }
 
 export function ReputationSection() {
+  // The rating figures come from one outlet's Google listing, so the "read the
+  // reviews" link points at that listing — it is a citation for the numbers
+  // above, not a general "here is where we are" destination.
+  const reviewOutlet = getOutletById(business.reviews.verifiedForOutletId);
+
   return (
     <section
       aria-labelledby="reputation-heading"
@@ -47,14 +53,22 @@ export function ReputationSection() {
                   Rated 4.6 by Surat diners
                 </span>
               }
-              description="A genuine snapshot of Mahesh Pav Bhaji's Google reputation. We don't publish invented reviews — see the real ratings on Google Maps."
+              description="A genuine snapshot of Mahesh Pav Bhaji's Google reputation. We don't publish invented reviews — see the real ratings on Google."
             />
-            <div className="mt-8">
-              <Button href={business.googleMaps} external variant="primary">
-                View on Google Maps
-                <ExternalLink className="h-[18px] w-[18px]" aria-hidden="true" />
-              </Button>
-            </div>
+            <p className="mt-4 text-sm text-charcoal/70">
+              {business.reviews.note}
+            </p>
+            {reviewOutlet ? (
+              <div className="mt-8">
+                <Button href={reviewOutlet.mapsUrl} external variant="primary">
+                  Read the Google reviews
+                  <ExternalLink
+                    className="h-[18px] w-[18px]"
+                    aria-hidden="true"
+                  />
+                </Button>
+              </div>
+            ) : null}
           </Reveal>
 
           <Reveal delay={0.12}>

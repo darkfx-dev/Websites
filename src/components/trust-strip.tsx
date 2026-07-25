@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Star, MessageSquareText, Store, CalendarDays, MapPin, UtensilsCrossed } from "lucide-react";
 import { business } from "@/data/business";
+import { outlets } from "@/data/outlets";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion-primitives";
 
 const stats = [
@@ -26,8 +27,8 @@ const stats = [
   },
   {
     icon: MapPin,
-    value: "Katargam",
-    label: "Surat, Gujarat",
+    value: `${outlets.length} Outlets`,
+    label: "Across Surat",
   },
   {
     icon: UtensilsCrossed,
@@ -62,9 +63,10 @@ export function TrustStrip() {
         </RevealStagger>
 
         <Reveal delay={0.1}>
-          <p className="mt-8 text-center text-xs text-charcoal/70">
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-charcoal/70">
             Rating and menu figures last verified on{" "}
-            {business.lastVerifiedDisplay} and may change.
+            {business.lastVerifiedDisplay} and may change.{" "}
+            {business.reviews.note}
           </p>
         </Reveal>
       </div>

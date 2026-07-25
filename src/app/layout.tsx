@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { business } from "@/data/business";
+import { outlets } from "@/data/outlets";
 import "./globals.css";
 
 // Refined editorial serif for display headings.
@@ -20,38 +21,39 @@ const manrope = Manrope({
   display: "swap",
 });
 
+// Metadata describes the business, which has seven outlets across Surat — it
+// must not present any single branch as the whole business. Individual outlet
+// names are kept as keywords because people search for them, but no branch is
+// named as *the* location.
 export const metadata: Metadata = {
   title: {
-    default: `${business.name} | Pav Bhaji, Dosa & Chinese Food in Katargam, Surat`,
+    default: `${business.name} | Pav Bhaji, Dosa & Chinese Food — ${outlets.length} Outlets in Surat`,
     template: `%s | ${business.name}`,
   },
-  description:
-    "Visit Mahesh Pav Bhaji at Sunday Hub, Katargam, Surat. Explore pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats. Open daily from 10:00 AM to midnight.",
+  description: `Mahesh Pav Bhaji has ${outlets.length} outlets across Surat. Explore pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats, then choose the outlet nearest you to call or message on WhatsApp.`,
   applicationName: business.name,
   keywords: [
     "Mahesh Pav Bhaji",
-    "pav bhaji Katargam",
     "pav bhaji Surat",
     "South Indian Surat",
-    "dosa Katargam",
     "Chinese food Surat",
     "vegetarian restaurant Surat",
+    ...outlets.map((outlet) => `Mahesh Pav Bhaji ${outlet.name}`),
   ],
   // NOTE: `canonical` and `metadataBase` are intentionally omitted until the
   // real production domain is known — do not invent one.
   openGraph: {
-    title: `${business.name} | Pav Bhaji, Dosa & Chinese Food in Katargam, Surat`,
-    description:
-      "Pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats in Katargam, Surat. Open daily from 10:00 AM to midnight.",
+    title: `${business.name} | ${outlets.length} Outlets Across Surat`,
+    description: `Pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats at ${outlets.length} Mahesh Pav Bhaji outlets across Surat.`,
     siteName: business.name,
     locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${business.name} | Katargam, Surat`,
+    title: `${business.name} | ${outlets.length} Outlets Across Surat`,
     description:
-      "Pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats. Open daily 10:00 AM–midnight.",
+      "Pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats. Choose your nearest outlet.",
   },
   robots: {
     index: true,

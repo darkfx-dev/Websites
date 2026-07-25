@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, MapPin, Navigation } from "lucide-react";
+import { Check, MapPin, Navigation, Phone } from "lucide-react";
 import type { Outlet } from "@/data/outlets";
 import { WhatsAppIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -90,6 +90,16 @@ export function OutletCard({
           </React.Fragment>
         ))}
       </address>
+
+      {/*
+        Shown as text, not a tel: link — the card is itself a <button>, and a
+        link inside a button is invalid. It is here so this outlet's own number
+        is readable (and dialable by hand) even if the scripted flow never runs.
+      */}
+      <span className="mt-3 flex items-center gap-2 text-sm font-medium text-charcoal/75">
+        <Phone className="h-4 w-4 shrink-0 text-tomato" strokeWidth={1.75} aria-hidden="true" />
+        {outlet.phone}
+      </span>
 
       {distanceLabel ? (
         <span className="mt-3 block text-sm font-medium text-charcoal/60">

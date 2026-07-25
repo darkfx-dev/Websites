@@ -4,9 +4,10 @@ import * as React from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { business, navLinks } from "@/data/business";
+import { navLinks } from "@/data/business";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/icons";
+import { useOutletTrigger } from "@/components/outlets/outlet-action-provider";
 import { cn } from "@/lib/utils";
 
 const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
@@ -18,6 +19,10 @@ export function SiteHeader() {
   const reduce = useReducedMotion();
   const toggleRef = React.useRef<HTMLButtonElement>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
+  // "WhatsApp Us" can't know which of the seven outlets to open, so it asks.
+  const whatsAppTrigger = useOutletTrigger(() => ({
+    type: "general-whatsapp",
+  }));
 
   // Toggle the solid navbar background once the page is scrolled.
   React.useEffect(() => {
@@ -158,8 +163,7 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-2">
             <Button
-              href={business.whatsapp.primary}
-              external
+              {...whatsAppTrigger}
               variant="whatsapp"
               className="hidden sm:inline-flex"
             >
@@ -244,11 +248,13 @@ export function SiteHeader() {
               </ul>
               <div className="mt-3 border-t border-warm-border pt-3">
                 <Button
-                  href={business.whatsapp.primary}
-                  external
+                  {...whatsAppTrigger}
                   variant="whatsapp"
                   className="w-full"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    whatsAppTrigger.onClick();
+                  }}
                 >
                   <WhatsAppIcon className="h-[18px] w-[18px]" />
                   WhatsApp Us

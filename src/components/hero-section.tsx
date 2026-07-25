@@ -1,10 +1,14 @@
 import * as React from "react";
-import { Phone, MapPin, ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { business } from "@/data/business";
 import { Button } from "@/components/ui/button";
-import { WhatsAppIcon } from "@/components/icons";
 import { MagneticButton } from "@/components/motion/magnetic-button";
 import { Reveal } from "@/components/motion-primitives";
+import {
+  HeroCallButton,
+  HeroDirectionsButton,
+  HeroWhatsAppButton,
+} from "@/components/hero-outlet-actions";
 
 const trust = [
   { label: "Google Rating", value: `${business.rating}` },
@@ -65,33 +69,15 @@ export function HeroSection() {
                 />
               </Button>
             </MagneticButton>
-            <Button
-              href={business.whatsapp.primary}
-              external
-              variant="whatsapp"
-              size="lg"
-            >
-              <WhatsAppIcon className="h-[18px] w-[18px]" />
-              WhatsApp Us
-            </Button>
+            <HeroWhatsAppButton />
           </div>
         </Reveal>
 
         {/* Additional quick actions */}
         <Reveal delay={0.3}>
           <div className="mt-3 flex flex-wrap justify-center gap-3">
-            <Button
-              href={`tel:${business.telephone}`}
-              variant="secondary"
-              aria-label={`Call Mahesh Pav Bhaji at ${business.displayTelephone}`}
-            >
-              <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
-              Call Now
-            </Button>
-            <Button href={business.googleMaps} external variant="secondary">
-              <MapPin className="h-[18px] w-[18px]" aria-hidden="true" />
-              Get Directions
-            </Button>
+            <HeroCallButton />
+            <HeroDirectionsButton />
           </div>
         </Reveal>
 

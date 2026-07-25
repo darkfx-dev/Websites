@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import { SearchX } from "lucide-react";
-import { business } from "@/data/business";
 import { WhatsAppIcon } from "@/components/icons";
+import { useOutletTrigger } from "@/components/outlets/outlet-action-provider";
 
 /**
  * Shown when a filter/search combination matches no named dishes. Never a dead
- * end — offers a reset and a real WhatsApp inquiry (the dish may exist in-store
- * even if it isn't in the named list, e.g. the unnamed South Indian variations).
+ * end — offers a reset and a real WhatsApp enquiry (the dish may exist in-store
+ * even if it isn't in the named list, e.g. the unnamed South Indian variations),
+ * routed to whichever outlet the visitor picks.
  */
 export function MenuEmptyState({ onClear }: { onClear: () => void }) {
+  const trigger = useOutletTrigger(() => ({ type: "request-menu" }));
+
   return (
     <div className="flex flex-col items-center gap-4 rounded-feature border border-dashed border-warm-border bg-white/60 px-6 py-14 text-center">
       <span className="inline-flex h-12 w-12 items-center justify-center rounded-card bg-ivory text-tomato">
@@ -34,16 +37,13 @@ export function MenuEmptyState({ onClear }: { onClear: () => void }) {
         >
           Clear filters
         </button>
-        <a
-          href={business.whatsapp.menu}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          {...trigger}
           className="inline-flex min-h-[44px] items-center gap-2 rounded-button bg-coriander px-4 text-sm font-semibold text-white transition-colors hover:bg-[#27563c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coriander focus-visible:ring-offset-2"
         >
           <WhatsAppIcon className="h-4 w-4" />
           Ask on WhatsApp
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+        </button>
       </div>
     </div>
   );

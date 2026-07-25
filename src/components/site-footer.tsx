@@ -1,11 +1,29 @@
+"use client";
+
 import * as React from "react";
 import Image from "next/image";
-import { Phone, MapPin, Clock } from "lucide-react";
+import { Phone, MapPin, Clock, Store } from "lucide-react";
 import { business, navLinks } from "@/data/business";
+import { outlets } from "@/data/outlets";
 import { WhatsAppIcon, InstagramIcon } from "@/components/icons";
+import { useOutletTrigger } from "@/components/outlets/outlet-action-provider";
 
+const footerLinkClass =
+  "inline-flex items-center gap-2.5 rounded text-charcoal/75 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal";
+
+/**
+ * The footer used to print one branch's address, phone number, WhatsApp link
+ * and map as the company's universal contact details. It now names the number
+ * of outlets, points at the finder, and routes each action through the shared
+ * outlet selector — the layout, type, spacing and colours are unchanged.
+ */
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  const callTrigger = useOutletTrigger(() => ({ type: "call" }));
+  const whatsAppTrigger = useOutletTrigger(() => ({
+    type: "general-whatsapp",
+  }));
+  const directionsTrigger = useOutletTrigger(() => ({ type: "directions" }));
 
   return (
     <footer className="border-t border-warm-border bg-ivory text-charcoal">
@@ -23,21 +41,34 @@ export function SiteFooter() {
               />
               {business.name}
             </p>
-            <address className="mt-4 flex items-start gap-3 not-italic leading-relaxed text-charcoal/70">
-              <MapPin
+            <p className="mt-4 flex items-start gap-3 leading-relaxed text-charcoal/70">
+              <Store
                 className="mt-1 h-5 w-5 shrink-0 text-tomato"
                 strokeWidth={1.75}
                 aria-hidden="true"
               />
-              {business.address.full}
-            </address>
-            <p className="mt-4 flex items-center gap-3 text-charcoal/70">
+              <span>
+                {outlets.length} outlets across Surat.{" "}
+                <a
+                  href="#outlets"
+                  className="rounded font-semibold text-charcoal underline underline-offset-2 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
+                >
+                  View all outlets
+                </a>
+              </span>
+            </p>
+            <p className="mt-4 flex items-start gap-3 text-charcoal/70">
               <Clock
-                className="h-5 w-5 shrink-0 text-tomato"
+                className="mt-1 h-5 w-5 shrink-0 text-tomato"
                 strokeWidth={1.75}
                 aria-hidden="true"
               />
-              {business.hours.days}, {business.hours.display}
+              <span>
+                {business.hours.days}, {business.hours.display}
+                <span className="mt-1 block text-sm text-charcoal/55">
+                  {business.hours.note}
+                </span>
+              </span>
             </p>
           </div>
 
@@ -67,44 +98,29 @@ export function SiteFooter() {
             </h2>
             <ul className="mt-4 flex flex-col gap-3">
               <li>
-                <a
-                  href={`tel:${business.telephone}`}
-                  className="inline-flex items-center gap-2.5 rounded text-charcoal/75 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-                >
+                <button {...callTrigger} className={footerLinkClass}>
                   <Phone className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
-                  {business.displayTelephone}
-                </a>
+                  Call an Outlet
+                </button>
               </li>
               <li>
-                <a
-                  href={business.whatsapp.primary}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 rounded text-charcoal/75 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-                >
+                <button {...whatsAppTrigger} className={footerLinkClass}>
                   <WhatsAppIcon className="h-[18px] w-[18px]" />
-                  WhatsApp
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                  WhatsApp an Outlet
+                </button>
               </li>
               <li>
-                <a
-                  href={business.googleMaps}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 rounded text-charcoal/75 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
-                >
+                <button {...directionsTrigger} className={footerLinkClass}>
                   <MapPin className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
-                  Google Maps
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                  Get Outlet Directions
+                </button>
               </li>
               <li>
                 <a
                   href={business.instagram.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 rounded text-charcoal/75 transition-colors hover:text-tomato focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal"
+                  className={footerLinkClass}
                 >
                   <InstagramIcon className="h-[18px] w-[18px]" />
                   {business.instagram.handle}

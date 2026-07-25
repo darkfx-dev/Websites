@@ -13,35 +13,13 @@
 export const business = {
   name: "Mahesh Pav Bhaji",
   type: "Vegetarian restaurant",
-  tagline: "Sunday Hub · Katargam · Surat",
-
-  address: {
-    full: "Shops 2, 3, 4 and 5, Sunday Hub, Char Rasta, opposite Ankur Vidhyalaya, Aamba Talavadi, Katargam, Surat, Gujarat 395004",
-    locality: "Katargam",
-    region: "Gujarat",
-    city: "Surat",
-    postalCode: "395004",
-  },
-
-  // E.164 for tel: links; display form for on-screen presentation.
-  telephone: "+917990632870",
-  displayTelephone: "+91 79906 32870",
-
-  // WhatsApp business number (no "+"), used to compose wa.me links.
-  whatsappNumber: "917990632870",
-
-  whatsapp: {
-    primary:
-      "https://wa.me/917990632870?text=Hi%20Mahesh%20Pav%20Bhaji%2C%20I%20found%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20menu%2C%20table%20availability%2C%20or%20placing%20an%20order.",
-    menu: "https://wa.me/917990632870?text=Hi%20Mahesh%20Pav%20Bhaji%2C%20I%20would%20like%20to%20see%20the%20current%20menu%20and%20prices.",
-    order:
-      "https://wa.me/917990632870?text=Hi%20Mahesh%20Pav%20Bhaji%2C%20I%20would%20like%20to%20place%20an%20order.%20Please%20share%20the%20current%20menu%20and%20availability.",
-    table:
-      "https://wa.me/917990632870?text=Hi%20Mahesh%20Pav%20Bhaji%2C%20I%20would%20like%20to%20check%20table%20availability.",
-  },
-
-  googleMaps:
-    "https://www.google.com/maps/search/?api=1&query=Mahesh%20Pav%20Bhaji%20Sunday%20Hub%20Katargam%20Surat",
+  // Neutral, factual, and true of the whole business. There is deliberately no
+  // universal address, telephone, WhatsApp link or Maps URL in this file: the
+  // business has seven outlets, so every one of those is per-outlet data and
+  // lives in `src/data/outlets.ts`.
+  tagline: "Seven Outlets Across Surat",
+  region: "Gujarat",
+  city: "Surat",
 
   instagram: {
     url: "https://www.instagram.com/maheshpavbhaji/",
@@ -55,12 +33,29 @@ export const business = {
     // 24h form for structured data (opens 10:00, closes 00:00 next day).
     opens: "10:00",
     closes: "00:00",
+    /**
+     * Which outlet these hours were verified for. Hours were only ever
+     * confirmed for one listing, so they are not claimed for all seven — see
+     * `hoursNote`. Do NOT invent per-outlet hours.
+     */
+    verifiedForOutletId: "katargam",
+    note: "Hours may vary by outlet — please check with the outlet you choose.",
   },
 
   // DYNAMIC — verify periodically.
   rating: 4.6,
   reviewCount: 1953,
   fiveStarReviews: 1662,
+
+  /**
+   * The Google listing these rating figures came from. They were verified for
+   * a single outlet's listing, so they must be attributed to it rather than
+   * presented as a seven-outlet average.
+   */
+  reviews: {
+    verifiedForOutletId: "katargam",
+    note: "Google rating figures are from the Katargam (Aamba Talavadi) outlet listing and may not reflect every outlet.",
+  },
 
   // Approx. total across the delivery menu; verify periodically.
   approxMenuVariations: 160,
@@ -192,7 +187,7 @@ export const whyVisit: string[] = [
   "Open seven days a week",
   "Lunch through late-night hours",
   "Dine-in, takeaway and delivery inquiries",
-  "Convenient Katargam location",
+  "Seven outlets across Surat",
   "Strong Google review volume",
 ];
 
