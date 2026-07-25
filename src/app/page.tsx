@@ -19,6 +19,7 @@ const MenuScrollStory = dynamic(() =>
 import { ReputationSection } from "@/components/reputation-section";
 import { LocationSection } from "@/components/location-section";
 import { ContactSection } from "@/components/contact-section";
+import { OutletFinderSection } from "@/components/outlets/outlet-finder-section";
 import { InstagramSection } from "@/components/instagram-section";
 import { SiteFooter } from "@/components/site-footer";
 import { FloatingWhatsAppButton } from "@/components/floating-whatsapp-button";
@@ -66,6 +67,14 @@ export default function HomePage() {
         <Section3D>
           <ContactSection />
         </Section3D>
+        {/*
+         * Outlet finder sits after Contact, per its own conversion flow. It
+         * deliberately opts out of Section3D like MenuExplorer does: it owns
+         * interactive controls, and its dialog is portalled to <body> so a
+         * transformed ancestor could never become the containing block for the
+         * dialog's fixed positioning.
+         */}
+        <OutletFinderSection />
         <Section3D>
           <InstagramSection />
         </Section3D>
