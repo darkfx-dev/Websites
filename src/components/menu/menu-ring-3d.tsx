@@ -514,7 +514,7 @@ export function MenuRing3D() {
       {/* On a narrow screen the hint is too long to sit between the buttons, so
           it drops to its own line underneath them rather than wrapping into
           the middle of the row. */}
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
         <RingNudgeButton
           className="order-1"
           direction={1}
@@ -553,11 +553,24 @@ function RingNudgeButton({
       onClick={onNudge}
       aria-label={label}
       className={cn(
-        "pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-warm-border bg-white text-charcoal shadow-card transition-colors hover:border-charcoal/40 hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2",
+        "pointer-events-auto relative inline-flex h-9 w-9 items-center justify-center rounded-full",
+        // Frosted glass: the blur is always on so only the tint and lift
+        // animate — backdrop-filter itself transitions poorly.
+        "border border-white/60 bg-white/40 text-charcoal/70 backdrop-blur-md",
+        "shadow-[0_2px_10px_rgba(45,31,20,0.06)]",
+        "transition-[background-color,border-color,box-shadow,transform,color] duration-300 ease-standard",
+        "hover:scale-105 hover:border-white/90 hover:bg-white/70 hover:text-charcoal hover:shadow-[0_10px_28px_rgba(45,31,20,0.14)]",
+        "active:scale-95 active:bg-white/80",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2",
+        // Glass sheen across the top, faded in on interaction.
+        "before:pointer-events-none before:absolute before:inset-0 before:rounded-full before:content-['']",
+        "before:bg-gradient-to-b before:from-white/80 before:via-white/10 before:to-transparent",
+        "before:opacity-0 before:transition-opacity before:duration-300",
+        "hover:before:opacity-100 focus-visible:before:opacity-100",
         className
       )}
     >
-      <Icon className="h-5 w-5" aria-hidden="true" />
+      <Icon className="relative h-4 w-4" aria-hidden="true" />
     </button>
   );
 }
