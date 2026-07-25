@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { menuHighlights } from "@/data/business";
 import {
   countForSelection,
@@ -35,9 +35,13 @@ const RADIUS_RATIO = 1.43;
 const DRIFT_SECONDS = 30;
 
 /**
- * The signature food groups arranged on a vertical cylinder that turns as the
- * page scrolls — a full 360° loop across the section's passage, so scrolling
- * carries you all the way around and back to where you started.
+ * The signature food groups arranged on a vertical cylinder you turn directly:
+ * drag it, swipe it, scroll it sideways, or use the arrow keys / prev-next
+ * controls. It loops endlessly in both directions, and idles with a slow
+ * ambient spin that steps aside as soon as you take hold of it.
+ *
+ * Deliberately NOT driven by vertical page scroll — turning the ring is its own
+ * gesture, so it also works in contexts where the document doesn't scroll.
  *
  * Every card is a real <button>: choosing one filters the menu explorer below
  * to exactly that group's dishes and scrolls you to it (see `menu-selection`).
@@ -92,6 +96,8 @@ export function MenuRing3D() {
     let ticker: (() => void) | null = null;
     /** True while a pointer rests on the ring or a card holds focus. */
     let pointerOrFocusHeld = false;
+    /** True between pointerdown and pointerup while turning the ring by hand. */
+    let dragging = false;
 
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>("[data-ring-card]", ring);
@@ -117,10 +123,10 @@ export function MenuRing3D() {
       gsap.set(ring, { xPercent: -50, yPercent: -50 });
 
       // Three independent contributions to one rotation, so nothing overwrites
-      // anything else: `scroll` is scrubbed by ScrollTrigger, `drift` is the
-      // ambient spin, `focus` is the offset added by keyboard focus and the
-      // prev/next controls.
-      const state = { scroll: 0, drift: 0, focus: 0 };
+      // anything else: `drag` is the user turning the ring by hand (pointer
+      // drag, swipe or horizontal wheel), `drift` is the ambient spin, `focus`
+      // is the offset added by keyboard focus and the prev/next controls.
+      const state = { drag: 0, drift: 0, focus: 0 };
 
       const setRotation = gsap.quickSetter(ring, "rotationY", "deg");
       const setOpacity = cards.map((card) => gsap.quickSetter(card, "opacity"));
@@ -130,7 +136,7 @@ export function MenuRing3D() {
       let frontIndex = -1;
 
       const render = () => {
-        const rotation = state.scroll + state.drift + state.focus;
+        const rotation = state.drag + state.drift + state.focus;
         setRotation(rotation);
 
         let bestIndex = 0;
@@ -160,20 +166,6 @@ export function MenuRing3D() {
           frontIndex = bestIndex;
         }
       };
-
-      // A full revolution across the section's passage through the viewport:
-      // scroll all the way past and the ring has come right back around.
-      gsap.to(state, {
-        scroll: -360,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
 
       const drift = gsap.to(state, {
         drift: "-=360",
@@ -210,7 +202,7 @@ export function MenuRing3D() {
       // Rotate a card to the front. `turns` is signed, so we always take the
       // short way round rather than unwinding through the back of the ring.
       const rotateToFront = (index: number, duration: number) => {
-        const current = state.scroll + state.drift + state.focus;
+        const current = state.drag + state.drift + state.focus;
         const desired = -step * index;
         const delta = ((((desired - current) % 360) + 540) % 360) - 180;
         gsap.to(state, {
@@ -239,6 +231,9 @@ export function MenuRing3D() {
         drift.pause();
       };
       const release = () => {
+        // Never hand the ring back to the ambient spin mid-drag — the pointer
+        // can leave the stage while still captured.
+        if (dragging) return;
         pointerOrFocusHeld = false;
         drift.play();
       };
@@ -260,14 +255,135 @@ export function MenuRing3D() {
         release();
       };
 
-      const stage = ring.parentElement;
+      const stage = ring.parentElement as HTMLElement | null;
+
+      // ---- Turning the ring by hand: drag / swipe / horizontal wheel ----
+      //
+      // Rotation tracks the pointer roughly 1:1 with the front of the ring:
+      // moving `radius` pixels sweeps one radian, so this is deg-per-pixel.
+      const DEG_PER_PX = 180 / Math.PI / radius;
+      let pointerId: number | null = null;
+      let lastX = 0;
+      let lastMoveTime = 0;
+      let velocity = 0; // deg per ms, for the flick that follows release
+      let movedBy = 0;
+
+      const onPointerDown = (event: PointerEvent) => {
+        // Left button / touch / pen only, and never start a drag on the
+        // prev/next controls, which do their own thing.
+        if (event.button !== 0) return;
+        dragging = true;
+        pointerId = event.pointerId;
+        lastX = event.clientX;
+        lastMoveTime = event.timeStamp;
+        velocity = 0;
+        movedBy = 0;
+        hold();
+        gsap.killTweensOf(state);
+        stage?.setPointerCapture(event.pointerId);
+      };
+
+      const onPointerMove = (event: PointerEvent) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        const dx = event.clientX - lastX;
+        const dt = Math.max(1, event.timeStamp - lastMoveTime);
+        lastX = event.clientX;
+        lastMoveTime = event.timeStamp;
+        movedBy += Math.abs(dx);
+        const deltaDeg = dx * DEG_PER_PX;
+        state.drag += deltaDeg;
+        // Smoothed so one jittery sample can't throw the release flick.
+        velocity = velocity * 0.7 + (deltaDeg / dt) * 0.3;
+      };
+
+      const endDrag = (event: PointerEvent) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        dragging = false;
+        pointerId = null;
+        if (stage?.hasPointerCapture(event.pointerId)) {
+          stage.releasePointerCapture(event.pointerId);
+        }
+        // Carry the flick on with a decaying glide.
+        const throwDeg = gsap.utils.clamp(-540, 540, velocity * 260);
+        if (Math.abs(throwDeg) > 1) {
+          gsap.to(state, {
+            drag: state.drag + throwDeg,
+            duration: 1.4,
+            ease: "power3.out",
+            overwrite: true,
+          });
+        }
+        scheduleRelease();
+        // A drag that travelled a real distance shouldn't also count as a click
+        // on whichever card happened to be under the pointer.
+        if (movedBy > 8) {
+          const swallowClick = (e: Event) => {
+            e.preventDefault();
+            e.stopPropagation();
+          };
+          stage?.addEventListener("click", swallowClick, {
+            capture: true,
+            once: true,
+          });
+          window.setTimeout(
+            () => stage?.removeEventListener("click", swallowClick, true),
+            0
+          );
+        }
+      };
+
+      // Horizontal wheel / trackpad swipe. Vertical wheel is deliberately left
+      // alone so the page still scrolls normally over the ring; shift+wheel is
+      // honoured because that is how a mouse without a tilt wheel scrolls
+      // horizontally.
+      const onWheel = (event: WheelEvent) => {
+        const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+        if (!horizontal && !event.shiftKey) return;
+        const delta = horizontal ? event.deltaX : event.deltaY;
+        if (!delta) return;
+        event.preventDefault();
+        hold();
+        gsap.killTweensOf(state);
+        state.drag -= delta * DEG_PER_PX;
+        scheduleRelease();
+      };
+
+      // Hand control back to the ambient spin a moment after the user stops.
+      let releaseTimer = 0;
+      const scheduleRelease = () => {
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(() => {
+          if (!dragging) release();
+        }, 2000);
+      };
+
+      // Arrow keys turn the ring when the stage itself holds focus.
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        nudgeRef.current?.(event.key === "ArrowLeft" ? 1 : -1);
+      };
+
+      stage?.addEventListener("pointerdown", onPointerDown);
+      stage?.addEventListener("pointermove", onPointerMove);
+      stage?.addEventListener("pointerup", endDrag);
+      stage?.addEventListener("pointercancel", endDrag);
+      stage?.addEventListener("wheel", onWheel, { passive: false });
+      stage?.addEventListener("keydown", onKeyDown);
       stage?.addEventListener("pointerenter", hold);
       stage?.addEventListener("pointerleave", release);
       ring.addEventListener("focusin", onFocusIn);
       ring.addEventListener("focusout", onFocusOut);
 
       return () => {
+        window.clearTimeout(releaseTimer);
         visibility.disconnect();
+        stage?.removeEventListener("pointerdown", onPointerDown);
+        stage?.removeEventListener("pointermove", onPointerMove);
+        stage?.removeEventListener("pointerup", endDrag);
+        stage?.removeEventListener("pointercancel", endDrag);
+        stage?.removeEventListener("wheel", onWheel);
+        stage?.removeEventListener("keydown", onKeyDown);
         stage?.removeEventListener("pointerenter", hold);
         stage?.removeEventListener("pointerleave", release);
         ring.removeEventListener("focusin", onFocusIn);
@@ -275,13 +391,9 @@ export function MenuRing3D() {
       };
     }, sectionRef);
 
-    // Category text is web-font-dependent, so the trigger points can shift once
-    // Fraunces/Manrope land.
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
-
     return () => {
-      // gsap.context() reverts tweens and ScrollTriggers, but the ticker
-      // callback is outside its bookkeeping and has to come off by hand.
+      // gsap.context() reverts its tweens, but the ticker callback is outside
+      // its bookkeeping and has to come off by hand.
       if (ticker) gsap.ticker.remove(ticker);
       nudgeRef.current = null;
       ctx.revert();
@@ -330,9 +442,15 @@ export function MenuRing3D() {
     >
       <div className="container-page">{heading}</div>
 
-      {/* 3D stage */}
+      {/* 3D stage. Focusable and labelled because it is a real control: you
+          turn the ring by dragging it, swiping, or scrolling it sideways.
+          `touch-action: pan-y` keeps vertical page scrolling working on touch
+          while horizontal drags come to us instead of the browser. */}
       <div
-        className="relative mt-14 h-[400px]"
+        role="group"
+        aria-label="Food group carousel — drag sideways or use the arrow keys to turn it"
+        tabIndex={0}
+        className="relative mt-14 h-[400px] cursor-grab select-none touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-charcoal active:cursor-grabbing"
         style={{ perspective: "1500px", perspectiveOrigin: "50% 50%" }}
       >
         {/* Soft floor glow, purely decorative depth cue. */}
@@ -379,7 +497,7 @@ export function MenuRing3D() {
           onNudge={() => nudgeRef.current?.(1)}
         />
         <p className="text-center text-sm text-charcoal/55">
-          Scroll to turn the ring — or pick a group to see its dishes
+          Drag or swipe sideways to turn the ring — pick a group to see its dishes
         </p>
         <RingNudgeButton
           direction={-1}
