@@ -113,6 +113,7 @@ export function OutletActionDialog() {
       const list = Array.from(focusables);
       const first = list[0];
       const last = list[list.length - 1];
+      if (!first || !last) return;
       const index = list.indexOf(document.activeElement as HTMLElement);
       // Index -1 means focus is on the panel itself, which is where it goes
       // when a step has no controls of its own (a call or directions

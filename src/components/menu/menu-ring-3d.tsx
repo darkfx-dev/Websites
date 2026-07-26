@@ -146,41 +146,46 @@ export function MenuRing3D() {
       const state = { drag: 0, drift: 0, focus: 0 };
 
       const setRotation = gsap.quickSetter(ring, "rotationY", "deg");
-      const setOpacity = cards.map((card) => gsap.quickSetter(card, "opacity"));
-      // Tracked so `data-*` attributes are only written when they change,
-      // rather than on every frame.
-      const facingAway = cards.map(() => false);
-      let frontIndex = -1;
+      // Each card is paired with its own opacity setter and its last-written
+      // `away` flag, so the render loop can never index one array with another
+      // array's position. `away` is tracked so `data-*` attributes are only
+      // written when they change, rather than on every frame.
+      const cardStates = cards.map((card) => ({
+        card,
+        setOpacity: gsap.quickSetter(card, "opacity"),
+        away: false,
+      }));
+      let frontCard: HTMLElement | null = null;
 
       const render = () => {
         const rotation = state.drag + state.drift + state.focus;
         setRotation(rotation);
 
-        let bestIndex = 0;
+        let best: HTMLElement | null = null;
         let bestFacing = -Infinity;
 
-        cards.forEach((card, i) => {
+        cardStates.forEach((cardState, i) => {
           // How squarely this card faces the viewer: 1 = dead ahead, 0 = edge
           // on, negative = turned away (and hidden by backface-visibility).
           const facing = Math.cos(((rotation + step * i) * Math.PI) / 180);
-          setOpacity[i](0.3 + 0.7 * Math.max(0, facing));
+          cardState.setOpacity(0.3 + 0.7 * Math.max(0, facing));
 
           const away = facing <= 0.05;
-          if (away !== facingAway[i]) {
-            facingAway[i] = away;
-            card.dataset.away = away ? "true" : "false";
+          if (away !== cardState.away) {
+            cardState.away = away;
+            cardState.card.dataset.away = away ? "true" : "false";
           }
 
           if (facing > bestFacing) {
             bestFacing = facing;
-            bestIndex = i;
+            best = cardState.card;
           }
         });
 
-        if (bestIndex !== frontIndex) {
-          if (frontIndex >= 0) delete cards[frontIndex].dataset.front;
-          cards[bestIndex].dataset.front = "true";
-          frontIndex = bestIndex;
+        if (best !== frontCard) {
+          if (frontCard) delete frontCard.dataset.front;
+          if (best) (best as HTMLElement).dataset.front = "true";
+          frontCard = best;
         }
       };
 
@@ -198,6 +203,7 @@ export function MenuRing3D() {
       // isn't on screen — this sits well below the fold for most of the visit.
       const visibility = new IntersectionObserver(
         ([entry]) => {
+          if (!entry) return;
           if (entry.isIntersecting) {
             if (!ticker) {
               ticker = render;

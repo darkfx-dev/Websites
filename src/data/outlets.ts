@@ -100,10 +100,13 @@ export function toPostalAddress(
   const flat = toAddressText(addressLines);
   const match = flat.match(/^(.*?),?\s*Surat\s*[–—-]\s*(\d{6})$/);
   if (!match) return { streetAddress: flat, addressLocality: "Surat" };
+  // Both groups are guaranteed by a successful match; falling back to the flat
+  // string keeps this total rather than relying on that guarantee.
+  const [, street = flat, postalCode] = match;
   return {
-    streetAddress: match[1].replace(/,\s*$/, ""),
+    streetAddress: street.replace(/,\s*$/, ""),
     addressLocality: "Surat",
-    postalCode: match[2],
+    postalCode,
   };
 }
 

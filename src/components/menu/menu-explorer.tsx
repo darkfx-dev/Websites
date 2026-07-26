@@ -67,13 +67,19 @@ export function MenuExplorer() {
     setQuery("");
   };
 
+  /**
+   * The one slug a selection reduces to, when it reduces to exactly one whole
+   * category. Multi-category groups and keyword-narrowed slices have no single
+   * slug, and neither does "All".
+   */
+  const singleCategorySlug: string | null =
+    selection && selection.slugs.length === 1 && !selection.keywords
+      ? (selection.slugs[0] ?? null)
+      : null;
+
   /** Which chip (if any) is pressed: only a plain single-category selection. */
   const activeChip: CategoryValue | null =
-    selection === null
-      ? "all"
-      : selection.slugs.length === 1 && !selection.keywords
-        ? selection.slugs[0]
-        : null;
+    selection === null ? "all" : singleCategorySlug;
 
   const onChipChange = (next: CategoryValue) => {
     if (next === "all") {
@@ -87,19 +93,14 @@ export function MenuExplorer() {
   };
 
   /** A selection resolving to exactly one whole category can be asked about. */
-  const inquiryCategoryName =
-    selection && selection.slugs.length === 1 && !selection.keywords
-      ? (categoryNameBySlug.get(selection.slugs[0]) ?? null)
-      : null;
+  const inquiryCategoryName = singleCategorySlug
+    ? (categoryNameBySlug.get(singleCategorySlug) ?? null)
+    : null;
 
   // Honest count label. Where the business lists more variations than it named
   // for us, say so rather than implying the named list is complete.
-  const singleSlug =
-    selection && selection.slugs.length === 1 && !selection.keywords
-      ? selection.slugs[0]
-      : null;
   const partialCategory = menuCategories.find(
-    (c) => c.slug === singleSlug && categoryHasUnnamedItems(c.slug)
+    (c) => c.slug === singleCategorySlug && categoryHasUnnamedItems(c.slug)
   );
 
   const countLabel =

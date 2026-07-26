@@ -2,13 +2,21 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { business } from "@/data/business";
 import { outlets } from "@/data/outlets";
+import { getSiteUrlObject } from "@/lib/site";
 import "./globals.css";
 
 // Refined editorial serif for display headings.
+//
+// Normal style only. The italic face was being downloaded and preloaded on
+// every visit — roughly a third of the site's total font payload — while
+// nothing on the site ever renders italic text (the single `not-italic` in the
+// codebase is an <address> reset that removes the browser default). Requesting
+// it back would cost the same bytes again, so add italic here only alongside
+// markup that actually uses it.
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  style: ["normal"],
   variable: "--font-display",
   display: "swap",
 });
@@ -40,14 +48,20 @@ export const metadata: Metadata = {
     "vegetarian restaurant Surat",
     ...outlets.map((outlet) => `Mahesh Pav Bhaji ${outlet.name}`),
   ],
-  // NOTE: `canonical` and `metadataBase` are intentionally omitted until the
-  // real production domain is known — do not invent one.
+  // Resolves every relative metadata URL (Open Graph image, canonical) against
+  // the deployed origin. Set NEXT_PUBLIC_SITE_URL to move the site to another
+  // domain; see `src/lib/site.ts`.
+  metadataBase: getSiteUrlObject(),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: `${business.name} | ${outlets.length} Outlets Across Surat`,
     description: `Pav bhaji, South Indian, Chinese, rice, pizza, sandwiches and chaats at ${outlets.length} Mahesh Pav Bhaji outlets across Surat.`,
     siteName: business.name,
     locale: "en_IN",
     type: "website",
+    url: "/",
   },
   twitter: {
     card: "summary_large_image",
@@ -58,7 +72,17 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  // Surfaces the business category to search engines without asserting
+  // anything that isn't already on the page.
+  category: "Restaurant",
 };
 
 export const viewport: Viewport = {
