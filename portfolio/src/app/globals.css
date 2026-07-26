@@ -1,0 +1,364 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TOKENS
+   Colours were checked against the text they carry; see the contrast notes.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: #07090d;
+    --surface: #0e1219;
+    --surface-elevated: rgba(20, 27, 38, 0.58);
+
+    /* 16.9:1 on --background */
+    --text-primary: #f4f1e9;
+    /* Lifted from the suggested #a7afbd to #b6bdc9 so secondary body text
+       clears 7:1 on the background and stays above 4.5:1 on glass. */
+    --text-secondary: #b6bdc9;
+    /* Only for non-essential meta text at >=14px. */
+    --text-tertiary: #8d94a2;
+
+    --border: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.2);
+
+    /* Accent is used for large text, borders and glow — never for small body
+       copy on the dark ground, where it would fall under 4.5:1. */
+    --accent: #8b97ff;
+    --accent-deep: #6d7cff;
+    --accent-soft: rgba(109, 124, 255, 0.2);
+    --success: #8fd6a4;
+    --focus: #b5c2ff;
+
+    --radius-sm: 8px;
+    --radius: 14px;
+    --radius-lg: 22px;
+
+    /* Type scale */
+    --text-xs: clamp(0.72rem, 0.69rem + 0.15vw, 0.82rem);
+    --text-sm: clamp(0.86rem, 0.82rem + 0.18vw, 0.98rem);
+    --text-base: clamp(1rem, 0.95rem + 0.22vw, 1.125rem);
+    --text-lg: clamp(1.2rem, 1.05rem + 0.55vw, 1.55rem);
+    --text-xl: clamp(1.65rem, 1.28rem + 1.25vw, 2.35rem);
+    --text-2xl: clamp(2.1rem, 1.5rem + 2.2vw, 3.4rem);
+    --text-hero: clamp(2.6rem, 1.5rem + 5vw, 6.5rem);
+
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --shell: min(1240px, 100% - 2.5rem);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Lenis is opt-in; native smooth scrolling covers everyone else. */
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* A single, very low-contrast technical grid. Fixed so it reads as the
+     surface the content sits on rather than decoration that scrolls past. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 88px 88px;
+    mask-image: radial-gradient(ellipse 120% 80% at 50% 0%, #000 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 120% 80% at 50% 0%, #000 30%, transparent 78%);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+    line-height: 1.06;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p { margin: 0; text-wrap: pretty; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  img, svg, canvas { display: block; max-width: 100%; }
+
+  ::selection {
+    background: var(--accent-deep);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Only hide the ring for pointer users who never needed it. */
+  :focus:not(:focus-visible) { outline: none; }
+}
+
+@layer components {
+  .shell {
+    width: var(--shell);
+    margin-inline: auto;
+  }
+
+  .section-y {
+    padding-block: clamp(5rem, 11vw, 9.5rem);
+  }
+
+  /* ── Liquid glass ──────────────────────────────────────────────────────
+     Physically-plausible rather than a flat translucent box: a directional
+     sheen across the top edge, a 1px translucent border, an inset highlight
+     that reads as a lit rim, and a soft falloff shadow. */
+  .liquid-glass {
+    position: relative;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.085),
+        rgba(255, 255, 255, 0.022) 42%,
+        rgba(255, 255, 255, 0.04)
+      ),
+      var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+      0 24px 80px rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(18px) saturate(125%);
+    -webkit-backdrop-filter: blur(18px) saturate(125%);
+  }
+
+  /* Spectral refraction along the lit edge — one hairline, not a rainbow. */
+  .liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      120deg,
+      rgba(139, 151, 255, 0.5),
+      rgba(255, 255, 255, 0.06) 26%,
+      transparent 52%,
+      rgba(143, 214, 164, 0.22)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* Where backdrop-filter is unavailable the translucency would leave text
+     on a muddy background, so fall back to an opaque surface instead. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .liquid-glass {
+      background: #131924;
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .glass-hover {
+    transition:
+      border-color 240ms var(--ease-out),
+      transform 240ms var(--ease-out),
+      box-shadow 240ms var(--ease-out);
+  }
+  .glass-hover:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 30px 90px rgba(0, 0, 0, 0.42);
+  }
+
+  /* ── Type helpers ────────────────────────────────────────────────────── */
+  .mono {
+    font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-ligatures: none;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--text-xs);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding-inline: 1.35rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition:
+      background-color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      transform 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+  .btn:active { transform: scale(0.975); }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: #0a0d12;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: #fff; }
+
+  .btn-ghost {
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    background: rgba(139, 151, 255, 0.09);
+  }
+
+  .btn-quiet {
+    min-height: 44px;
+    padding-inline: 0.25rem;
+    color: var(--text-secondary);
+  }
+  .btn-quiet:hover { color: var(--text-primary); }
+
+  /* A hairline rule that reads as a technical divider, not a border.
+     Full width by default; the scroll choreography draws it outward from the
+     centre, so if that never loads the rule is simply already there. */
+  .rule {
+    height: 1px;
+    transform-origin: center;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--border) 12%,
+      var(--border) 88%,
+      transparent
+    );
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@layer utilities {
+  /* Scroll-reveal. Content is visible by default and only hidden once JS has
+     proven it can animate it back in, so nothing is ever trapped invisible. */
+  .reveal { opacity: 1; }
+  html.js .reveal {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 18px), 0);
+    transition:
+      opacity 620ms var(--ease-out),
+      transform 620ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  html.js .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Masked line reveal, for the editorial About sentences.
+     The clip is on the inner element, never on the observed host — see the
+     note in `Reveal`: a target clipped to zero area never reports itself as
+     intersecting, so it would wait forever for the class that unclips it. */
+  .reveal-mask-inner { display: block; }
+  html.js .reveal-mask > .reveal-mask-inner {
+    clip-path: inset(0 0 110% 0);
+    transition: clip-path 900ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: clip-path;
+  }
+  html.js .reveal-mask.in > .reveal-mask-inner {
+    clip-path: inset(0 0 -20% 0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LENIS
+   Only applies once Lenis has actually started and added its classes, so no
+   rule here affects a visitor who never gets it (touch, small screen, reduced
+   motion, or a failed chunk).
+   ───────────────────────────────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+/* Lets a nested scrollable opt out instead of scrolling the page behind it. */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION
+   Reduced motion means less movement, not less site: every element ends in
+   its final, fully-readable state and every control keeps working.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  html.js .reveal,
+  html.js .reveal-mask,
+  html.js .reveal-mask > .reveal-mask-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
