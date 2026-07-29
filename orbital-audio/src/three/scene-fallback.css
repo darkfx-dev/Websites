@@ -1,0 +1,67 @@
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* Sits where the Core sits on desktop: right of centre, clear of the copy. */
+.fallback > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+@media (min-width: 1024px) {
+  .fallback > * {
+    left: 68%;
+  }
+}
+
+.fallback__glow {
+  width: min(80vw, 640px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 165, 61, 0.22),
+    rgba(255, 165, 61, 0)
+  );
+}
+
+.fallback__core {
+  width: min(30vw, 190px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 32%,
+    rgba(255, 214, 168, 0.9),
+    rgba(255, 165, 61, 0.42) 46%,
+    rgba(42, 36, 56, 0.25) 100%
+  );
+  box-shadow: 0 0 0 1px rgba(255, 165, 61, 0.3);
+}
+
+.fallback__ring {
+  border-radius: 50%;
+  border: 1px solid rgba(255, 165, 61, 0.28);
+}
+.fallback__ring--a {
+  width: min(58vw, 400px);
+  height: min(20vw, 140px);
+  rotate: -12deg;
+}
+.fallback__ring--b {
+  width: min(74vw, 510px);
+  height: min(26vw, 180px);
+  rotate: 24deg;
+  border-color: rgba(111, 227, 196, 0.2);
+}
+.fallback__ring--c {
+  width: min(88vw, 610px);
+  height: min(32vw, 220px);
+  rotate: -38deg;
+  border-color: rgba(243, 239, 231, 0.1);
+}

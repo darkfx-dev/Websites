@@ -1,0 +1,321 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   NEON BUTTON
+   Colour, border and glow only. Scale belongs to Framer Motion.
+   ───────────────────────────────────────────────────────────────────────── */
+.neon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Comfortably past the 44px minimum at every size. */
+  min-height: 52px;
+  min-width: 52px;
+  padding-inline: 1.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--body);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-align: center;
+  transition:
+    box-shadow 200ms ease-out,
+    background-color 200ms ease-out,
+    border-color 200ms ease-out,
+    color 200ms ease-out;
+}
+
+.neon--sm {
+  min-height: 44px;
+  padding-inline: 1.15rem;
+}
+.neon--lg {
+  min-height: 58px;
+  padding-inline: 2rem;
+  font-size: var(--t-body);
+}
+
+/* The label sits above the glow layers so no shadow can wash it out. */
+.neon__label {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Primary: the filament itself ─────────────────────────────────────── */
+.neon--primary {
+  background: var(--lamp);
+  /* 8.9:1 against --lamp, and it stays that way in every state below. */
+  color: #14100a;
+  box-shadow:
+    0 0 0 1px rgba(255, 165, 61, 0.5),
+    0 2px 10px rgba(255, 165, 61, 0.22),
+    0 6px 26px rgba(255, 165, 61, 0.16);
+}
+.neon--primary:hover {
+  background: var(--lamp-hot);
+  box-shadow:
+    0 0 0 1px rgba(255, 196, 120, 0.7),
+    0 2px 12px rgba(255, 165, 61, 0.38),
+    0 8px 34px rgba(255, 165, 61, 0.3),
+    0 16px 60px rgba(255, 165, 61, 0.18);
+}
+.neon--primary:active {
+  background: var(--lamp-hot);
+  box-shadow:
+    0 0 0 1px rgba(255, 214, 168, 0.9),
+    0 2px 8px rgba(255, 196, 120, 0.5),
+    0 6px 26px rgba(255, 165, 61, 0.42),
+    0 14px 52px rgba(255, 165, 61, 0.26);
+}
+
+/* ── Secondary: the filament seen through the panel ───────────────────── */
+.neon--secondary {
+  background: rgba(255, 165, 61, 0.05);
+  border-color: var(--lamp-line);
+  color: var(--print);
+  box-shadow: 0 0 18px -6px rgba(255, 165, 61, 0.35);
+}
+.neon--secondary:hover {
+  background: rgba(255, 165, 61, 0.12);
+  border-color: var(--lamp);
+  color: #fff6e9;
+  box-shadow:
+    0 0 0 1px rgba(255, 165, 61, 0.4),
+    0 4px 22px rgba(255, 165, 61, 0.24),
+    0 12px 44px rgba(255, 165, 61, 0.14);
+}
+.neon--secondary:active {
+  background: rgba(255, 165, 61, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(255, 196, 120, 0.6),
+    0 3px 16px rgba(255, 165, 61, 0.34);
+}
+
+/* Focus is the phosphor ring from global.css — a different hue and a
+   different shape from the amber glow, so the two states never read as one.
+   Restated here only to keep the offset clear of the glow. */
+.neon:focus-visible {
+  outline: 2px solid var(--trace);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The glow stays exactly as it is; only the travel between states goes. */
+  .neon {
+    transition: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────────────────────────────────── */
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 260ms var(--ease),
+    border-color 260ms var(--ease),
+    backdrop-filter 260ms var(--ease);
+}
+.header[data-solid="true"] {
+  background: rgba(18, 25, 38, 0.82);
+  border-bottom-color: var(--hairline);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 72px;
+}
+
+/* Wordmark, not a logo file: two weights of the display face and a lamp dot
+   for the orbit. */
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.1em;
+  font-family: var(--display);
+  font-size: 1.06rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.wordmark em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--print-dim);
+}
+.wordmark span {
+  width: 5px;
+  height: 5px;
+  margin-left: 0.35em;
+  border-radius: 50%;
+  background: var(--lamp);
+  box-shadow: 0 0 10px 1px rgba(255, 165, 61, 0.7);
+  translate: 0 -0.35em;
+}
+
+.header__nav {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+}
+.header__nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.85rem;
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  color: var(--print-dim);
+  transition: color 160ms ease-out;
+}
+.header__nav a:hover {
+  color: var(--print);
+}
+.header__nav a[aria-current] {
+  color: var(--print);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.header__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--r-sm);
+  transition: border-color 160ms ease-out;
+}
+.header__toggle:hover {
+  border-color: var(--lamp-line);
+}
+.header__toggle span {
+  display: block;
+  width: 17px;
+  height: 1.5px;
+  background: var(--print);
+  transition: translate 200ms var(--ease), rotate 200ms var(--ease), opacity 140ms;
+}
+.header__toggle span + span {
+  margin-top: 4px;
+}
+.header__toggle[aria-expanded="true"] span:nth-child(1) {
+  translate: 0 5.5px;
+  rotate: 45deg;
+}
+.header__toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.header__toggle[aria-expanded="true"] span:nth-child(3) {
+  translate: 0 -5.5px;
+  rotate: -45deg;
+}
+
+/* A disclosure, not a modal: the page stays scrollable behind it and focus is
+   free to leave, so it needs no focus trap and cannot strand anyone. */
+.header__panel {
+  overflow: hidden;
+  border-top: 1px solid var(--hairline);
+  background: rgba(10, 14, 23, 0.96);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.header__panel ul {
+  display: flex;
+  flex-direction: column;
+  padding-block: 0.5rem 1.25rem;
+}
+.header__panel a {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: var(--t-body);
+  color: var(--print-dim);
+}
+.header__panel a:hover {
+  color: var(--print);
+}
+.header__panel .neon {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 880px) {
+  .header__nav {
+    display: flex;
+  }
+  .header__toggle {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   METER RAIL
+   A channel meter standing in for a progress bar. Decorative and
+   aria-hidden — the header nav carries the real navigation.
+   ───────────────────────────────────────────────────────────────────────── */
+.meter {
+  position: fixed;
+  top: 50%;
+  right: clamp(0.75rem, 1.6vw, 1.5rem);
+  z-index: 90;
+  translate: 0 -50%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  pointer-events: none;
+}
+
+.meter__scale {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3px;
+}
+.meter__seg {
+  width: 12px;
+  height: 4px;
+  border-radius: 1px;
+  background: rgba(243, 239, 231, 0.13);
+  transition: background-color 120ms linear, box-shadow 120ms linear;
+}
+.meter__seg[data-lit="true"] {
+  background: var(--lamp);
+  box-shadow: 0 0 7px rgba(255, 165, 61, 0.55);
+}
+/* The peak segment, in phosphor — the same rule the field follows: amber is
+   the product, phosphor is the system doing something. */
+.meter__seg[data-peak="true"] {
+  background: var(--trace);
+  box-shadow: 0 0 9px rgba(111, 227, 196, 0.7);
+}
+
+.meter__label {
+  writing-mode: vertical-rl;
+  font-family: var(--readout);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--print-faint);
+}
+
+@media (min-width: 1180px) {
+  .meter {
+    display: flex;
+  }
+}
