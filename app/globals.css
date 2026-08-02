@@ -1,0 +1,377 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Surti Editorial Warmth — design tokens
+
+   Contrast ratios below were computed against the canvas (#FFF9EE) using the
+   WCAG relative-luminance formula:
+
+     text        #171411 on canvas  15.7:1   AA/AAA body
+     text-muted  #6F675F on canvas   5.3:1   AA body
+     brand       #9C2F25 on canvas   7.0:1   AA/AAA body, and white on brand
+                                              is 7.4:1 for solid buttons
+     success     #2F6D49 on canvas   5.9:1   AA body
+     copper      #A25A2E on canvas   5.0:1   AA body — darkened from the
+                                              brief's #B66A3C (3.9:1), which
+                                              cannot carry the 11–12px eyebrow
+                                              labels. Measured at 4.7:1 against
+                                              the darkest pixel of the grain
+                                              overlay, which is the real worst
+                                              case (see scripts/audit.mjs)
+     focus       #1959B8 on canvas   6.3:1   focus ring
+     accent gold #F3C746 on canvas   1.5:1   DECORATIVE ONLY on light
+                                              surfaces; it is legible only on
+                                              ink (11.4:1), where it is used
+                                              for footer and final-CTA text
+     border-strong #8A8175 on canvas 3.7:1   borders that carry meaning
+   ========================================================================== */
+
+@theme {
+  --color-canvas: #fff9ee;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f7edda;
+  --color-ink: #171411;
+  --color-muted: #6f675f;
+  --color-border: #d8cdbb;
+  --color-border-strong: #8a8175;
+  --color-brand: #9c2f25;
+  --color-accent: #f3c746;
+  --color-copper: #a25a2e;
+  --color-success: #2f6d49;
+  --color-warning: #a65716;
+  --color-danger: #b42318;
+  --color-focus: #1959b8;
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-gujarati: var(--font-noto-gujarati), var(--font-manrope), sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-card: 1.25rem;
+
+  --shadow-card: 0 1px 2px rgb(23 20 17 / 0.08);
+  --shadow-lifted: 0 16px 50px rgb(52 34 20 / 0.1);
+
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* 020 — smooth in-page scrolling only when motion is welcome. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  html,
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    /* 096 / 116 — space for the fixed mobile inquiry bar is reserved from the
+       first paint, so the bar can never cover content and its appearance
+       costs no layout shift. The bar itself only exists below 768px. */
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 1.0625rem;
+      padding-bottom: 0;
+    }
+  }
+
+  :where(h1, h2, h3, h4) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  :where(p) {
+    text-wrap: pretty;
+  }
+
+  /* 040 — one focus style, everywhere, never removed. */
+  :where(a, button, input, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* Anchors clear the sticky header instead of hiding under it. */
+  :where(section[id], div[id]) {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Layout helpers
+   -------------------------------------------------------------------------- */
+
+@utility container-page {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 768px) {
+    padding-inline: 2.5rem;
+  }
+
+  @media (min-width: 1280px) {
+    padding-inline: 4rem;
+  }
+}
+
+/** Fluid hero display size: ~2.4rem at 360px up to 5rem on wide screens. */
+@utility text-hero {
+  font-size: clamp(2.4rem, 1.35rem + 4.6vw, 5rem);
+}
+
+@utility text-section {
+  font-size: clamp(1.75rem, 1.15rem + 2.4vw, 2.75rem);
+}
+
+/** Paragraph measure of roughly 52–70 characters. */
+@utility measure {
+  max-width: 62ch;
+}
+
+/* --------------------------------------------------------------------------
+   Background language — warm paper, faint craft lattice, low-opacity washes.
+   All decorative, all static, none of it intercepts input.
+   -------------------------------------------------------------------------- */
+
+@utility paper {
+  position: relative;
+  isolation: isolate;
+}
+
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(60rem 32rem at 12% -10%, rgb(243 199 70 / 0.16), transparent 65%),
+    radial-gradient(48rem 30rem at 92% 4%, rgb(162 90 46 / 0.12), transparent 62%),
+    radial-gradient(52rem 34rem at 50% 108%, rgb(156 47 37 / 0.07), transparent 68%);
+}
+
+/** Faint tray/lattice geometry. Not a religious or cultural motif. */
+@utility lattice {
+  background-image:
+    linear-gradient(to right, rgb(23 20 17 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(23 20 17 / 0.045) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
+}
+
+/**
+ * 043 / 12.4 — static grain. Inline SVG keeps it at a few hundred bytes with
+ * no extra request, and it is capped at 3.5% so small text keeps its contrast.
+ */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   001 — editorial hero entrance (CSS-owned)
+
+   The hero is the LCP region, so its copy is present and opaque in the served
+   HTML. The entrance exists only inside the no-preference media query, which
+   means visitors who ask for reduced motion — and anyone without CSS
+   animation — simply get the final composition.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-item] {
+    animation: hero-rise 520ms var(--ease-standard) both;
+    animation-delay: var(--hero-delay, 0ms);
+  }
+
+  /* The headline is the LCP element. It joins the same choreography but
+     moves only — animating its opacity delays the largest contentful paint
+     and leaves critical copy transparent (rule 115). */
+  [data-hero-headline] {
+    animation: hero-slide 520ms var(--ease-standard) both;
+  }
+
+  /* 064 — navbar entrance. Also CSS-owned: the header sits above the fold,
+     so it must be painted and operable before any JavaScript runs. */
+  [data-navbar] {
+    animation: navbar-in 360ms var(--ease-standard) both;
+  }
+
+  /* 007 — underline drawn beneath one emphasised phrase, once. */
+  [data-underline] {
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: underline-draw 500ms var(--ease-standard) 320ms forwards;
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-slide {
+  from {
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes underline-draw {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes navbar-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mobile sheet: functional open/close feedback, not one of the ten
+   expressive patterns. Capped at the 280ms panel token. */
+[data-sheet] {
+  transition:
+    opacity 200ms var(--ease-standard),
+    transform 200ms var(--ease-standard);
+}
+
+[data-sheet][data-state="closed"] {
+  opacity: 0;
+  transform: translateX(1.5rem);
+}
+
+/* --------------------------------------------------------------------------
+   031 — menu card lift (CSS-owned transform; Framer Motion only ever writes
+   opacity on these cards, so the two systems never fight over a property).
+   -------------------------------------------------------------------------- */
+
+.menu-card {
+  transition:
+    transform 180ms var(--ease-standard),
+    box-shadow 180ms var(--ease-standard),
+    border-color 180ms var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lifted);
+  }
+}
+
+/* Focus gets the same emphasis without moving the card under the ring. */
+.menu-card:focus-within {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-lifted);
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility and platform safeguards
+   -------------------------------------------------------------------------- */
+
+/* 112 / 117 — no residual motion for visitors who opted out. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .menu-card:hover {
+    transform: none;
+  }
+}
+
+/* Windows high-contrast: drop decoration, keep every boundary visible. */
+@media (forced-colors: active) {
+  .grain::after,
+  .paper::before {
+    display: none;
+  }
+
+  .menu-card,
+  [data-surface] {
+    border: 1px solid CanvasText;
+  }
+
+  :where(a, button):focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+@media print {
+  .grain::after,
+  .paper::before,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* Printing never scrolls, so scroll-triggered reveals would never fire and
+     whole sections would come out blank. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    padding-bottom: 0;
+  }
+}

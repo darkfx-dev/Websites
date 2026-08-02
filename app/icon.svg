@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Surat Khaman House">
+  <rect width="64" height="64" rx="14" fill="#171411" />
+  <rect x="18" y="18" width="28" height="28" rx="5" transform="rotate(45 32 32)" fill="#f3c746" />
+  <rect x="14" y="45" width="36" height="4" rx="2" fill="#a85f30" />
+</svg>
