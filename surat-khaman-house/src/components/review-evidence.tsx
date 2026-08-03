@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/motion/reveal";
-import { business, reviewThemes } from "@/data/business";
+import { business } from "@/data/business";
 
 /**
  * A 0–5 rating axis with a single marker at the observed value.
@@ -63,16 +63,7 @@ function RatingAxis({ value }: { value: number }) {
 }
 
 /**
- * Aggregated public sentiment, presented as themes rather than testimonials.
- *
- * There are deliberately no customer names, no quotation marks and no
- * carousel: no review has been permissioned for republication, so presenting
- * paraphrased themes as if they were quotes would be inventing evidence.
- *
- * The themes are set as a plain hairline list rather than pill chips: pills
- * are already this site's language for an interactive filter (the menu's
- * category buttons), and reusing that shape for a non-interactive list
- * would read as clickable when nothing here can be clicked.
+ * The public rating, on its own — no theme tags, no testimonials.
  *
  * No Maps link appears here — that belongs only to the final section.
  */
@@ -89,13 +80,16 @@ export function ReviewEvidence() {
           02 — Reviews
         </p>
 
-        <div className="mt-3 grid gap-12 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-5">
-            <h2 className="max-w-[14ch] font-display text-[clamp(2rem,5vw,3.25rem)] leading-[1.08] tracking-[-0.01em] text-ink">
-              What visitors often mention
-            </h2>
+        {/* An asymmetric two-up split rather than a single stacked column:
+            with only the rating left to show, stacking it under the heading
+            would leave the section's right half empty on wide screens. */}
+        <div className="mt-3 grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-10">
+          <h2 className="max-w-[14ch] font-display text-[clamp(2rem,5vw,3.25rem)] leading-[1.08] tracking-[-0.01em] text-ink lg:col-span-6">
+            What visitors often mention
+          </h2>
 
-            <p className="tabular mt-10 font-display text-[clamp(3.5rem,7vw,5.5rem)] leading-none text-ink">
+          <div className="lg:col-span-6">
+            <p className="tabular font-display text-[clamp(3.5rem,7vw,5.5rem)] leading-none text-ink">
               {business.rating.value}
             </p>
             <div className="mt-4">
@@ -105,23 +99,6 @@ export function ReviewEvidence() {
               Google rating
               <span className="text-muted"> — last checked 3 August 2026</span>
             </p>
-          </div>
-
-          <div className="lg:col-span-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
-              Frequently mentioned
-            </p>
-            <ul className="mt-4 grid gap-x-10 border-t border-[rgba(10,10,10,0.12)] sm:grid-cols-2">
-              {reviewThemes.map((theme) => (
-                <li
-                  key={theme}
-                  className="flex items-center gap-3 border-b border-[rgba(10,10,10,0.12)] py-4 text-base text-ink"
-                >
-                  <span aria-hidden className="h-1.5 w-1.5 shrink-0 bg-chutney" />
-                  {theme}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </Reveal>

@@ -94,20 +94,6 @@ export const featureFlags = {
   ENABLE_ANALYTICS: false,
 } as const;
 
-/**
- * Aggregated themes drawn from public review sentiment. These are labels, not
- * quotations, and are never attributed to a named person.
- */
-export const reviewThemes = [
-  "Locho",
-  "Vagharela khaman",
-  "Sev khamani",
-  "Cheese idada",
-  "Samosas",
-  "Breakfast",
-  "Affordability",
-] as const;
-
 /** Header and mobile-sheet navigation. Deliberately has no location entry. */
 export const navLinks = [
   { href: "#menu", label: "Menu" },
