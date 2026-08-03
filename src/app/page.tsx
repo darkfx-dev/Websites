@@ -1,0 +1,100 @@
+import { LoadingScreen } from "@/components/loading-screen";
+import { SkipLink } from "@/components/skip-link";
+import { SiteHeader } from "@/components/site-header";
+import { Section3D } from "@/components/motion/section-3d";
+import { SmoothAnchorScroll } from "@/components/motion/smooth-anchor-scroll";
+import { ClickRipple } from "@/components/motion/click-ripple";
+import { HeroSection } from "@/components/hero-section";
+import { TrustStrip } from "@/components/trust-strip";
+import dynamic from "next/dynamic";
+import { MenuRing3D } from "@/components/menu/menu-ring-3d";
+import { MenuExplorer } from "@/components/menu/menu-explorer";
+import { ServiceHighlights } from "@/components/service-highlights";
+
+// Lazy-load the GSAP-powered scroll story so GSAP stays out of the initial
+// bundle. SSR stays on, so its stacked content is present without JS.
+const MenuScrollStory = dynamic(() =>
+  import("@/components/motion/menu-scroll-story").then((m) => m.MenuScrollStory)
+);
+import { ReputationSection } from "@/components/reputation-section";
+import { LocationSection } from "@/components/location-section";
+import { ContactSection } from "@/components/contact-section";
+import { OutletFinderSection } from "@/components/outlets/outlet-finder-section";
+import { OutletActionProvider } from "@/components/outlets/outlet-action-provider";
+import { OutletActionDialog } from "@/components/outlets/outlet-action-dialog";
+import { InstagramSection } from "@/components/instagram-section";
+import { SiteFooter } from "@/components/site-footer";
+import { FloatingWhatsAppButton } from "@/components/floating-whatsapp-button";
+import { MobileActionBar } from "@/components/mobile-action-bar";
+import { StructuredData } from "@/components/structured-data";
+
+export default function HomePage() {
+  return (
+    /*
+     * The business has seven outlets, so every contact action — WhatsApp, call,
+     * directions, address, dish and menu enquiries — has to know which branch
+     * the visitor means before it can go anywhere. OutletActionProvider is the
+     * one router that asks, and OutletActionDialog (rendered once, at the end)
+     * is the one selector every entry point on the page shares.
+     */
+    <OutletActionProvider>
+      <LoadingScreen />
+      <StructuredData />
+      <SmoothAnchorScroll />
+      <ClickRipple />
+      <SkipLink />
+      <SiteHeader />
+      <main id="main">
+        {/*
+         * Section3D adds the scroll-linked depth hand-off between sections
+         * (desktop + motion-OK only; see the component for the safety notes).
+         * Two sections deliberately opt out: the hero, which runs its own
+         * entrance choreography, and MenuScrollStory, whose ScrollTrigger pin
+         * must not sit inside a transformed ancestor. MenuExplorer also opts
+         * out — tilting a container while the user is filtering and typing in
+         * it would fight the interaction rather than support it.
+         */}
+        <HeroSection />
+        <TrustStrip />
+        {/*
+         * MenuRing3D is the "#menu" section. It opts out of Section3D for the
+         * same reason MenuScrollStory does: it owns its own perspective stage,
+         * and a transformed ancestor would flatten it.
+         */}
+        <MenuRing3D />
+        <MenuScrollStory />
+        <MenuExplorer />
+        <Section3D>
+          <ServiceHighlights />
+        </Section3D>
+        <Section3D>
+          <ReputationSection />
+        </Section3D>
+        <Section3D>
+          <LocationSection />
+        </Section3D>
+        <Section3D>
+          <ContactSection />
+        </Section3D>
+        {/*
+         * Outlet finder sits after Contact, per its own conversion flow. It
+         * deliberately opts out of Section3D like MenuExplorer does: it owns
+         * interactive controls, and its dialog is portalled to <body> so a
+         * transformed ancestor could never become the containing block for the
+         * dialog's fixed positioning.
+         */}
+        <OutletFinderSection />
+        <Section3D>
+          <InstagramSection />
+        </Section3D>
+      </main>
+      <SiteFooter />
+      {/* Persistent conversion controls */}
+      <FloatingWhatsAppButton />
+      <MobileActionBar />
+      {/* Spacer so the fixed mobile action bar never covers the footer's end. */}
+      <div className="h-[76px] lg:hidden" aria-hidden="true" />
+      <OutletActionDialog />
+    </OutletActionProvider>
+  );
+}

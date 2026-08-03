@@ -1,0 +1,22 @@
+node_modules/
+.DS_Store
+*.log
+
+# env files
+.env
+.env.local
+.env*.local
+
+# claude
+.claude.json
+.claude/
+
+# next.js
+.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# build output
+dist/
+build/

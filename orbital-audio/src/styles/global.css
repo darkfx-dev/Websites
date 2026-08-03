@@ -1,0 +1,198 @@
+@import "./tokens.css";
+@import "./components.css";
+@import "./sections.css";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   RESET AND GROUND
+   ───────────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Clears the fixed header when jumping to an anchor. */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--room);
+  color: var(--print);
+  font-family: var(--body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+svg {
+  display: block;
+}
+
+::selection {
+  background: var(--lamp);
+  color: #14100a;
+}
+
+/* One focus treatment for the whole page. It is a ring in the phosphor
+   colour rather than the lamp, so it can never be mistaken for a hover glow
+   and stays legible on both the room and the rack. */
+:focus-visible {
+  outline: 2px solid var(--trace);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LAYOUT PRIMITIVES
+   ───────────────────────────────────────────────────────────────────────── */
+.page {
+  width: var(--page);
+  margin-inline: auto;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+.readout {
+  font-family: var(--readout);
+  font-size: var(--t-readout);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--print-faint);
+}
+
+.lede {
+  max-width: 56ch;
+  font-size: var(--t-lead);
+  color: var(--print-dim);
+}
+
+.hairline {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--hairline) 10%,
+    var(--hairline) 90%,
+    transparent
+  );
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Visible the moment it takes focus, and a real target when it is. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-inline: 1.25rem;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--r-sm);
+  background: var(--rack);
+  font-size: var(--t-sm);
+  transform: translateY(calc(-100% - 1.5rem));
+  transition: transform 160ms var(--ease);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   THE 3D LAYER
+   Fixed behind everything and inert: it must never take a click or a scroll
+   gesture meant for the content above it.
+   ───────────────────────────────────────────────────────────────────────── */
+.scene-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--room-deep);
+}
+.scene-layer canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION
+   Global, not just inside the 3D scene. Everything ends in its final,
+   readable state and every control keeps working.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

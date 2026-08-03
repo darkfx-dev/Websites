@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: #fdfdfb;
+    --surface: #ffffff;
+    --surface-muted: #f4f3ee;
+    --ink: #0a0a0a;
+    --ink-soft: #343434;
+    --muted: #696965;
+    --border: #d8d8d2;
+    --khaman-yellow: #e9c934;
+    --chilli-red: #a43227;
+    --chutney-green: #2d6245;
+    --focus: #155eef;
+
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-feature-settings: "kern";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Body copy floor from the brief: 16px minimum, ~1.55 line height. */
+  p {
+    line-height: 1.55;
+  }
+
+  /* One visible focus treatment everywhere, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Anchor scrolling clears the sticky header. `scroll-behavior` is left
+     alone on purpose — the brief prohibits forced smooth scrolling. */
+  [id] {
+    scroll-margin-top: 88px;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 18px;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 36px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 64px;
+    }
+  }
+
+  /* Vertical rhythm drawn from the brief's spacing scale. */
+  .section-y {
+    padding-block: clamp(64px, 9vw, 112px);
+  }
+
+  /* Prices are compared down a column, so the digits must not jitter. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Paper grain, held under 3% opacity per the brief. */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Numbered editorial section label, e.g. "01 — The complete menu". */
+  .section-index {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Framer Motion is told separately via useReducedMotion; this covers CSS
+     transitions and any animation that is not motion-driven. Functionality is
+     unchanged — only movement is removed. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
