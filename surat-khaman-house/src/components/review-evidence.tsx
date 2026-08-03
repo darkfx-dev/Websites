@@ -1,15 +1,14 @@
 import { Star } from "lucide-react";
 
 import { Reveal } from "@/components/motion/reveal";
-import { balancedNote, business, reviewThemes } from "@/data/business";
+import { business, reviewThemes } from "@/data/business";
 
 /**
  * Aggregated public sentiment, presented as themes rather than testimonials.
  *
  * There are deliberately no customer names, no quotation marks and no
  * carousel: no review has been permissioned for republication, so presenting
- * paraphrased themes as if they were quotes would be inventing evidence. The
- * critical themes are shown alongside the positive ones for the same reason.
+ * paraphrased themes as if they were quotes would be inventing evidence.
  *
  * No Maps link appears here — that belongs only to the final section.
  */
@@ -53,10 +52,6 @@ export function ReviewEvidence() {
                 </li>
               ))}
             </ul>
-
-            <p className="mt-8 border-l-2 border-chilli bg-surface py-4 pl-4 pr-3 text-ink-soft">
-              {balancedNote}
-            </p>
           </div>
         </div>
       </Reveal>

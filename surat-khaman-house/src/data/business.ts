@@ -108,10 +108,6 @@ export const reviewThemes = [
   "Affordability",
 ] as const;
 
-/** Shown alongside the positive themes so criticism is not hidden. */
-export const balancedNote =
-  "Some public feedback also mentions parking difficulty and occasional inconsistency in takeaway or service.";
-
 /** Header and mobile-sheet navigation. Deliberately has no location entry. */
 export const navLinks = [
   { href: "#menu", label: "Menu" },
