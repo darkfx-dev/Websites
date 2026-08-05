@@ -3,10 +3,9 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { ActionLink } from "@/components/ui/action-link";
-import { MapPinIcon } from "@/components/ui/icons";
-import { WhatsAppLink } from "@/components/ui/whatsapp-link";
+import { MapPinIcon, PhoneIcon } from "@/components/ui/icons";
 import { outlet } from "@/data/outlet";
-import { anchors, directionsHref, whatsappHref } from "@/lib/links";
+import { anchors, directionsHref, telHref } from "@/lib/links";
 
 export const metadata: Metadata = {
   title: `Page not found | ${outlet.name}`,
@@ -23,8 +22,8 @@ export default function NotFound() {
     <>
       <Header />
 
-      <main id="main" className="container-page flex min-h-[60vh] flex-col justify-center py-20">
-        <p className="text-xs font-semibold tracking-[0.18em] text-copper uppercase">
+      <main id="main" className="container-page flex min-h-[60vh] flex-col justify-center pt-36 pb-20">
+        <p className="text-xs font-semibold tracking-[0.18em] text-terracotta uppercase">
           {outlet.displayName}
         </p>
         <h1 className="text-section mt-4 text-ink">This page does not exist.</h1>
@@ -43,9 +42,9 @@ export default function NotFound() {
         </div>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <WhatsAppLink href={whatsappHref()} variant="secondary">
-            {outlet.cta.whatsapp}
-          </WhatsAppLink>
+          <ActionLink href={telHref} variant="secondary" icon={<PhoneIcon />}>
+            {outlet.cta.call}
+          </ActionLink>
           <ActionLink
             href={directionsHref}
             variant="secondary"

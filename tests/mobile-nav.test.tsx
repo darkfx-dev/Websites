@@ -26,11 +26,13 @@ describe("mobile navigation sheet", () => {
     const dialog = screen.getByRole("dialog", { name: "Site menu" });
     expect(dialog).toHaveAttribute("aria-modal", "true");
 
-    for (const label of ["Menu", "About", "Location", "FAQ"]) {
+    for (const label of ["Menu", "Our story", "Visit us", "FAQ"]) {
       expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
     }
-    expect(screen.getByRole("link", { name: /Ask on WhatsApp/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Call the Outlet/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Get Directions/ })).toBeInTheDocument();
+    // WhatsApp capability is unverified for this number, so it is never offered.
+    expect(screen.queryByRole("link", { name: /WhatsApp/i })).not.toBeInTheDocument();
   });
 
   it("moves focus into the sheet on open", async () => {

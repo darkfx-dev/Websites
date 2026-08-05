@@ -4,7 +4,7 @@ import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { Hero } from "@/components/hero";
+import { CinematicHero } from "@/components/sections/cinematic-hero";
 import { LocationContact } from "@/components/location-contact";
 import { MenuExplorer } from "@/components/menu-explorer";
 import { MobileInquiryBar } from "@/components/mobile-inquiry-bar";
@@ -23,7 +23,7 @@ export default function HomePage() {
       <Header />
 
       <main id="main">
-        <Hero />
+        <CinematicHero />
         <MobileInquiryBar />
         <QuickFacts />
         <MenuExplorer />

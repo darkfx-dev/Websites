@@ -5,10 +5,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { useAccessibleMotion } from "@/components/motion/use-accessible-motion";
 import { actionClasses } from "@/components/ui/action-link";
-import { PhoneIcon } from "@/components/ui/icons";
-import { WhatsAppLink } from "@/components/ui/whatsapp-link";
+import { MapPinIcon, PhoneIcon } from "@/components/ui/icons";
 import { outlet } from "@/data/outlet";
-import { telHref, whatsappHref } from "@/lib/links";
+import { directionsHref, telHref } from "@/lib/links";
 import { stickyBar } from "@/lib/motion";
 
 /**
@@ -58,16 +57,23 @@ export function MobileInquiryBar() {
             className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-canvas pb-[env(safe-area-inset-bottom)] md:hidden"
           >
             <div className="flex items-center gap-3 px-4 py-3">
-              <WhatsAppLink href={whatsappHref()} className="flex-1">
-                {outlet.cta.whatsapp}
-              </WhatsAppLink>
               <a
                 href={telHref}
-                className={actionClasses("secondary", "md", "flex-1")}
+                className={actionClasses("primary", "md", "flex-1")}
                 aria-label={`Call the outlet on ${outlet.contact.phoneDisplay}`}
               >
                 <PhoneIcon />
                 <span>Call</span>
+              </a>
+              <a
+                href={directionsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={actionClasses("secondary", "md", "flex-1")}
+              >
+                <MapPinIcon />
+                <span>Directions</span>
+                <span className="sr-only"> (opens Google Maps)</span>
               </a>
             </div>
           </m.div>

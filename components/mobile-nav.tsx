@@ -3,15 +3,14 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { actionClasses } from "@/components/ui/action-link";
-import { CloseIcon, MenuIcon, PhoneIcon } from "@/components/ui/icons";
-import { WhatsAppLink } from "@/components/ui/whatsapp-link";
+import { CloseIcon, MapPinIcon, MenuIcon, PhoneIcon } from "@/components/ui/icons";
 import { outlet } from "@/data/outlet";
-import { anchors, telHref, whatsappHref } from "@/lib/links";
+import { anchors, directionsHref, telHref } from "@/lib/links";
 
 const navItems = [
   { href: anchors.menu, label: "Menu" },
-  { href: anchors.about, label: "About" },
-  { href: anchors.location, label: "Location" },
+  { href: anchors.about, label: "Our story" },
+  { href: anchors.location, label: "Visit us" },
   { href: anchors.faq, label: "FAQ" },
 ];
 
@@ -25,7 +24,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
  * The sheet content is unmounted when closed so there is never a duplicate
  * hidden navigation landmark.
  */
-export function MobileNav() {
+export function MobileNav({ overHero = false }: { overHero?: boolean }) {
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -91,7 +90,12 @@ export function MobileNav() {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-11 items-center justify-center rounded-md border border-border-strong bg-surface text-ink md:hidden"
+        className={[
+          "inline-flex size-11 items-center justify-center rounded-md transition-colors duration-200 md:hidden",
+          overHero
+            ? "border border-white/40 bg-black/25 text-white backdrop-blur-[6px]"
+            : "border border-border-strong bg-surface text-ink",
+        ].join(" ")}
       >
         <MenuIcon width={22} height={22} />
         <span className="sr-only">Open menu</span>
@@ -118,7 +122,7 @@ export function MobileNav() {
             <div className="flex items-start justify-between gap-4">
               <p className="font-display text-lg leading-tight text-ink">
                 {outlet.name}
-                <span className="mt-0.5 block text-xs font-semibold tracking-[0.14em] text-copper uppercase">
+                <span className="mt-0.5 block text-xs font-semibold tracking-[0.14em] text-terracotta uppercase">
                   Adajan Patiya
                 </span>
               </p>
@@ -149,12 +153,19 @@ export function MobileNav() {
             </nav>
 
             <div className="mt-auto flex flex-col gap-3">
-              <WhatsAppLink href={whatsappHref()} size="lg">
-                {outlet.cta.whatsapp}
-              </WhatsAppLink>
-              <a href={telHref} className={actionClasses("secondary", "lg")}>
+              <a href={telHref} className={actionClasses("primary", "lg")}>
                 <PhoneIcon />
                 <span>{outlet.cta.call}</span>
+              </a>
+              <a
+                href={directionsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={actionClasses("secondary", "lg")}
+              >
+                <MapPinIcon />
+                <span>{outlet.cta.directions}</span>
+                <span className="sr-only"> (opens Google Maps)</span>
               </a>
             </div>
           </div>

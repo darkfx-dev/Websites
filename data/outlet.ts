@@ -16,8 +16,18 @@
 export const featureFlags = {
   /** Online listings conflict (6:00–19:00, 6:30–18:00, 6:30–20:00). Unverified. */
   BUSINESS_HOURS_VERIFIED: false,
-  /** Board prices are an online-reference snapshot, not owner-confirmed. */
+  /**
+   * Board prices are an online-reference snapshot, not owner-confirmed.
+   * While false the menu still shows the transcribed figures — they are
+   * user-supplied, not invented — but always beside `PRICE_DISCLAIMER`.
+   * Flip only once the owner confirms each figure against the current board.
+   */
   MENU_PRICES_VERIFIED: false,
+  /**
+   * The public number has not been independently confirmed to accept
+   * WhatsApp, so no WhatsApp action is published anywhere on the site.
+   */
+  WHATSAPP_VERIFIED: false,
   /** No rights-cleared photography of this outlet has been verified. */
   APPROVED_PHOTOS_AVAILABLE: false,
   /** No exact, attributable, reuse-approved customer quotes are available. */

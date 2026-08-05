@@ -1,0 +1,20 @@
+{
+  "source": {
+    "count": 240
+  },
+  "variants": {
+    "desktop": {
+      "count": 120,
+      "width": 1152,
+      "pattern": "/media/hero/desktop/{i}.webp",
+      "bytes": 6250792
+    },
+    "mobile": {
+      "count": 60,
+      "width": 720,
+      "pattern": "/media/hero/mobile/{i}.webp",
+      "bytes": 1682248
+    }
+  },
+  "aspectRatio": 1.7778
+}

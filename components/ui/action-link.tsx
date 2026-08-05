@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 
-export type ActionVariant = "primary" | "secondary" | "secondaryOnDark" | "quiet";
+export type ActionVariant = "primary" | "secondary" | "onDark" | "secondaryOnDark" | "quiet";
 export type ActionSize = "md" | "lg";
 
 /**
- * One shared control style for every WhatsApp, call and directions action.
+ * One shared control style for every call and directions action.
  * Visible labels stay distinct; only the styling is reused.
  *
  * Every size clears the 44×44px minimum touch target.
@@ -18,12 +18,12 @@ export function actionClasses(
     "inline-flex items-center justify-center gap-2.5 font-semibold no-underline transition-colors duration-[160ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
 
   const sizes: Record<ActionSize, string> = {
-    md: "min-h-[44px] rounded-md px-5 py-2.5 text-[0.9375rem]",
-    lg: "min-h-[52px] rounded-md px-6 py-3.5 text-base",
+    md: "min-h-[48px] rounded-lg px-6 py-2.5 text-[0.9375rem]",
+    lg: "min-h-[52px] rounded-lg px-7 py-3.5 text-base",
   };
 
   const variants: Record<ActionVariant, string> = {
-    primary: "bg-brand text-canvas hover:bg-[#83261e] active:bg-[#6f201a]",
+    primary: "bg-ink text-white hover:bg-black active:bg-black",
     secondary:
       "border border-border-strong bg-surface text-ink hover:bg-surface-subtle active:bg-[#f0e2c9]",
     /**
@@ -34,7 +34,9 @@ export function actionClasses(
      * rendered ink-on-ink.
      */
     secondaryOnDark:
-      "border border-canvas/50 bg-transparent text-canvas hover:bg-canvas/10 active:bg-canvas/15",
+      "border border-white/45 bg-transparent text-white hover:bg-white/10 active:bg-white/15",
+    /** Solid light button for use on the ink panel. */
+    onDark: "bg-white text-ink hover:bg-white/90 active:bg-white/80",
     quiet:
       "min-h-[44px] px-1 text-ink underline decoration-border-strong decoration-1 underline-offset-4 hover:decoration-brand hover:text-brand",
   };
@@ -46,7 +48,7 @@ export function actionClasses(
 
 /**
  * A plain anchor: it works with no JavaScript, which is a hard requirement
- * for the phone, WhatsApp and directions actions.
+ * for the phone and directions actions.
  */
 export function ActionLink({
   href,

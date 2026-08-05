@@ -3,11 +3,8 @@ import type { SVGProps } from "react";
 /**
  * One icon family, drawn on a 24×24 grid with a 1.75 stroke.
  *
- * These are hand-drawn geometric glyphs rather than a packaged icon set: the
- * site needs eight icons, and inlining them avoids a dependency entirely.
- * The messaging glyph is a generic speech bubble, not the WhatsApp mark —
- * every WhatsApp control carries a visible "WhatsApp" text label, so no
- * brand logo is reproduced.
+ * Hand-drawn geometric glyphs rather than a packaged icon set: the site needs
+ * a handful of icons, and inlining them avoids a dependency entirely.
  */
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -28,15 +25,6 @@ function Icon({ children, ...props }: IconProps) {
     >
       {children}
     </svg>
-  );
-}
-
-export function MessageIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.3 8.7 8.7 0 0 1-3.9-.9L3 20.5l1.7-5.2a8.2 8.2 0 0 1-1.2-4.3A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z" />
-      <path d="M8.6 10.4h.01M12.5 10.4h.01M16.4 10.4h.01" />
-    </Icon>
   );
 }
 

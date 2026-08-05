@@ -1,43 +1,54 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Surti Editorial Warmth — design tokens
+   Premium light editorial — design tokens (Master Prompt V2)
 
-   Contrast ratios below were computed against the canvas (#FFF9EE) using the
-   WCAG relative-luminance formula:
+   Revision note: this replaces the earlier warm-ivory systems. Three briefs
+   have been supplied for this outlet and they disagree on palette; V2 is the
+   newest and most specific, and it calls for white / warm-white grounds with
+   black as the principal text and interface colour. Token *names* are kept
+   stable (--color-canvas, --color-ink, --color-brand …) so components pick up
+   the new values without a rename.
 
-     text        #171411 on canvas  15.7:1   AA/AAA body
-     text-muted  #6F675F on canvas   5.3:1   AA body
-     brand       #9C2F25 on canvas   7.0:1   AA/AAA body, and white on brand
-                                              is 7.4:1 for solid buttons
-     success     #2F6D49 on canvas   5.9:1   AA body
-     copper      #A25A2E on canvas   5.0:1   AA body — darkened from the
-                                              brief's #B66A3C (3.9:1), which
-                                              cannot carry the 11–12px eyebrow
-                                              labels. Measured at 4.7:1 against
-                                              the darkest pixel of the grain
-                                              overlay, which is the real worst
-                                              case (see scripts/audit.mjs)
-     focus       #1959B8 on canvas   6.3:1   focus ring
-     accent gold #F3C746 on canvas   1.5:1   DECORATIVE ONLY on light
-                                              surfaces; it is legible only on
-                                              ink (11.4:1), where it is used
-                                              for footer and final-CTA text
-     border-strong #8A8175 on canvas 3.7:1   borders that carry meaning
+   Contrast ratios computed against the canvas (#FCFBF7):
+
+     ink        #111111 on canvas  18.2:1  primary text and primary buttons
+                                            (white on ink is 18.9:1)
+     heading    #090909 on canvas  19.2:1  strong headings
+     secondary  #5E5A54 on canvas   6.6:1  AA body — the default for copy on
+                                            warm panels
+     muted      #777169 on canvas   4.7:1  AA on canvas/white ONLY; it is
+                                            4.33:1 on the warm surface, so use
+                                            `secondary` there instead
+     walnut     #3A2418 on canvas  14.0:1  AA/AAA
+     forest     #254636 on canvas  10.1:1  AA/AAA — selected states
+     terracotta #A65334 on canvas   5.2:1  AA body — small labels
+     success    #237A4B on canvas   5.1:1  AA body
+     error      #B42318 on canvas   6.4:1  AA body
+     brass      #B58949 on canvas   3.1:1  DECORATIVE / graphic only — rules,
+                                            inner lines, never body text
+     border-strong #9C917E          3.0:1  boundaries that carry meaning
+     border     #E8E1D7             1.3:1  hairline separators only
    ========================================================================== */
 
 @theme {
-  --color-canvas: #fff9ee;
+  --color-canvas: #fcfbf7;
   --color-surface: #ffffff;
-  --color-surface-subtle: #f7edda;
-  --color-ink: #171411;
-  --color-muted: #6f675f;
-  --color-border: #d8cdbb;
-  --color-border-strong: #8a8175;
-  --color-brand: #9c2f25;
-  --color-accent: #f3c746;
-  --color-copper: #a25a2e;
-  --color-success: #2f6d49;
+  --color-surface-subtle: #f7f2ea;
+  --color-ink: #111111;
+  --color-heading: #090909;
+  --color-secondary: #5e5a54;
+  --color-muted: #777169;
+  --color-border: #e8e1d7;
+  --color-border-strong: #9c917e;
+  --color-brand: #111111;
+  --color-walnut: #3a2418;
+  --color-forest: #254636;
+  --color-terracotta: #a65334;
+  --color-brass: #b58949;
+  --color-accent: #b58949;
+  --color-copper: #a65334;
+  --color-success: #237a4b;
   --color-warning: #a65716;
   --color-danger: #b42318;
   --color-focus: #1959b8;
@@ -99,6 +110,7 @@
 
   :where(h1, h2, h3, h4) {
     font-family: var(--font-display);
+    color: var(--color-heading);
     font-weight: 600;
     line-height: 1.1;
     letter-spacing: -0.015em;
@@ -133,7 +145,7 @@
 
 @utility container-page {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: 1.25rem;
 
@@ -146,13 +158,19 @@
   }
 }
 
-/** Fluid hero display size: ~2.4rem at 360px up to 5rem on wide screens. */
+/** V2 H1 scale. */
 @utility text-hero {
-  font-size: clamp(2.4rem, 1.35rem + 4.6vw, 5rem);
+  font-size: clamp(2.75rem, 5.5vw, 6rem);
 }
 
+/** V2 H2 scale. */
 @utility text-section {
-  font-size: clamp(1.75rem, 1.15rem + 2.4vw, 2.75rem);
+  font-size: clamp(2.1rem, 4vw, 4.5rem);
+}
+
+/** V2 H3 scale. */
+@utility text-sub {
+  font-size: clamp(1.4rem, 2vw, 2rem);
 }
 
 /** Paragraph measure of roughly 52–70 characters. */
@@ -177,16 +195,15 @@
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(60rem 32rem at 12% -10%, rgb(243 199 70 / 0.16), transparent 65%),
-    radial-gradient(48rem 30rem at 92% 4%, rgb(162 90 46 / 0.12), transparent 62%),
-    radial-gradient(52rem 34rem at 50% 108%, rgb(156 47 37 / 0.07), transparent 68%);
+    radial-gradient(70rem 38rem at 15% -12%, rgb(181 137 73 / 0.05), transparent 68%),
+    radial-gradient(56rem 34rem at 92% 6%, rgb(166 83 52 / 0.035), transparent 64%);
 }
 
 /** Faint tray/lattice geometry. Not a religious or cultural motif. */
 @utility lattice {
   background-image:
-    linear-gradient(to right, rgb(23 20 17 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(23 20 17 / 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgb(17 17 17 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(17 17 17 / 0.035) 1px, transparent 1px);
   background-size: 2.5rem 2.5rem;
   -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
   mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
@@ -202,7 +219,7 @@
   inset: 0;
   z-index: 40;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.018;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 

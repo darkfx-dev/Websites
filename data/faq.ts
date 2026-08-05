@@ -1,6 +1,6 @@
 import { outlet } from "@/data/outlet";
 
-export type FaqAction = "whatsapp" | "call" | "directions";
+export type FaqAction = "call" | "directions";
 
 export type FaqEntry = {
   id: string;
@@ -24,15 +24,15 @@ export const faqEntries: readonly FaqEntry[] = [
     id: "todays-menu",
     question: "How do I ask what is available today?",
     answer:
-      "Send a WhatsApp message to the outlet. The message is prefilled with an inquiry about today's menu and availability, so you only need to press send.",
-    action: "whatsapp",
+      "Call the outlet. Availability changes through the day, so a quick call before you travel is the reliable way to check what is ready.",
+    action: "call",
   },
   {
     id: "prices-current",
     question: "Are the prices I found online current?",
     answer:
-      "Prices circulating online are an old snapshot and are not shown on this site because they have not been confirmed with the outlet. Ask for the current price on WhatsApp or by phone before ordering.",
-    action: "whatsapp",
+      "The prices shown here were transcribed from the latest available photograph of the menu board. They have not been confirmed as current, so treat them as a reference and check by phone before ordering.",
+    action: "call",
   },
   {
     id: "how-to-call",

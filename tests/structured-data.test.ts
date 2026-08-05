@@ -8,6 +8,7 @@ describe("feature flags", () => {
     expect(featureFlags).toEqual({
       BUSINESS_HOURS_VERIFIED: false,
       MENU_PRICES_VERIFIED: false,
+      WHATSAPP_VERIFIED: false,
       APPROVED_PHOTOS_AVAILABLE: false,
       TESTIMONIAL_PERMISSION_AVAILABLE: false,
       ENABLE_MAP_EMBED: false,
@@ -21,6 +22,11 @@ describe("feature flags", () => {
 
   it("stores no review count, because published counts disagree", () => {
     expect(outlet.rating.reviewCount).toBeNull();
+  });
+
+  it("publishes no rating anywhere, since it is unverified", async () => {
+    const { ReviewEvidence } = await import("@/components/review-evidence");
+    expect(String(ReviewEvidence)).not.toMatch(/rating\.value|RatingStars/);
   });
 });
 

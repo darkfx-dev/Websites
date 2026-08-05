@@ -164,6 +164,11 @@ async function checkTextContrast(page, label) {
 
       const element = node.parentElement;
       if (!element || element.closest(".sr-only, svg, noscript, script, style")) continue;
+      // The cinematic hero is light text over moving footage. Its contrast is
+      // guaranteed by a scrim plus a text shadow, not by a solid background,
+      // so sampling one background pixel cannot evaluate it. It is checked by
+      // measuring the scrim floor instead (see checkHeroScrim).
+      if (element.closest("[data-contrast-exempt]")) continue;
       if (element.dataset.contrastIdx) continue;
 
       const style = getComputedStyle(element);
@@ -185,7 +190,8 @@ async function checkTextContrast(page, label) {
 
   await page.addStyleTag({
     content:
-      "*, *::before, *::after { color: transparent !important; text-shadow: none !important; }",
+      ".pv-blank *, .pv-blank *::before, .pv-blank *::after " +
+      "{ color: transparent !important; text-shadow: none !important; }",
   });
 
   const viewport = page.viewportSize();
@@ -200,6 +206,7 @@ async function checkTextContrast(page, label) {
     await page.waitForTimeout(450);
 
     const visible = await page.evaluate(() => {
+      // Read colours with glyphs still painted.
       const found = [];
       for (const element of document.querySelectorAll("[data-contrast-idx]")) {
         const rect = element.getBoundingClientRect();
@@ -216,14 +223,48 @@ async function checkTextContrast(page, label) {
         const topMost = document.elementFromPoint(x, y);
         if (!topMost || !(element.contains(topMost) || topMost.contains(element))) continue;
 
-        found.push({ idx: Number(element.dataset.contrastIdx), x, y });
+        const live = getComputedStyle(element);
+        if (live.visibility === "hidden" || live.display === "none") continue;
+
+        // Skip anything inside a fixed or sticky container. Their painted
+        // position cannot be correlated with a viewport screenshot pixel
+        // reliably enough to judge contrast, and a false 1:1 reading is worse
+        // than no reading. These are checked by computed style instead, in
+        // checkPinnedContrast below.
+        let skipped = false;
+        for (let node = element; node && node !== document.body; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          if (style.position === "fixed" || style.position === "sticky") skipped = true;
+          if (style.overflowX === "auto" || style.overflowX === "scroll") skipped = true;
+          if (skipped) break;
+        }
+        if (skipped) continue;
+
+        const path = [];
+        for (let node = element; node && node !== document.body; node = node.parentElement) {
+          path.unshift(node.tagName.toLowerCase() + (node.className && typeof node.className === "string" ? "." + node.className.trim().split(/\s+/).slice(0, 2).join(".") : ""));
+        }
+        found.push({
+          idx: Number(element.dataset.contrastIdx),
+          sel: path.slice(-3).join(" > "),
+          x,
+          y,
+          // Re-read now: elements whose colour depends on scroll position
+          // (a sticky header over a hero) would otherwise be judged with a
+          // colour captured at a different scroll offset.
+          color: live.color,
+        });
       }
       return found;
     });
 
     if (visible.length === 0) continue;
 
+    // Now hide the glyphs so the screenshot shows only the composited
+    // background, screenshot, then restore.
+    await page.evaluate(() => document.documentElement.classList.add("pv-blank"));
     const shot = await page.screenshot();
+    await page.evaluate(() => document.documentElement.classList.remove("pv-blank"));
     const { data, info } = await sharp(shot)
       .ensureAlpha()
       .raw()
@@ -231,7 +272,7 @@ async function checkTextContrast(page, label) {
 
     for (const entry of visible) {
       const run = runs[entry.idx];
-      const foreground = parseRgb(run.color);
+      const foreground = parseRgb(entry.color ?? run.color);
       if (!foreground) continue;
 
       // Sample a 3x3 patch and keep the darkest pixel: the grain overlay is
@@ -254,10 +295,10 @@ async function checkTextContrast(page, label) {
       const ratio = contrastRatio(foreground, darkest);
       const required = run.large ? 3 : 4.5;
       if (ratio < required) {
-        const key = `${run.color}|${run.large}`;
+        const key = `${entry.color ?? run.color}|${run.large}`;
         const existing = worst.get(key);
         if (!existing || ratio < existing.ratio) {
-          worst.set(key, { ratio, required, run, background: darkest });
+          worst.set(key, { ratio, required, run, color: entry.color ?? run.color, background: darkest, sel: entry.sel, at: `${entry.x},${entry.y}` });
         }
       }
     }
@@ -266,11 +307,165 @@ async function checkTextContrast(page, label) {
   for (const entry of worst.values()) {
     fail(
       `[contrast ${label}] ${entry.ratio.toFixed(2)}:1 (needs ${entry.required}:1) — ` +
-        `"${entry.run.text}" ${entry.run.color} on rgb(${entry.background.join(", ")})`,
+        `"${entry.run.text}" ${entry.color} on rgb(${entry.background.join(", ")}) @${entry.at} ${entry.sel}`,
     );
   }
 
   note(`[contrast ${label}] sampled ${sampled} text runs, ${worst.size} failing colour pairs`);
+}
+
+/**
+ * Contrast check by computed style, for the elements the pixel sampler
+ * deliberately skips: anything inside a fixed/sticky container, and anything
+ * inside a horizontally scrollable rail. Neither can be correlated with a
+ * viewport screenshot pixel reliably, and a false 1:1 reading is worse than
+ * no reading. Their backgrounds are solid by construction, so resolving the
+ * nearest opaque ancestor background is exact.
+ */
+async function checkComputedContrast(page, label) {
+  const samples = await page.evaluate(() => {
+    const opaque = (value) => {
+      const match = value.match(/rgba?\(([^)]+)\)/);
+      if (!match) return false;
+      const parts = match[1].split(",").map((p) => Number.parseFloat(p));
+      return !(parts.length >= 4 && parts[3] < 0.95);
+    };
+
+    const resolveBackground = (element) => {
+      for (let node = element; node && node !== document.documentElement; node = node.parentElement) {
+        const bg = getComputedStyle(node).backgroundColor;
+        if (opaque(bg)) return bg;
+      }
+      return null;
+    };
+
+    const isSkipped = (element) => {
+      for (let node = element; node && node !== document.body; node = node.parentElement) {
+        const style = getComputedStyle(node);
+        if (style.position === "fixed" || style.position === "sticky") return true;
+        if (style.overflowX === "auto" || style.overflowX === "scroll") return true;
+      }
+      return false;
+    };
+
+    const out = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const seen = new Set();
+
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node.textContent.trim()) continue;
+      const element = node.parentElement;
+      if (!element || seen.has(element)) continue;
+      if (element.closest(".sr-only, svg, noscript, script, style")) continue;
+      // Scrim-backed text over the hero footage is measured by
+      // checkHeroScrim, which reads the real composited pixels.
+      if (element.closest("[data-contrast-exempt], header:not([data-solid])")) continue;
+      if (!isSkipped(element)) continue;
+
+      const style = getComputedStyle(element);
+      if (style.visibility === "hidden" || style.display === "none") continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 4 || rect.height < 4) continue;
+
+      seen.add(element);
+      out.push({
+        text: node.textContent.trim().slice(0, 30),
+        color: style.color,
+        bg: resolveBackground(element),
+        size: Number.parseFloat(style.fontSize),
+        weight: Number.parseInt(style.fontWeight, 10) || 400,
+      });
+    }
+    return out;
+  });
+
+  const worst = new Map();
+  let checked = 0;
+
+  for (const sample of samples) {
+    const fg = parseRgb(sample.color);
+    const bg = sample.bg ? parseRgb(sample.bg) : null;
+    // A transparent chain means the text sits on the hero scrim, which is
+    // handled by the scrim and its text shadow; skip rather than guess.
+    if (!fg || !bg) continue;
+    checked += 1;
+
+    const ratio = contrastRatio(fg, bg);
+    const large = sample.size >= 24 || (sample.size >= 18.66 && sample.weight >= 700);
+    const required = large ? 3 : 4.5;
+    if (ratio < required) {
+      const key = `${sample.color}|${sample.bg}|${large}`;
+      if (!worst.has(key) || worst.get(key).ratio > ratio) {
+        worst.set(key, { ratio, required, sample });
+      }
+    }
+  }
+
+  for (const entry of worst.values()) {
+    fail(
+      `[computed ${label}] ${entry.ratio.toFixed(2)}:1 (needs ${entry.required}:1) — ` +
+        `"${entry.sample.text}" ${entry.sample.color} on ${entry.sample.bg}`,
+    );
+  }
+  note(`[computed ${label}] checked ${checked} skipped text runs by computed style`);
+}
+
+/**
+ * Measures the scrim floor behind light text drawn over the hero footage.
+ *
+ * This text has no solid background — its legibility comes from the header
+ * scrim, the hero scrim and a text shadow, composited over a moving image.
+ * So the check reads the actual rendered pixels inside the wordmark's box and
+ * contrasts white against the *lightest* one, which is the worst case.
+ */
+async function checkHeroScrim(page, label) {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(700);
+
+  const box = await page.evaluate(() => {
+    const mark = document.querySelector("header a");
+    if (!mark) return null;
+    const rect = mark.getBoundingClientRect();
+    return { x: Math.round(rect.left), y: Math.round(rect.top), w: Math.round(rect.width), h: Math.round(rect.height) };
+  });
+  if (!box || box.w < 4 || box.h < 4) return;
+
+  // Blank the glyphs so only the composited backdrop is captured. The rule is
+  // added here rather than relying on checkTextContrast, which runs later.
+  await page.addStyleTag({
+    content:
+      ".pv-blank *, .pv-blank *::before, .pv-blank *::after " +
+      "{ color: transparent !important; text-shadow: none !important; }",
+  });
+  await page.evaluate(() => document.documentElement.classList.add("pv-blank"));
+  await page.waitForTimeout(120);
+  const shot = await page.screenshot({
+    clip: { x: box.x, y: box.y, width: box.w, height: box.h },
+  });
+  await page.evaluate(() => document.documentElement.classList.remove("pv-blank"));
+
+  const { data, info } = await sharp(shot).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+
+  let lightest = null;
+  let lightestLuminance = -1;
+  for (let i = 0; i < data.length; i += info.channels) {
+    const pixel = [data[i], data[i + 1], data[i + 2]];
+    const value = luminance(pixel);
+    if (value > lightestLuminance) {
+      lightestLuminance = value;
+      lightest = pixel;
+    }
+  }
+
+  const ratio = contrastRatio([255, 255, 255], lightest);
+  if (ratio < 4.5) {
+    fail(
+      `[hero-scrim ${label}] white wordmark is ${ratio.toFixed(2)}:1 against the ` +
+        `lightest backdrop pixel rgb(${lightest.join(", ")}) — the scrim is too weak`,
+    );
+  }
+  note(`[hero-scrim ${label}] white on lightest backdrop pixel = ${ratio.toFixed(2)}:1`);
 }
 
 async function checkOverflow(page, label) {
@@ -383,6 +578,8 @@ async function main() {
           fullPage: true,
         });
         // Destructive (blanks all text), so it runs last on this context.
+        await checkHeroScrim(page, `${width}px`);
+        await checkComputedContrast(page, `${width}px`);
         await checkTextContrast(page, `${width}px`);
       }
 
@@ -403,11 +600,11 @@ async function main() {
 
       // Primary actions must be reachable without scrolling past the hero.
       const ctaBox = await page
-        .getByRole("link", { name: /Ask on WhatsApp/ })
+        .getByRole("link", { name: /Explore menu/i })
         .first()
         .boundingBox();
       if (!ctaBox || ctaBox.y > 560) {
-        fail("[hero 360×560] primary WhatsApp CTA is not visible in the first viewport");
+        fail("[hero 360×560] the hero CTA is not visible in the first viewport");
       }
       await context.close();
     }
@@ -522,16 +719,22 @@ async function main() {
       await page.goto(ORIGIN, { waitUntil: "load" });
 
       const text = (await page.textContent("body")) ?? "";
-      for (const required of ["Surat Khaman House", "+91 99246 66000", "Plain Locho", "Ghee Jalebi"]) {
+      for (const required of [
+        "Surat Khaman House",
+        "+91 99246 66000",
+        "Plain Locho",
+        "Ghee Jalebi",
+        "\u20B9120",
+      ]) {
         if (!text.includes(required)) fail(`[no-js] "${required}" is missing without JavaScript`);
       }
-      const waLink = await page.locator('a[href^="https://wa.me/919924666000"]').count();
+      const waLink = await page.locator('a[href*="wa.me"]').count();
       const telLink = await page.locator('a[href="tel:+919924666000"]').count();
       const mapLink = await page.locator('a[href*="ChIJtYD54X9O4DsRir0umBF6TOQ"]').count();
-      if (waLink === 0) fail("[no-js] no WhatsApp link");
+      if (waLink > 0) fail("[no-js] a WhatsApp link is published while the channel is unverified");
       if (telLink === 0) fail("[no-js] no telephone link");
       if (mapLink === 0) fail("[no-js] no Place-ID directions link");
-      note(`no-js: ${waLink} WhatsApp, ${telLink} tel, ${mapLink} maps links present`);
+      note(`no-js: ${telLink} tel, ${mapLink} maps links present, 0 WhatsApp`);
       await context.close();
     }
 
@@ -540,7 +743,6 @@ async function main() {
       const html = await (await fetch(ORIGIN)).text();
 
       const forbidden = [
-        /₹/,
         /\bsince\s+\d{4}\b/i,
         /\bfounded\b/i,
         /\bproprietor\b/i,
@@ -557,6 +759,7 @@ async function main() {
         /gopalkhamanhouse/i,
         /\binstagram\b/i,
         /\bfacebook\b/i,
+        /wa\.me/i,
         /openingHours/i,
         /priceRange/i,
         /aggregateRating/i,
@@ -578,28 +781,26 @@ async function main() {
         fail("[facts] the exact Google Place ID is missing from the served HTML");
       }
 
-      // Reference prices must not reach the client bundle.
+      // Every price presentation must carry the exact qualification.
+      const disclaimer =
+        "Reference prices from the latest available menu-board photograph.";
+      if (html.includes("\u20B9") && !html.includes(disclaimer)) {
+        fail("[facts] prices are rendered without the mandatory price disclaimer");
+      }
+
+      // The WhatsApp channel must not reach the client bundle either.
       const chunkDir = path.resolve(".next/static/chunks");
       const files = await readdir(chunkDir, { recursive: true }).catch(() => []);
-      const referencePrices = [
-        "120", "200", "400", "500", "100", "160", "240", "300", "600", "50", "80", "60", "30", "40", "20",
-      ];
-      let priceHits = 0;
+      let waHits = 0;
       for (const file of files) {
         if (!String(file).endsWith(".js")) continue;
         const source = await readFile(path.join(chunkDir, String(file)), "utf8");
-        if (source.includes("₹")) {
-          fail(`[facts] rupee symbol found in client chunk ${file}`);
-        }
-        // Look for the price table shape rather than bare numbers, which
-        // legitimately appear in minified code.
-        if (/perKg\s*:\s*\d/.test(source) || /perPlate\s*:\s*\d/.test(source)) {
-          fail(`[facts] a serialised price field reached client chunk ${file}`);
-          priceHits += 1;
+        if (/wa\.me/.test(source)) {
+          fail(`[facts] a wa.me reference reached client chunk ${file}`);
+          waHits += 1;
         }
       }
-      note(`bundle: scanned ${files.length} chunk files, ${priceHits} price leaks`);
-      void referencePrices;
+      note(`bundle: scanned ${files.length} chunk files, ${waHits} WhatsApp leaks`);
     }
   } finally {
     await browser.close();

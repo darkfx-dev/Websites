@@ -24,7 +24,7 @@ export function SectionHeading({
       <h2 id={id} className="text-section text-ink">
         {title}
       </h2>
-      {support ? <p className="measure mt-4 text-muted">{support}</p> : null}
+      {support ? <p className="measure mt-4 text-secondary">{support}</p> : null}
     </div>
   );
 }

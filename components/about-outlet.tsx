@@ -20,8 +20,8 @@ export function AboutOutlet() {
             <h2 className="text-section text-ink">
               One shop on Adajan Road, opposite Sevadarshan Hospital.
             </h2>
-            <p className="measure mt-6 text-lg text-muted">{outlet.copy.about}</p>
-            <p className="measure mt-4 text-muted">
+            <p className="measure mt-6 text-lg text-secondary">{outlet.copy.about}</p>
+            <p className="measure mt-4 text-secondary">
               This website covers that address only. Other businesses trade under the same name
               elsewhere; their menus, numbers and timings are not represented here.
             </p>

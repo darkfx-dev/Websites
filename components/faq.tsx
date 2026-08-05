@@ -6,10 +6,9 @@ import { useState } from "react";
 import { useAccessibleMotion } from "@/components/motion/use-accessible-motion";
 import { actionClasses } from "@/components/ui/action-link";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
-import { WhatsAppLink } from "@/components/ui/whatsapp-link";
 import { faqEntries, type FaqAction } from "@/data/faq";
 import { outlet } from "@/data/outlet";
-import { directionsHref, telHref, whatsappHref } from "@/lib/links";
+import { directionsHref, telHref } from "@/lib/links";
 import { duration, ease } from "@/lib/motion";
 
 /**
@@ -32,7 +31,7 @@ export function Faq() {
   return (
     <section id="faq" className="container-page scroll-mt-24 py-20 md:py-28">
       <div className="max-w-2xl">
-        <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-copper uppercase">
+        <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-terracotta uppercase">
           Before you go
         </p>
         <h2 className="text-section text-ink">Questions this outlet gets asked</h2>
@@ -57,7 +56,7 @@ export function Faq() {
                 >
                   {entry.question}
                   <ChevronDownIcon
-                    className={`shrink-0 text-copper transition-transform duration-[180ms] ${
+                    className={`shrink-0 text-terracotta transition-transform duration-[180ms] ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -82,7 +81,7 @@ export function Faq() {
                     className="overflow-hidden"
                   >
                     <div className="pb-6">
-                      <p className="measure text-muted">{entry.answer}</p>
+                      <p className="measure text-secondary">{entry.answer}</p>
                       {entry.action ? (
                         <div className="mt-5">
                           <FaqAction action={entry.action} />
@@ -98,18 +97,17 @@ export function Faq() {
       </ul>
 
       <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <p className="text-muted">Still unsure about today?</p>
-        <WhatsAppLink href={whatsappHref()}>{outlet.cta.whatsapp}</WhatsAppLink>
+        <p className="text-secondary">Still unsure about today?</p>
+        <a href={telHref} className={actionClasses("primary")}>
+          <PhoneIcon />
+          <span>{outlet.cta.call}</span>
+        </a>
       </div>
     </section>
   );
 }
 
 function FaqAction({ action }: { action: FaqAction }) {
-  if (action === "whatsapp") {
-    return <WhatsAppLink href={whatsappHref()}>{outlet.cta.whatsapp}</WhatsAppLink>;
-  }
-
   if (action === "call") {
     return (
       <a href={telHref} className={actionClasses("secondary")}>

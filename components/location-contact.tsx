@@ -2,9 +2,8 @@ import { CopyAddress } from "@/components/copy-address";
 import { Reveal } from "@/components/motion/reveal";
 import { ActionLink } from "@/components/ui/action-link";
 import { MapPinIcon, PhoneIcon } from "@/components/ui/icons";
-import { WhatsAppLink } from "@/components/ui/whatsapp-link";
 import { featureFlags, outlet } from "@/data/outlet";
-import { directionsHref, telHref, whatsappHref } from "@/lib/links";
+import { directionsHref, telHref } from "@/lib/links";
 
 /**
  * Location and contact.
@@ -22,7 +21,7 @@ export function LocationContact() {
         <Reveal>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
-              <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-copper uppercase">
+              <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-terracotta uppercase">
                 Find the outlet
               </p>
               <h2 className="text-section text-ink">{outlet.locationQualifier}</h2>
@@ -31,13 +30,10 @@ export function LocationContact() {
                 {outlet.address.display}
               </address>
 
-              <p className="mt-4 text-muted">{outlet.hours.fallback}</p>
+              <p className="mt-4 text-secondary">{outlet.hours.fallback}</p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <WhatsAppLink href={whatsappHref()} size="lg">
-                  {outlet.cta.whatsapp}
-                </WhatsAppLink>
-                <ActionLink href={telHref} variant="secondary" size="lg" icon={<PhoneIcon />}>
+                <ActionLink href={telHref} size="lg" icon={<PhoneIcon />}>
                   {outlet.contact.phoneDisplay}
                 </ActionLink>
               </div>
@@ -86,7 +82,7 @@ export function LocationContact() {
                         strokeDasharray="10 12"
                         fill="none"
                       />
-                      <circle cx="196" cy="176" r="34" fill="var(--color-accent)" opacity="0.25" />
+                      <circle cx="196" cy="176" r="34" fill="var(--color-brass)" opacity="0.25" />
                       <g transform="translate(184,152)">
                         <path
                           d="M12 27S22 17.6 22 11a10 10 0 1 0-20 0c0 6.6 10 16 10 16Z"
@@ -99,7 +95,7 @@ export function LocationContact() {
                 )}
 
                 <div className="border-t border-border p-6">
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-secondary">
                     The illustration above is decorative. Use the link below for real directions —
                     it opens this exact shop by its Google Place ID, not another outlet with the
                     same name.
