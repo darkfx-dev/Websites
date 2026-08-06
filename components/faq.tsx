@@ -29,7 +29,8 @@ export function Faq() {
     );
 
   return (
-    <section id="faq" className="container-page scroll-mt-24 py-20 md:py-28">
+    <section id="faq" className="veil scroll-mt-28">
+      <div className="container-page py-24 md:py-32">
       <div className="max-w-2xl">
         <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-terracotta uppercase">
           Before you go
@@ -102,6 +103,7 @@ export function Faq() {
           <PhoneIcon />
           <span>{outlet.cta.call}</span>
         </a>
+      </div>
       </div>
     </section>
   );

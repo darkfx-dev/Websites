@@ -23,7 +23,7 @@ const sections = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-surface-subtle/60">
+    <footer className="veil-strong border-t border-border">
       <div className="container-page py-16">
         <div className="grid gap-10 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-5">

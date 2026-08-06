@@ -30,7 +30,7 @@ const operationalNotes = [
 
 export function ReviewEvidence() {
   return (
-    <section aria-labelledby="reviews-heading" className="border-y border-border bg-surface-subtle">
+    <section aria-labelledby="reviews-heading" className="veil-strong border-y border-border">
       <div className="container-page py-24 md:py-32">
         <Reveal>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">

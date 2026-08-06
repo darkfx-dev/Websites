@@ -61,6 +61,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${manrope.variable} ${notoGujarati.variable}`}
     >
+      <head>
+        {/*
+          Marks that scripting is available, before first paint. The menu's
+          category hiding is keyed off this, so with JavaScript disabled the
+          whole board stays visible instead of a single category.
+        */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+        />
+      </head>
       <body className="paper grain antialiased">
         {/*
           120 — without JavaScript, Framer Motion never runs, so the reveal

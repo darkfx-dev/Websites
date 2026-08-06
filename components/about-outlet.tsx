@@ -10,7 +10,8 @@ import { outlet } from "@/data/outlet";
  */
 export function AboutOutlet() {
   return (
-    <section id="about" className="container-page scroll-mt-24 py-20 md:py-28">
+    <section id="about" className="veil scroll-mt-28">
+      <div className="container-page py-24 md:py-32">
       <Reveal>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
@@ -60,6 +61,7 @@ export function AboutOutlet() {
           </div>
         </div>
       </Reveal>
+      </div>
     </section>
   );
 }

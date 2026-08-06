@@ -7,7 +7,8 @@ import { directionsHref, telHref } from "@/lib/links";
 /** The one ink-coloured panel on the page. */
 export function FinalCta() {
   return (
-    <section aria-labelledby="final-cta-heading" className="container-page pb-20 md:pb-28">
+    <section aria-labelledby="final-cta-heading" className="veil">
+      <div className="container-page py-24 md:py-32">
       <Reveal className="overflow-hidden rounded-[1.75rem] bg-ink px-6 py-14 text-center sm:px-12 md:py-20">
         <p className="text-xs font-semibold tracking-[0.18em] text-brass uppercase">
           {outlet.locationQualifier}
@@ -38,6 +39,7 @@ export function FinalCta() {
 
         <p className="mt-7 text-sm text-canvas/70">{outlet.hours.fallback}</p>
       </Reveal>
+      </div>
     </section>
   );
 }

@@ -84,9 +84,14 @@
     }
   }
 
-  html,
-  body {
+  html {
     background-color: var(--color-canvas);
+  }
+
+  /* Transparent so the fixed cinematic backdrop shows through. Content bands
+     carry their own `veil` surface for legibility. */
+  body {
+    background-color: transparent;
     color: var(--color-ink);
   }
 
@@ -171,6 +176,23 @@
 /** V2 H3 scale. */
 @utility text-sub {
   font-size: clamp(1.4rem, 2vw, 2rem);
+}
+
+/**
+ * Near-opaque content surface over the cinematic backdrop.
+ *
+ * 94% canvas leaves the footage as a faint moving texture while keeping ink
+ * text far above AA — the audit measures the real composited pixels. No
+ * backdrop-filter: blurring a full-height band would cost a compositing pass
+ * on every scroll frame.
+ */
+@utility veil {
+  background-color: color-mix(in srgb, var(--color-canvas) 94%, transparent);
+}
+
+/** For the densest reading surfaces. */
+@utility veil-strong {
+  background-color: color-mix(in srgb, var(--color-canvas) 98%, transparent);
 }
 
 /** Paragraph measure of roughly 52–70 characters. */
@@ -307,6 +329,83 @@
 [data-sheet][data-state="closed"] {
   opacity: 0;
   transform: translateX(1.5rem);
+}
+
+/*
+ * Progressive enhancement for the menu tabs. The `js` class is set on <html>
+ * before first paint, so with scripting enabled only the selected category is
+ * shown; without it every category stays visible and the full board is
+ * readable rather than one seventh of it.
+ */
+.js [data-menu-group]:not([data-menu-group-selected]) {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   3D menu ring
+
+   The ring is DOM + CSS 3D transforms, not WebGL — the brief rules out
+   Three.js and a handful of transformed cards does not justify a canvas.
+   Cards are positioned by JS only when `data-ring="on"` is set; without it
+   the same buttons stay a snap rail or a grid.
+   -------------------------------------------------------------------------- */
+
+.menu-ring[data-ring="on"] {
+  display: block;
+  position: relative;
+  height: 440px;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  overflow: visible;
+}
+
+.menu-ring[data-ring="on"] .menu-ring-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  /* JS owns transform; easing it here would fight the rAF loop. */
+  will-change: transform, opacity;
+}
+
+/* Glass, but readable on a light page: a mostly-opaque fill plus a real
+   border, so the card never depends on backdrop-filter being supported.
+   The blur is applied only in the flat presentations. On the 3D ring it is
+   deliberately absent: backdrop-filter flattens an element out of its
+   parent's preserve-3d context, which desynchronises paint order from
+   hit-testing and left the cards visible but not clickable. */
+.menu-ring:not([data-ring="on"]) .menu-ring-card {
+  backdrop-filter: blur(14px) saturate(110%);
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+}
+
+.menu-ring[data-ring="on"] .menu-ring-card {
+  background-color: rgb(255 255 255 / 0.9);
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+  .menu-ring-card {
+    background-color: rgb(255 255 255 / 0.96);
+  }
+}
+
+/* Pointer feedback stays within the brief's limits: 1.02 hover, 0.985 press. */
+@media (hover: hover) and (pointer: fine) {
+  .menu-ring:not([data-ring="on"]) .menu-ring-card:hover {
+    transform: scale(1.02);
+  }
+}
+
+.menu-ring:not([data-ring="on"]) .menu-ring-card:active {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-ring[data-ring="on"] {
+    height: auto;
+    perspective: none;
+  }
 }
 
 /* --------------------------------------------------------------------------

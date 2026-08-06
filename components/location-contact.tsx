@@ -16,7 +16,7 @@ import { directionsHref, telHref } from "@/lib/links";
  */
 export function LocationContact() {
   return (
-    <section id="location" className="scroll-mt-24 border-t border-border bg-surface-subtle/50">
+    <section id="location" className="veil-strong scroll-mt-28 border-t border-border">
       <div className="container-page py-20 md:py-28">
         <Reveal>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">

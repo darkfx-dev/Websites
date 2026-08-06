@@ -14,8 +14,9 @@ const facts = [
 
 export function QuickFacts() {
   return (
-    <section aria-label="Outlet at a glance" className="container-page pb-4">
-      <Reveal className="rounded-[1.5rem] border border-border bg-surface/70 p-2 shadow-card">
+    <section aria-label="Outlet at a glance" className="veil">
+      <div className="container-page py-16">
+        <Reveal className="rounded-2xl border border-border bg-surface p-2 shadow-card">
         <dl className="grid grid-cols-1 gap-px overflow-hidden rounded-[1.15rem] bg-border sm:grid-cols-2 lg:grid-cols-4">
           {facts.map((fact) => (
             <div key={fact.label} className="bg-canvas px-5 py-5">
@@ -26,7 +27,8 @@ export function QuickFacts() {
             </div>
           ))}
         </dl>
-      </Reveal>
+        </Reveal>
+      </div>
     </section>
   );
 }

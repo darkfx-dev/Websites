@@ -545,11 +545,13 @@ async function main() {
 
       // Guard against auditing an unstyled page: without CSS every element
       // measures wrong and the report fills with meaningless failures.
+      // `body` is deliberately transparent so the fixed cinematic backdrop
+      // shows through, so the canvas colour now lives on `html`.
       const styled = await page.evaluate(
-        () => getComputedStyle(document.body).backgroundColor,
+        () => getComputedStyle(document.documentElement).backgroundColor,
       );
       if (styled === "rgba(0, 0, 0, 0)" || styled === "rgb(255, 255, 255)") {
-        throw new Error(`Stylesheet did not apply at ${width}px (body background ${styled})`);
+        throw new Error(`Stylesheet did not apply at ${width}px (html background ${styled})`);
       }
 
       await checkOverflow(page, `${width}px`);
@@ -647,12 +649,35 @@ async function main() {
       await checkOverflow(page, "faq open");
       await runAxe(page, "faq open");
 
-      await page.getByRole("button", { name: "Locho", exact: true }).click();
-      await page.waitForTimeout(400);
-      const status = await page.getByRole("status").first().textContent();
-      if (!status?.includes("Showing 4 of 29")) {
-        fail(`[menu] filter did not announce the result count, got: ${status}`);
+      // Categories are tabs on the 3D ring. Park the page on the ring first
+      // and let it settle, so the click is a plain click rather than a
+      // scroll-into-view that would re-steer the ring on the way.
+      await page.addStyleTag({ content: "html{scroll-behavior:auto !important}" });
+      const ringTrack = await page.locator("[data-menu-ring-track]").boundingBox();
+      if (ringTrack) {
+        await page.evaluate((y) => window.scrollTo(0, y), ringTrack.y - 80);
+        await page.waitForTimeout(900);
       }
+
+      await page.getByRole("tab", { name: /Khaman & Khamani/ }).click();
+      await page.waitForTimeout(900);
+
+      const status = await page.getByRole("status").first().textContent();
+      if (!status?.includes("Khaman & Khamani selected")) {
+        fail(`[menu] category change was not announced, got: ${status}`);
+      }
+
+      const panelHeading = await page.locator('[role="tabpanel"] h3').first().textContent();
+      if (!panelHeading?.includes("Khaman & Khamani")) {
+        fail(`[menu] panel did not follow the selected tab, got: ${panelHeading}`);
+      }
+
+      // The board price must be on screen with its unit.
+      const panelText = (await page.locator('[role="tabpanel"]').first().textContent()) ?? "";
+      if (!panelText.includes("₹120") || !panelText.includes("per kg")) {
+        fail("[menu] board prices are not rendered with their units");
+      }
+
       await runAxe(page, "menu filtered");
       await page.screenshot({ path: path.join(OUT, "menu-filtered.png") });
       await context.close();
